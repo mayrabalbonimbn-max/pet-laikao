@@ -1,78 +1,136 @@
-import Image from "next/image";
 import Link from "next/link";
-import { ShoppingBag } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { PageHead } from "@/components/marketing/page-head";
 import { siteConfig } from "@/config/site";
 import { listActivePromotions } from "@/domains/promotions/queries";
+import { publicRoutes } from "@/lib/routes";
 
 export const dynamic = "force-dynamic";
 
+function Paw({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <circle cx="6" cy="9" r="2" />
+      <circle cx="12" cy="6.5" r="2.1" />
+      <circle cx="18" cy="9" r="2" />
+      <path d="M12 11.5c-2.6 0-4.7 2-4.7 4.2 0 1.5 1.2 2.3 2.7 2.3.9 0 1.4-.3 2-.3s1.1.3 2 .3c1.5 0 2.7-.8 2.7-2.3 0-2.2-2.1-4.2-4.7-4.2z" />
+    </svg>
+  );
+}
+
 export default async function PromotionsPage() {
   const promotions = await listActivePromotions();
-  const highlight = promotions[0] ?? null;
-  const otherPromotions = promotions.slice(1);
 
   return (
-    <div className="content-container py-10 sm:py-14">
-      <section className="rounded-[34px] bg-[linear-gradient(135deg,#6817b5_0%,#9f38f6_46%,#ef4fb3_100%)] p-1.5 shadow-[0_20px_54px_rgba(43,14,70,0.18)]">
-        <div className="rounded-[28px] bg-[#fff9f2] p-6 sm:p-8">
-          <div className="grid gap-7 lg:grid-cols-[1fr_0.82fr] lg:items-center">
+    <>
+      <PageHead
+        eyebrow={
+          <>
+            <Paw className="paw" /> Promocoes
+          </>
+        }
+        title={
+          <>
+            Ofertas e <span className="rosa">vantagens</span> da Laikao.
+          </>
+        }
+        description="O que esta valendo agora, mais o jeito mais facil de receber tudo: entrega ou retirada, e iFood ate meia-noite."
+      />
+
+      <section className="sec" style={{ paddingTop: 24 }}>
+        <div className="lk-wrap">
+          <div className="promo-destaque">
             <div>
-              <p className="promo-badge-hot">Promocoes</p>
-              <h1 className="mt-4 font-heading text-4xl font-extrabold leading-tight text-brand-900 sm:text-5xl">
-                Ofertas e campanhas do Laikao sem complicacao.
-              </h1>
-              <p className="mt-3 max-w-2xl text-base font-semibold leading-7 text-brand-950/75">
-                Produtos, iFood, retirada e campanhas em uma pagina mais direta, com menos ruido e mais foco.
+              <span className="selo">
+                <Paw className="paw" /> Sempre disponivel
+              </span>
+              <h2>Agora tambem no iFood, ate meia-noite.</h2>
+              <p>
+                Esqueceu a racao ou o petisco acabou tarde da noite? A Laikao entrega pelo iFood ate meia-noite. E se preferir,
+                voce compra e retira na loja.
               </p>
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <Link href="/produtos"><Button size="lg">Ver produtos</Button></Link>
-                <a href={siteConfig.quickLinks.ifood.href} target="_blank" rel="noreferrer">
-                  <Button variant="secondary" size="lg"><ShoppingBag className="h-4 w-4" />Pedir no iFood</Button>
+              <div className="acoes">
+                <a className="btn btn--rosa" href={siteConfig.quickLinks.ifood.href} target="_blank" rel="noreferrer">
+                  Pedir no iFood
                 </a>
+                <Link className="btn btn--linha" href={publicRoutes.products}>
+                  Ver a loja
+                </Link>
               </div>
             </div>
+            <div className="photo-frame photo-frame--quadro" aria-hidden="true" style={{ boxShadow: "none", outlineColor: "rgba(255,255,255,.5)" }}>
+              <div className="ph-fallback">
+                <svg className="big-paw" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3 7h13v8H3z" />
+                  <path d="M16 10h3l2 3v2h-5z" />
+                  <circle cx="7" cy="17" r="1.8" />
+                  <circle cx="17" cy="17" r="1.8" />
+                </svg>
+                <span>Entrega ou retirada, do seu jeito</span>
+              </div>
+            </div>
+          </div>
 
-            {highlight ? (
-              <article className="rounded-[24px] bg-white p-5 shadow-[inset_0_0_0_2px_rgba(104,23,181,0.1)]">
-                {highlight.banners[0]?.imageThumbUrl ? (
-                  <div className="mb-4 overflow-hidden rounded-[18px]">
-                    <Image src={highlight.banners[0].imageThumbUrl} alt={highlight.banners[0].imageAlt ?? highlight.title} width={960} height={540} className="h-auto w-full object-cover" />
-                  </div>
-                ) : null}
-                <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--magenta-600)]">Campanha em destaque</p>
-                <h2 className="mt-2 font-heading text-2xl font-extrabold text-brand-900">{highlight.title}</h2>
-                <p className="mt-2 text-sm leading-6 text-stone-600">{highlight.description ?? "Campanha ativa com condicoes especiais para cuidar melhor do seu pet."}</p>
-                <Link href={(highlight.ctaLink ?? "/produtos") as "/produtos"} className="mt-4 inline-flex">
-                  <Button variant="secondary">{highlight.ctaLabel ?? "Aproveitar"}</Button>
-                </Link>
+          <div className="promo-grid">
+            <article className="promo">
+              <span className="faixinha">Vantagem fixa</span>
+              <h3>Retire na loja sem frete</h3>
+              <p>Compre pelo site ou WhatsApp e retire na Laikao, na Vila Nova Cachoeirinha, sem pagar entrega.</p>
+              <Link className="btn btn--rosa promo-cta" href={publicRoutes.products}>
+                Montar pedido
+              </Link>
+            </article>
+
+            <article className="promo">
+              <span className="faixinha">Vantagem fixa</span>
+              <h3>Atendimento ate meia-noite</h3>
+              <p>Pedidos pelo iFood com a loja aberta ate tarde, pros perrengues de ultima hora.</p>
+              <a className="btn btn--rosa promo-cta" href={siteConfig.quickLinks.ifood.href} target="_blank" rel="noreferrer">
+                Pedir no iFood
+              </a>
+            </article>
+
+            {promotions.map((promotion) => (
+              <article key={promotion.id} className="promo">
+                <span className="faixinha">{promotion.type ?? "Campanha"}</span>
+                <h3>{promotion.title}</h3>
+                <p>{promotion.description ?? "Aproveite e cuide melhor do seu pet."}</p>
+                <a className="btn btn--rosa promo-cta" href={promotion.ctaLink ?? publicRoutes.products}>
+                  {promotion.ctaLabel ?? "Aproveitar"}
+                </a>
               </article>
-            ) : (
-              <article className="rounded-[24px] bg-white p-5 shadow-[inset_0_0_0_2px_rgba(104,23,181,0.1)]">
-                <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--magenta-600)]">Em breve</p>
-                <h2 className="mt-2 font-heading text-2xl font-extrabold text-brand-900">Novas campanhas aparecem aqui.</h2>
-                <p className="mt-2 text-sm leading-6 text-stone-600">Enquanto isso, veja a loja ou fale com o Laikao no WhatsApp.</p>
+            ))}
+
+            {promotions.length === 0 ? (
+              <article className="promo promo--futuro">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M12 8v8M8 12h8" />
+                  <circle cx="12" cy="12" r="9" />
+                </svg>
+                <b>Novas campanhas em breve</b>
+                <p style={{ margin: ".3rem 0 0" }}>Siga o @pet_laikao pra ser a primeira a saber.</p>
               </article>
-            )}
+            ) : null}
           </div>
         </div>
       </section>
 
-      {otherPromotions.length > 0 ? (
-        <section className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {otherPromotions.map((promotion) => (
-            <article key={promotion.id} className="rounded-[24px] bg-white p-5 shadow-[0_14px_34px_rgba(43,14,70,0.08)]">
-              <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--magenta-600)]">{promotion.type}</p>
-              <h2 className="mt-2 font-heading text-2xl font-extrabold text-brand-900">{promotion.title}</h2>
-              <p className="mt-2 text-sm leading-6 text-stone-600">{promotion.description ?? "Promocao para cuidar melhor do seu pet."}</p>
-              <Link href={(promotion.ctaLink ?? "/produtos") as "/produtos"} className="mt-4 inline-flex">
-                <Button variant="secondary">{promotion.ctaLabel ?? "Aproveitar"}</Button>
-              </Link>
-            </article>
-          ))}
-        </section>
-      ) : null}
-    </div>
+      <section className="sec" style={{ paddingTop: 0 }}>
+        <div className="lk-wrap">
+          <div className="cta-band">
+            <h2>Nao quer perder nenhuma oferta?</h2>
+            <p>Acompanha a gente no Instagram e fala no WhatsApp pra saber das novidades primeiro.</p>
+            <div className="acoes">
+              <a className="btn btn--linha" href={siteConfig.instagramUrl} target="_blank" rel="noreferrer">
+                Seguir no Instagram
+              </a>
+              <a className="btn btn--claro" href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer">
+                Falar no WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

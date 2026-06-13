@@ -1,67 +1,134 @@
-import { Clock3, Instagram, MapPinned, MessageCircle, Navigation, ShoppingBag } from "lucide-react";
+import Link from "next/link";
 
-import { FormPrivacyNotice } from "@/components/legal/form-privacy-notice";
-import { Button } from "@/components/ui/button";
+import { PageHead } from "@/components/marketing/page-head";
 import { siteConfig } from "@/config/site";
+import { publicRoutes } from "@/lib/routes";
+
+function Paw({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <circle cx="6" cy="9" r="2" />
+      <circle cx="12" cy="6.5" r="2.1" />
+      <circle cx="18" cy="9" r="2" />
+      <path d="M12 11.5c-2.6 0-4.7 2-4.7 4.2 0 1.5 1.2 2.3 2.7 2.3.9 0 1.4-.3 2-.3s1.1.3 2 .3c1.5 0 2.7-.8 2.7-2.3 0-2.2-2.1-4.2-4.7-4.2z" />
+    </svg>
+  );
+}
+
+const Arrow = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M5 12h14M13 6l6 6-6 6" />
+  </svg>
+);
+
+const Zap = (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.8.7.8-2.7-.2-.3A8 8 0 1 1 12 20z" />
+  </svg>
+);
 
 export default function ContactPage() {
   return (
-    <div className="content-container py-10 sm:py-14">
-      <section className="promo-frame">
-        <div className="promo-panel grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
-          <div className="space-y-4">
-            <div className="flex flex-wrap gap-2">
-              <span className="promo-badge">Contato</span>
-              <span className="promo-badge-hot">Pratico e direto</span>
-            </div>
-            <h1 className="promo-title">
-              Estamos prontos para atender <span className="promo-word">voce e seu pet</span>
-            </h1>
-            <p className="text-base font-semibold leading-7 text-brand-950">Visite nossa loja, fale com a gente no WhatsApp, compre pelo iFood ou acompanhe novidades no Instagram.</p>
+    <>
+      <PageHead
+        eyebrow={
+          <>
+            <Paw className="paw" /> Contato
+          </>
+        }
+        title={
+          <>
+            Vem falar com a <span className="rosa">Laikao.</span>
+          </>
+        }
+        description="Estamos pertinho, na Vila Nova Cachoeirinha. Chame no WhatsApp, abra a rota ou siga a gente no Instagram."
+        actions={
+          <>
+            <a className="btn btn--zap" href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer">
+              {Zap} Falar no WhatsApp
+            </a>
+            <Link className="btn btn--rosa" href={publicRoutes.schedule}>
+              Agendar horario
+            </Link>
+          </>
+        }
+      />
 
-            <div className="grid gap-3 sm:grid-cols-2">
-              <article className="promo-card"><MessageCircle className="h-5 w-5 text-success-500" /><p className="mt-2 text-sm text-stone-500">WhatsApp</p><p className="font-extrabold text-brand-900">{siteConfig.whatsappNumber}</p></article>
-              <article className="promo-card bg-[var(--magenta-100)]"><Instagram className="h-5 w-5 text-[var(--magenta-600)]" /><p className="mt-2 text-sm text-stone-500">Instagram</p><p className="font-extrabold text-brand-900">{siteConfig.instagramHandle}</p></article>
-              <article className="promo-card sm:col-span-2"><MapPinned className="h-5 w-5 text-brand-600" /><p className="mt-2 text-sm text-stone-500">Endereco</p><p className="font-extrabold text-brand-900">{siteConfig.address}</p></article>
+      <section className="sec" style={{ paddingTop: 24 }}>
+        <div className="lk-wrap">
+          <div className="visita-grid">
+            <div className="vcard">
+              <div className="vi">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M5 4h4l2 5-2 1c1 2 2 3 4 4l1-2 5 2v4c0 1-1 2-2 2A16 16 0 0 1 3 6c0-1 1-2 2-2z" />
+                </svg>
+              </div>
+              <h3>WhatsApp</h3>
+              <p>Resposta rapida pra agendar ou tirar duvida.</p>
+              <a className="link" href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer">
+                {siteConfig.whatsappNumber} {Arrow}
+              </a>
+            </div>
+
+            <div className="vcard">
+              <div className="vi">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="3" y="3" width="18" height="18" rx="5" />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" />
+                </svg>
+              </div>
+              <h3>Instagram</h3>
+              <p>Novidades, promocoes e os pets mais fofos do dia.</p>
+              <a className="link" href={siteConfig.instagramUrl} target="_blank" rel="noreferrer">
+                {siteConfig.instagramHandle} {Arrow}
+              </a>
+            </div>
+
+            <div className="vcard">
+              <div className="vi">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z" />
+                  <circle cx="12" cy="10" r="2.5" />
+                </svg>
+              </div>
+              <h3>Endereco</h3>
+              <p>{siteConfig.addressLine}, {siteConfig.addressNeighborhood}.</p>
+              <a className="link" href={siteConfig.mapUrl} target="_blank" rel="noreferrer">
+                Abrir no mapa {Arrow}
+              </a>
+            </div>
+
+            <div className="vcard">
+              <div className="vi">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 7v5l3 2" />
+                </svg>
+              </div>
+              <h3>Horario</h3>
+              <p>Segunda a sabado, das 8h as 19h. iFood ate meia-noite.</p>
+              <a className="link" href={siteConfig.quickLinks.ifood.href} target="_blank" rel="noreferrer">
+                Pedir no iFood {Arrow}
+              </a>
             </div>
           </div>
 
-          <div className="promo-panel-white">
-            <h2 className="font-heading text-3xl font-extrabold text-[var(--magenta-600)]">Quer agendar ou saber mais?</h2>
-            <p className="mt-2 text-sm text-stone-600">Fale com a gente no WhatsApp.</p>
-            <div className="mt-5 grid gap-3">
-              <a href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer"><Button size="lg" fullWidth><MessageCircle className="h-4 w-4" />Falar no WhatsApp</Button></a>
-              <a href={siteConfig.instagramUrl} target="_blank" rel="noreferrer"><Button variant="secondary" size="lg" fullWidth><Instagram className="h-4 w-4" />Abrir Instagram</Button></a>
-              <a href={siteConfig.mapUrl} target="_blank" rel="noreferrer"><Button variant="secondary" size="lg" fullWidth><Navigation className="h-4 w-4" />Ver localizacao</Button></a>
-              <a href={siteConfig.quickLinks.ifood.href} target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-dashed border-[var(--sun-300)] bg-[var(--sun-100)]/85 px-4 py-3 text-sm font-semibold text-brand-900"><ShoppingBag className="h-4 w-4" />Pedir no iFood</a>
-            </div>
-            <div className="mt-5">
-              <FormPrivacyNotice compact />
-            </div>
+          <div className="mapa">
+            <iframe
+              title="Mapa da Pet Shop Laikao"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps?q=Rua+Franklin+do+Amaral+271,+Vila+Nova+Cachoeirinha,+Sao+Paulo,+SP&output=embed"
+            />
           </div>
+
+          <p className="lgpd">
+            Ao falar com a gente, voce concorda com o tratamento das informacoes para atendimento, agendamento, compra e
+            suporte, conforme nossa <Link href={publicRoutes.privacy}>Politica de Privacidade</Link>.
+          </p>
         </div>
       </section>
-
-      <section className="mt-8 grid gap-4 lg:grid-cols-[1fr_1.1fr]">
-        <article className="promo-frame">
-          <div className="promo-panel-white">
-          <h2 className="font-heading text-2xl font-extrabold text-brand-900">Horario e visita</h2>
-          <div className="mt-4 grid gap-3">
-            <div className="rounded-[16px] border-2 border-brand-100 p-4"><p className="inline-flex items-center gap-2 text-sm font-extrabold text-brand-900"><Clock3 className="h-4 w-4 text-brand-600" />{siteConfig.hoursLabel}</p></div>
-            <div className="rounded-[16px] border-2 border-brand-900 bg-[var(--sun-100)] p-4"><p className="inline-flex items-center gap-2 text-sm font-extrabold text-brand-900"><MapPinned className="h-4 w-4 text-brand-600" />{siteConfig.address}</p></div>
-          </div>
-          </div>
-        </article>
-
-        <div className="overflow-hidden rounded-[28px] border-[5px] border-brand-900 bg-white shadow-[var(--shadow-soft)]">
-          <div className="flex min-h-[19rem] flex-col items-center justify-center bg-[#fff9f2] p-8 text-center">
-            <MapPinned className="h-9 w-9 text-brand-600" />
-            <h2 className="mt-4 font-heading text-2xl font-extrabold text-brand-900">Mapa e chegada rapida</h2>
-            <p className="mt-2 max-w-lg text-sm leading-6 text-stone-600">A cliente abre rota em um toque e chega sem friccao.</p>
-            <a href={siteConfig.mapUrl} target="_blank" rel="noreferrer" className="mt-5"><Button size="lg">Abrir no mapa</Button></a>
-          </div>
-        </div>
-      </section>
-    </div>
+    </>
   );
 }
