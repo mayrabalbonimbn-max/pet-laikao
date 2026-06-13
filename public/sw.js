@@ -1,4 +1,4 @@
-const SW_VERSION = "laikao-pwa-v3";
+const SW_VERSION = "laikao-pwa-v4";
 const STATIC_CACHE = `${SW_VERSION}-static`;
 const RUNTIME_CACHE = `${SW_VERSION}-runtime`;
 
