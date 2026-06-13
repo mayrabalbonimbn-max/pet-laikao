@@ -3,3 +3,5 @@ dist
 .env
 .env.local
 *.log
+# copia local do schema (fonte unica fica em ../prisma/schema.prisma)
+prisma/schema.prisma
