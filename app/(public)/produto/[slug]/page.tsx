@@ -47,8 +47,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         </Link>
       </div>
 
-      <section className="rounded-[34px] bg-[linear-gradient(135deg,#6817b5_0%,#9f38f6_54%,#ef4fb3_100%)] p-1.5 shadow-[0_22px_60px_rgba(43,14,70,0.2)]">
-        <div className="grid gap-6 rounded-[28px] bg-[#fff9f2] p-5 sm:p-7 xl:grid-cols-[1.04fr_0.96fr] xl:items-start">
+      <section className="rounded-[34px] bg-[linear-gradient(125deg,var(--roxo-profundo)_0%,var(--roxo)_54%,var(--rosa)_100%)] p-1.5 shadow-[0_22px_60px_rgba(74,21,104,0.2)]">
+        <div className="grid gap-6 rounded-[28px] bg-white p-5 sm:p-7 xl:grid-cols-[1.04fr_0.96fr] xl:items-start">
           <ProductGallery
             images={product.images}
             fallbackLabel={product.imageLabel}
@@ -80,10 +80,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
       <section className="mt-7 grid gap-4 lg:grid-cols-4">
         {[
-          { icon: ShieldCheck, title: "Compra segura", text: "Produto conectado ao estoque real da loja." },
-          { icon: Truck, title: "Entrega ou retirada", text: "Fluxo preparado para retirada na loja e entrega." },
-          { icon: PackageCheck, title: "Estoque claro", text: "Disponibilidade visivel antes da compra." },
-          { icon: HeartHandshake, title: "Atendimento Laikao", text: "Suporte proximo para escolher o item certo." }
+          { icon: ShieldCheck, title: "Compra tranquila", text: "Voce confirma a disponibilidade com a gente antes de fechar." },
+          { icon: Truck, title: "Entrega ou retirada", text: "Receba pelo iFood ate meia-noite ou retire na loja." },
+          { icon: PackageCheck, title: "Sempre fresquinho", text: "Produtos certos pro dia a dia do seu pet." },
+          { icon: HeartHandshake, title: "Atendida pela Cris", text: "A gente ajuda voce a escolher o item certo." }
         ].map((item) => (
           <article key={item.title} className="rounded-[22px] bg-white p-5 shadow-[var(--shadow-soft)] ring-1 ring-brand-100">
             <item.icon className="h-5 w-5 text-[var(--magenta-600)]" />
@@ -96,24 +96,24 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       <section className="mt-7 rounded-[28px] bg-brand-900 p-5 text-white shadow-[0_18px_44px_rgba(43,14,70,0.16)] sm:p-6">
         <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
-            <p className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.14em] text-[var(--sun-300)]">
+            <p className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.14em] text-[var(--rosa-claro)]">
               <Sparkles className="h-4 w-4" />
-              Informacoes do produto
+              Como receber
             </p>
-            <h2 className="mt-2 font-heading text-2xl font-extrabold text-white">Detalhes para comprar sem duvida.</h2>
+            <h2 className="mt-2 font-heading text-2xl font-extrabold text-white">Do seu jeito: retire na loja ou peca pelo iFood.</h2>
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="rounded-[18px] bg-white/10 p-4">
-              <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--sun-300)]">Categoria</p>
-              <p className="mt-1 font-semibold">{product.categoryName ?? "Catalogo"}</p>
+              <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--rosa-claro)]">Categoria</p>
+              <p className="mt-1 font-semibold">{product.categoryName ?? "Loja Laikao"}</p>
             </div>
             <div className="rounded-[18px] bg-white/10 p-4">
-              <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--sun-300)]">Versoes</p>
-              <p className="mt-1 font-semibold">{activeVariants.length || 0} disponivel(is)</p>
+              <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--rosa-claro)]">Retirada</p>
+              <p className="mt-1 font-semibold">Na loja, sem frete</p>
             </div>
             <div className="rounded-[18px] bg-white/10 p-4">
-              <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--sun-300)]">Promocao</p>
-              <p className="mt-1 font-semibold">{hasDiscount ? "Com preco comparativo" : "Preco regular"}</p>
+              <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--rosa-claro)]">Entrega</p>
+              <p className="mt-1 font-semibold">iFood ate meia-noite</p>
             </div>
           </div>
         </div>
