@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import { siteConfig } from "@/config/site";
 import { publicRoutes } from "@/lib/routes";
@@ -69,10 +70,13 @@ export function HeroBanner() {
         </div>
 
         <div className="photo-frame" aria-label="Foto da Cris com um pet">
-          <div className="ph-fallback">
-            <Paw className="big-paw" />
-            <span>Coloque aqui uma foto da Cris com um pet feliz</span>
-          </div>
+          <Image
+            src="/images/cris-pets.jpg"
+            alt="Cris, da Pet Shop Laikão, com um golden retriever e um pug"
+            fill
+            priority
+            sizes="(min-width: 920px) 44vw, 100vw"
+          />
           <div className="frame-badge">
             <span className="dot" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="currentColor">

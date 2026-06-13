@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import { HeroBanner } from "@/components/marketing/hero-banner";
 import { siteConfig } from "@/config/site";
@@ -131,10 +132,12 @@ export default function HomePage() {
       <section className="sec sec--lav">
         <div className="lk-wrap sobre-grid">
           <div className="photo-frame photo-frame--quadro" aria-label="Foto da loja Laikao">
-            <div className="ph-fallback">
-              <Paw className="big-paw" />
-              <span>Foto da loja ou da Cris atendendo</span>
-            </div>
+            <Image
+              src="/images/fachada-loja.jpg"
+              alt="Fachada da Pet Shop Laikão, na Vila Nova Cachoeirinha"
+              fill
+              sizes="(min-width: 920px) 45vw, 100vw"
+            />
           </div>
           <div className="txt">
             <span className="selo sec-eyebrow">Quem e a Laikao</span>
