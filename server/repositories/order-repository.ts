@@ -2,7 +2,6 @@ import { Prisma } from "@prisma/client";
 
 import { db } from "@/server/db/client";
 import { PaymentMethod, PaymentPurpose } from "@/domains/payments/types";
-import { ensureCommerceSeedData } from "@/server/services/commerce-seed-service";
 import { OrderDetailView, OrderPaymentListItem, OrderRecord, OrderTimelineEntry } from "@/domains/orders/types";
 import { formatCurrency } from "@/lib/formatters";
 import { LEGACY_DEMO_ORDER_IDS } from "@/server/services/demo-data-hygiene-service";
@@ -12,7 +11,7 @@ function nextId(prefix: string) {
 }
 
 async function ensureInfrastructure() {
-  await ensureCommerceSeedData();
+  return;
 }
 
 const orderInclude = Prisma.validator<Prisma.OrderDefaultArgs>()({

@@ -44,6 +44,19 @@ function addDays(date: Date, amount: number) {
   return clone;
 }
 
+function getTodayDateKey(timeZone = "America/Sao_Paulo") {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(new Date());
+  const year = parts.find((part) => part.type === "year")?.value;
+  const month = parts.find((part) => part.type === "month")?.value;
+  const day = parts.find((part) => part.type === "day")?.value;
+  return `${year}-${month}-${day}`;
+}
+
 function getVisibleDateKeys(selectedDate: string, view: CalendarView) {
   const baseDate = new Date(`${selectedDate}T12:00:00.000Z`);
 
@@ -66,7 +79,7 @@ export async function getAgendaBootstrapData(): Promise<AgendaBootstrapData> {
   return {
     services: await listServices(),
     customers: mapCustomersWithPets(customers, pets),
-    initialSelectedDate: "2026-04-21",
+    initialSelectedDate: getTodayDateKey(),
     holdDurationSeconds: await getHoldDurationSeconds()
   };
 }

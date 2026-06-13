@@ -1,5 +1,4 @@
 import { db } from "@/server/db/client";
-import { ensureSqliteDatabaseSchema } from "@/server/db/bootstrap";
 import { ensureAppointmentSeedData } from "@/server/services/appointment-seed-service";
 import { categorySeed } from "@/domains/catalog/constants";
 import { cleanupLegacyDemoData } from "@/server/services/demo-data-hygiene-service";
@@ -10,7 +9,6 @@ declare global {
 }
 
 async function seed() {
-  await ensureSqliteDatabaseSchema();
   await ensureAppointmentSeedData();
   await cleanupLegacyDemoData();
 

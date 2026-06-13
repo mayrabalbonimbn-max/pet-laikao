@@ -326,7 +326,7 @@ export function AgendaBookingFlow({
 
       toast.success(
         kind === "initial"
-          ? "Cobranca da InfinitePay criada para o agendamento."
+          ? "Cobranca criada para o agendamento."
           : "Cobranca do saldo gerada com sucesso."
       );
     } catch (error) {
@@ -481,10 +481,9 @@ export function AgendaBookingFlow({
     <div className="space-y-5">
       <div className="space-y-3">
         <p className="eyebrow">Agenda online</p>
-        <h1 className="page-title">Fluxo de agendamento real, com hold de slot, checkout integrado da InfinitePay e leitura coerente no admin.</h1>
+        <h1 className="page-title">Agendamento online com reserva de horário, pagamento e acompanhamento no painel.</h1>
         <p className="max-w-3xl text-base leading-7 text-stone-500">
-          A interface continua leve, mas agora conversa com um dominio real de agendamentos, regras de disponibilidade,
-          hold temporario, cobranca real e transicoes protegidas por state machine.
+          Escolha o serviço, informe o pet, reserve um horário disponível e acompanhe a confirmação do pagamento no mesmo fluxo.
         </p>
       </div>
 
@@ -493,9 +492,9 @@ export function AgendaBookingFlow({
       <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
         <div className="space-y-6">
           <section className="space-y-4">
-            <div>
-              <p className="text-sm font-semibold text-ink-900">1. Escolha o servico</p>
-              <p className="text-sm text-stone-500">Catalogo centralizado em dominio, nao espalhado pela UI.</p>
+              <div>
+                <p className="text-sm font-semibold text-ink-900">1. Escolha o servico</p>
+                <p className="text-sm text-stone-500">Serviços cadastrados no painel da loja.</p>
             </div>
             <ServiceSelector services={bootstrap.services} selectedServiceId={selectedServiceId} onSelect={setSelectedServiceId} />
           </section>
@@ -521,7 +520,7 @@ export function AgendaBookingFlow({
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm font-semibold text-ink-900">2. Selecione data e horario</p>
-                <p className="text-sm text-stone-500">Views mensal, semanal e diaria usando a mesma camada de disponibilidade.</p>
+                <p className="text-sm text-stone-500">Veja os horários disponíveis por mês, semana ou dia.</p>
               </div>
               <CalendarViewSwitcher value={selectedView} onChange={setSelectedView} />
             </div>
@@ -556,7 +555,7 @@ export function AgendaBookingFlow({
             <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
               <div className="space-y-1">
                 <p className="text-sm font-semibold text-ink-900">3. Defina a forma de pagamento</p>
-                <p className="text-sm text-stone-500">Pix e cartao seguem pelo checkout integrado da InfinitePay, sem jogar regra financeira na tela.</p>
+                <p className="text-sm text-stone-500">Escolha Pix ou cartão para confirmar a reserva.</p>
               </div>
               <div className="w-full md:w-52">
                 <Select
@@ -573,8 +572,8 @@ export function AgendaBookingFlow({
             <PaymentOptionSelector value={paymentOption} totalCents={selectedService?.priceCents} onChange={setPaymentOption} />
             <InlineNotice
               tone="warning"
-              title="Hold e pagamento continuam separados, mas no mesmo fluxo"
-              description="Ao avancar, o slot entra em hold temporario. A confirmacao, falha ou expiracao do pagamento muda o estado do agendamento pelo dominio."
+              title="Horário reservado enquanto o pagamento é concluído"
+              description="Ao avançar, o horário fica protegido por alguns minutos. A confirmação, falha ou expiração do pagamento atualiza o agendamento automaticamente."
             />
           </section>
         </div>

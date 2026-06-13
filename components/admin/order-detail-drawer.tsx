@@ -1,13 +1,15 @@
 "use client";
 
 import { CircleDollarSign, ExternalLink, PackageCheck, ScrollText, Truck } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { OperationalStatusPill } from "@/components/status/operational-status-pill";
 import { PaymentStatusPill } from "@/components/status/payment-status-pill";
 import { inventoryStateLabels } from "@/domains/orders/constants";
-import { OrderDetailView } from "@/domains/orders/types";
+import { OrderDetailView, OrderTransitionEvent } from "@/domains/orders/types";
 import { paymentMethodLabels, paymentPurposeLabels } from "@/domains/payments/constants";
 import { formatCurrency } from "@/lib/formatters";
 
@@ -21,35 +23,95 @@ function formatDateTime(value: string) {
   }).format(new Date(value));
 }
 
+type OrderAction = {
+  label: string;
+  type: "payment_intent" | OrderTransitionEvent["type"];
+  tone?: "danger";
+};
+
 function getVisibleActions(detail: OrderDetailView) {
-  const actions: string[] = [];
+  const actions: OrderAction[] = [];
 
   if (detail.order.paymentStatus !== "paid" && detail.order.status !== "cancelled" && detail.order.status !== "delivered") {
-    actions.push("Gerar cobranca");
+    actions.push({ label: "Gerar cobrança", type: "payment_intent" });
   }
 
   if (detail.order.status === "paid") {
-    actions.push("Iniciar separacao");
+    actions.push({ label: "Iniciar separação", type: "start_processing" });
   }
 
   if (detail.order.status === "processing") {
-    actions.push("Marcar pronto");
-    actions.push("Marcar enviado");
+    actions.push({ label: "Marcar pronto", type: "mark_ready_for_pickup" });
+    actions.push({ label: "Marcar enviado", type: "mark_shipped" });
   }
 
   if (detail.order.status === "ready_for_pickup" || detail.order.status === "shipped") {
-    actions.push("Marcar entregue");
+    actions.push({ label: "Marcar entregue", type: "mark_delivered" });
   }
 
   if (detail.order.status !== "cancelled" && detail.order.status !== "delivered") {
-    actions.push("Cancelar");
+    actions.push({ label: "Cancelar", type: "cancel", tone: "danger" });
   }
 
   return actions;
 }
 
 export function OrderDetailDrawer({ detail }: { detail: OrderDetailView }) {
+  const router = useRouter();
   const visibleActions = getVisibleActions(detail);
+  const [isPending, startTransition] = useTransition();
+  const [actionMessage, setActionMessage] = useState<{ tone: "success" | "error"; text: string } | null>(null);
+
+  function runAction(action: OrderAction) {
+    setActionMessage(null);
+
+    startTransition(async () => {
+      try {
+        if (action.type === "payment_intent") {
+          const response = await fetch(`/api/orders/${detail.order.id}/payment-intent`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ method: "pix" })
+          });
+          const payload = await response.json();
+          if (!response.ok) {
+            throw new Error(typeof payload?.message === "string" ? payload.message : "Não foi possível gerar a cobrança.");
+          }
+
+          setActionMessage({
+            tone: "success",
+            text: payload?.payment?.checkoutUrl
+              ? "Cobrança gerada. O link aparece em pagamentos vinculados."
+              : "Pedido atualizado, mas o provedor não retornou um link de pagamento."
+          });
+          router.refresh();
+          return;
+        }
+
+        const response = await fetch(`/api/orders/${detail.order.id}/transition`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ event: action.type })
+        });
+        const payload = await response.json();
+        if (!response.ok) {
+          throw new Error(typeof payload?.message === "string" ? payload.message : "Não foi possível atualizar o pedido.");
+        }
+
+        setActionMessage({ tone: "success", text: "Pedido atualizado com segurança." });
+        router.refresh();
+      } catch (error) {
+        setActionMessage({
+          tone: "error",
+          text: error instanceof Error ? error.message : "Não foi possível concluir esta ação."
+        });
+      }
+    });
+  }
 
   return (
     <Drawer>
@@ -136,7 +198,7 @@ export function OrderDetailDrawer({ detail }: { detail: OrderDetailView }) {
                         rel="noreferrer"
                         className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-brand-700 hover:text-brand-800"
                       >
-                        Abrir checkout da InfinitePay
+                        Abrir cobrança
                         <ExternalLink className="h-4 w-4" />
                       </a>
                     ) : null}
@@ -171,11 +233,22 @@ export function OrderDetailDrawer({ detail }: { detail: OrderDetailView }) {
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {visibleActions.map((action) => (
-                <Button key={action} variant="secondary" fullWidth>
-                  {action}
+                <Button
+                  key={`${action.type}-${action.label}`}
+                  variant={action.tone === "danger" ? "ghost" : "secondary"}
+                  fullWidth
+                  disabled={isPending}
+                  onClick={() => runAction(action)}
+                >
+                  {isPending ? "Atualizando..." : action.label}
                 </Button>
               ))}
             </div>
+            {actionMessage ? (
+              <p className={actionMessage.tone === "success" ? "text-sm font-semibold text-success-500" : "text-sm font-semibold text-error-500"}>
+                {actionMessage.text}
+              </p>
+            ) : null}
           </div>
         </div>
       </DrawerContent>

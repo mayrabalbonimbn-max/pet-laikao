@@ -3,7 +3,6 @@ import { randomUUID } from "node:crypto";
 import { Prisma } from "@prisma/client";
 
 import { db } from "@/server/db/client";
-import { ensureAppointmentSeedData } from "@/server/services/appointment-seed-service";
 import {
   LEGACY_DEMO_APPOINTMENT_IDS,
   LEGACY_DEMO_ORDER_IDS
@@ -18,7 +17,7 @@ import {
 } from "@/domains/payments/types";
 
 async function ensureInfrastructure() {
-  await ensureAppointmentSeedData();
+  return;
 }
 
 const paymentWithRelations = Prisma.validator<Prisma.PaymentDefaultArgs>()({

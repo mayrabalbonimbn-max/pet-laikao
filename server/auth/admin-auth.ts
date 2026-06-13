@@ -4,7 +4,6 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { db } from "@/server/db/client";
-import { ensureAdminSeedData } from "@/server/services/admin-seed-service";
 
 const ADMIN_SESSION_COOKIE = "laikao_admin_session";
 const SESSION_TTL_DAYS = 14;
@@ -85,7 +84,6 @@ export async function clearAdminSession() {
 }
 
 export async function authenticateAdmin(email: string, password: string) {
-  await ensureAdminSeedData();
   const normalizedEmail = email.trim().toLowerCase();
   const user = await db.adminUser.findUnique({
     where: { email: normalizedEmail }
@@ -136,7 +134,6 @@ export async function authenticateAdmin(email: string, password: string) {
 }
 
 export async function getAdminSessionUser() {
-  await ensureAdminSeedData();
   const cookieStore = await cookies();
   const token = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
   if (!token) {

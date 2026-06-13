@@ -14,7 +14,7 @@ import {
 import { mapAppointmentToHoldResponse } from "@/domains/appointments/mappers";
 import { calculateAmounts } from "@/domains/appointments/policies";
 import { getAvailabilityData } from "@/domains/appointments/queries";
-import { appointmentHoldSchema, paymentSimulationSchema, releaseHoldSchema } from "@/domains/appointments/schema";
+import { appointmentHoldSchema, releaseHoldSchema } from "@/domains/appointments/schema";
 import { transitionAppointment } from "@/domains/appointments/state-machine";
 import { addMinutes } from "@/domains/appointments/utils";
 
@@ -113,47 +113,6 @@ export async function createAppointmentHold(input: unknown) {
   const refreshed = await getAppointmentById(saved.id);
   if (!refreshed) {
     throw new Error("Agendamento não encontrado após criação do hold.");
-  }
-
-  return mapAppointmentToHoldResponse(refreshed);
-}
-
-export async function simulateAppointmentPayment(input: unknown) {
-  const payload = paymentSimulationSchema.parse(input);
-  const appointment = await getAppointmentById(payload.appointmentId);
-
-  if (!appointment) {
-    throw new Error("Agendamento não encontrado.");
-  }
-
-  const transitioned =
-    payload.outcome === "success"
-      ? transitionAppointment(appointment, {
-          type: "payment_confirmed",
-          paymentOption: appointment.paymentOption
-        })
-      : transitionAppointment(appointment, { type: "payment_failed" });
-
-  const saved = await saveAppointment({
-    ...transitioned,
-    paymentMethod: payload.paymentMethod
-  });
-
-  await updateAppointmentHoldStatus(saved.id, payload.outcome === "success" ? "converted" : "released");
-
-  await addAppointmentTimeline(
-    saved.id,
-    payload.outcome === "success" ? "Pagamento confirmado" : "Pagamento falhou",
-    payload.outcome === "success"
-      ? appointment.paymentOption === "deposit_50"
-        ? "Pagamento parcial confirmado com saldo pendente."
-        : "Pagamento integral confirmado."
-      : "Tentativa de pagamento falhou antes da confirmação."
-  );
-
-  const refreshed = await getAppointmentById(saved.id);
-  if (!refreshed) {
-    throw new Error("Agendamento não encontrado após simular pagamento.");
   }
 
   return mapAppointmentToHoldResponse(refreshed);

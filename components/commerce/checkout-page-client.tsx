@@ -172,11 +172,11 @@ export function CheckoutPageClient() {
             return;
           }
 
-          setPendingOrderWithoutCheckout({
-            id: paymentIntent.order.id,
-            orderNumber: paymentIntent.order.orderNumber,
-            reason: "O pedido foi criado, mas a InfinitePay nao retornou uma URL valida de checkout."
-          });
+        setPendingOrderWithoutCheckout({
+          id: paymentIntent.order.id,
+          orderNumber: paymentIntent.order.orderNumber,
+          reason: "O pedido foi criado, mas a cobrança online não retornou um link válido."
+        });
         } catch (paymentError) {
           setPendingOrderWithoutCheckout({
             id: result.orderId,
@@ -235,7 +235,7 @@ export function CheckoutPageClient() {
                   {paymentStatusView?.order ? `Pedido ${paymentStatusView.order.orderNumber}` : "Consulta de pagamento do pedido"}
                 </h2>
                 <p className="text-sm leading-6 text-stone-500">
-                  O checkout voltou da InfinitePay e esta lendo o estado financeiro real da cobranca vinculada ao pedido.
+                  O pagamento retornou e o pedido está lendo o estado financeiro vinculado à cobrança.
                 </p>
               </div>
               {isLoadingPaymentStatus ? <LoaderCircle className="h-5 w-5 animate-spin text-brand-700" /> : null}
@@ -260,7 +260,7 @@ export function CheckoutPageClient() {
                     title={`Pagamento ${paymentStatusLabels[paymentStatusView.payment.status].toLowerCase()}`}
                     description={
                       publicStatus === "pending"
-                        ? "A cobranca ainda esta aguardando confirmacao da InfinitePay. Voce pode reabrir o checkout ou atualizar o status."
+                        ? "A cobranca ainda esta aguardando confirmacao. Voce pode reabrir o pagamento ou atualizar o status."
                         : publicStatus === "failed"
                           ? "A tentativa falhou. O pedido continua registrado e voce pode gerar uma nova cobranca."
                           : publicStatus === "expired"
@@ -360,7 +360,7 @@ export function CheckoutPageClient() {
               description:
                 paymentStatusView?.payment.status === "paid"
                   ? "O pedido ja esta confirmado e refletido no financeiro."
-                  : "Se a InfinitePay ainda estiver processando, este bloco continua sendo atualizado pelo backend."
+                  : "Se o pagamento ainda estiver processando, este bloco continua sendo atualizado pelo sistema."
             }}
           />
         </aside>
@@ -385,7 +385,7 @@ export function CheckoutPageClient() {
       <div className="mt-8 space-y-5">
         <SuccessBanner
           title="Pedido criado, mas a cobranca nao ficou disponivel"
-          description={`O pedido ${pendingOrderWithoutCheckout.orderNumber} foi criado e continua salvo, mas o checkout da InfinitePay nao foi preparado nesta tentativa.`}
+          description={`O pedido ${pendingOrderWithoutCheckout.orderNumber} foi criado e continua salvo, mas a cobranca online nao ficou disponivel nesta tentativa.`}
         />
         <InlineNotice tone="warning" title="Pagamento indisponivel agora" description={pendingOrderWithoutCheckout.reason} />
         <div className="grid gap-4 sm:grid-cols-2">
@@ -409,7 +409,7 @@ export function CheckoutPageClient() {
                     return;
                   }
 
-                  setSubmitError("A InfinitePay ainda nao retornou uma URL de checkout para este pedido.");
+                  setSubmitError("A cobranca online ainda nao retornou um link para este pedido.");
                 } catch (nextError) {
                   setSubmitError(nextError instanceof Error ? nextError.message : "Nao foi possivel preparar a cobranca.");
                 }
@@ -461,8 +461,8 @@ export function CheckoutPageClient() {
           />
           <InlineNotice
             tone="info"
-            title="Pagamento real via InfinitePay"
-            description="Ao confirmar, o checkout cria o pedido real e ja prepara a cobranca do ecommerce na InfinitePay."
+            title="Pagamento online"
+            description="Ao confirmar, o pedido é criado de verdade e a cobrança é preparada em seguida."
           />
         </div>
 
@@ -512,7 +512,7 @@ export function CheckoutPageClient() {
             </div>
             <div>
               <h2 className="font-heading text-2xl font-semibold text-ink-900">Entrega ou retirada</h2>
-              <p className="text-sm text-stone-500">Mantem a hierarquia clara sem jogar regra comercial para o front.</p>
+              <p className="text-sm text-stone-500">Escolha como prefere receber ou retirar o pedido.</p>
             </div>
           </div>
 
@@ -563,14 +563,14 @@ export function CheckoutPageClient() {
             </div>
             <div>
               <h2 className="font-heading text-2xl font-semibold text-ink-900">Pagamento</h2>
-              <p className="text-sm text-stone-500">O pedido nasce real e segue direto para a cobranca do ecommerce na InfinitePay.</p>
+              <p className="text-sm text-stone-500">O pedido é salvo e segue para cobrança online.</p>
             </div>
           </div>
 
           <div className="mt-5 rounded-[var(--radius-lg)] border border-brand-200/80 bg-brand-100/55 p-4">
             <p className="text-sm font-semibold text-brand-700">Fluxo financeiro protegido</p>
             <p className="mt-1 text-sm leading-6 text-stone-500">
-              O pedido so muda de estado quando o payment layer confirma o resultado. A interface apenas dispara a acao e exibe o retorno real.
+              O pedido só muda de estado quando o pagamento confirma o resultado. A tela apenas inicia a ação e mostra o retorno real.
             </p>
           </div>
         </article>

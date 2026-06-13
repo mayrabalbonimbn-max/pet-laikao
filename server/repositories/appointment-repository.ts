@@ -12,8 +12,6 @@ import {
   CustomerProfile,
   PetProfile
 } from "@/domains/appointments/types";
-import { ensureAppointmentHoldWorker } from "@/server/services/appointment-hold-expiration-service";
-import { ensureAppointmentSeedData } from "@/server/services/appointment-seed-service";
 import {
   LEGACY_DEMO_APPOINTMENT_IDS,
   LEGACY_DEMO_CALENDAR_BLOCK_IDS,
@@ -26,8 +24,7 @@ function nextId(prefix: string) {
 }
 
 async function ensureInfrastructure() {
-  await ensureAppointmentSeedData();
-  ensureAppointmentHoldWorker();
+  return;
 }
 
 const appointmentWithRelations = Prisma.validator<Prisma.AppointmentDefaultArgs>()({

@@ -24,12 +24,6 @@ export const appointmentHoldSchema = z.object({
   petBreed: z.string().optional()
 });
 
-export const paymentSimulationSchema = z.object({
-  appointmentId: z.string().min(1),
-  outcome: z.enum(["success", "failed"]),
-  paymentMethod: z.enum(["pix", "credit_card"]).default("pix")
-});
-
 export const releaseHoldSchema = z.object({
   appointmentId: z.string().min(1),
   reason: z.enum(["expired", "cancelled"]).default("expired")

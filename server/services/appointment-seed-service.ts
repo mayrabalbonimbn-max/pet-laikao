@@ -1,5 +1,4 @@
 import { db } from "@/server/db/client";
-import { ensureSqliteDatabaseSchema } from "@/server/db/bootstrap";
 import {
   appointmentServicesSeed,
   availabilityRulesSeed
@@ -12,7 +11,6 @@ declare global {
 }
 
 async function seed() {
-  await ensureSqliteDatabaseSchema();
   await cleanupLegacyDemoData();
 
   await db.$transaction(async (tx) => {

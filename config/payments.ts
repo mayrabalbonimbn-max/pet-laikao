@@ -22,5 +22,5 @@ export function isPaymentProviderConfigured() {
 }
 
 export function getPaymentProviderConfigurationError() {
-  return "INFINITEPAY_HANDLE nao configurado. O checkout integrado da InfinitePay esta pronto, mas ainda sem a conta vinculada.";
+  return "Conta de pagamento nao configurada. A cobranca online esta preparada, mas ainda precisa da configuracao final.";
 }

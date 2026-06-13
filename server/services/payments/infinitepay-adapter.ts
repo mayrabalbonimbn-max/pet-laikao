@@ -5,6 +5,9 @@ import { PaymentMethod, PaymentRecord, PaymentWebhookPayload } from "@/domains/p
 
 type InfinitePayCreateCheckoutResponse = {
   url?: string;
+  slug?: string;
+  invoice_slug?: string;
+  id?: string;
 };
 
 export type InfinitePayPaymentCheckResponse = {
@@ -155,7 +158,14 @@ export async function createInfinitePayCheckoutLink({
   }
 
   return {
-    providerCheckoutId: undefined,
+    providerCheckoutId:
+      typeof payload.invoice_slug === "string"
+        ? payload.invoice_slug
+        : typeof payload.slug === "string"
+          ? payload.slug
+          : typeof payload.id === "string"
+            ? payload.id
+            : undefined,
     checkoutUrl: payload.url,
     rawPayload: JSON.stringify(payload),
     expiresAt: payment.expiresAt,

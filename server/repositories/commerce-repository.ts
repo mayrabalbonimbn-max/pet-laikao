@@ -20,7 +20,6 @@ import {
   OrderItemRecord,
   OrderRecord
 } from "@/domains/orders/types";
-import { ensureCommerceSeedData } from "@/server/services/commerce-seed-service";
 import { formatCurrency } from "@/lib/formatters";
 import {
   LEGACY_DEMO_CART_KEYS,
@@ -31,7 +30,7 @@ import {
 } from "@/server/services/demo-data-hygiene-service";
 
 async function ensureInfrastructure() {
-  await ensureCommerceSeedData();
+  return;
 }
 
 function nextId(prefix: string) {

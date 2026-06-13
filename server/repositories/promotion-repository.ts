@@ -1,7 +1,6 @@
 import { randomUUID } from "node:crypto";
 
 import { db } from "@/server/db/client";
-import { ensurePromotionSeedData } from "@/server/services/promotion-seed-service";
 import { LEGACY_DEMO_PROMOTION_IDS } from "@/server/services/demo-data-hygiene-service";
 
 function nextId(prefix: string) {
@@ -9,7 +8,6 @@ function nextId(prefix: string) {
 }
 
 export async function listPromotionRecords() {
-  await ensurePromotionSeedData();
   return db.promotion.findMany({
     where: {
       id: { notIn: LEGACY_DEMO_PROMOTION_IDS }
@@ -31,7 +29,6 @@ export async function getPromotionRecordById(id: string) {
     return null;
   }
 
-  await ensurePromotionSeedData();
   return db.promotion.findUnique({
     where: { id },
     include: {
@@ -93,7 +90,6 @@ export async function upsertPromotionRecord(input: {
     endsAt?: string;
   }>;
 }) {
-  await ensurePromotionSeedData();
   const promotionId = input.id ?? nextId("promo");
 
   await db.$transaction(async (tx) => {

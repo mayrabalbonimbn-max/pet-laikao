@@ -73,7 +73,7 @@ export function AppointmentConfirmationPanel({
       <div className="space-y-1">
         <p className="text-sm font-semibold text-ink-900">Confirmacao do fluxo</p>
         <p className="text-sm text-stone-500">
-          O pagamento segue pelo checkout integrado da InfinitePay e a agenda continua protegida pela state machine.
+          O pagamento confirma a reserva e atualiza o painel da loja automaticamente.
         </p>
       </div>
 
@@ -117,8 +117,8 @@ export function AppointmentConfirmationPanel({
           <div className="mt-3 space-y-1 text-xs text-stone-500">
             <p>Pagamento: {paymentIntent.id}</p>
             {paymentIntent.expiresAt ? <p>Expira em {formatExpiry(paymentIntent.expiresAt)}</p> : null}
-            {paymentIntent.providerPaymentId ? <p>Transacao InfinitePay: {paymentIntent.providerPaymentId}</p> : null}
-            {paymentIntent.providerCheckoutId ? <p>Fatura InfinitePay: {paymentIntent.providerCheckoutId}</p> : null}
+            {paymentIntent.providerPaymentId ? <p>Transacao do pagamento: {paymentIntent.providerPaymentId}</p> : null}
+            {paymentIntent.providerCheckoutId ? <p>Referencia da cobranca: {paymentIntent.providerCheckoutId}</p> : null}
           </div>
         </div>
       ) : null}
@@ -138,7 +138,7 @@ export function AppointmentConfirmationPanel({
           {hasPendingCheckout ? (
             <div className="grid gap-3 sm:grid-cols-2">
               <Button fullWidth onClick={onOpenCheckout}>
-                Abrir checkout da InfinitePay
+                Abrir cobrança
               </Button>
               <Button variant="secondary" fullWidth onClick={onCheckStatus} disabled={isCheckingStatus}>
                 {isCheckingStatus ? "Verificando..." : "Ja paguei, verificar status"}

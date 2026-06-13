@@ -86,7 +86,7 @@ export function PaymentDetailDrawer({
                 rel="noreferrer"
                 className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-brand-700 hover:text-brand-800"
               >
-                Abrir checkout da InfinitePay
+                Abrir cobrança
                 <ExternalLink className="h-4 w-4" />
               </a>
             ) : null}

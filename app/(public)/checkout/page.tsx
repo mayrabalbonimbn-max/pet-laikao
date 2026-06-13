@@ -19,7 +19,7 @@ const checkoutSections = [
   },
   {
     title: "Pagamento",
-    description: "A tela ja nasce preparada para a payment layer dos pedidos.",
+    description: "Revise seus dados, escolha retirada ou entrega e finalize o pedido com pagamento online.",
   },
 ];
 
@@ -60,7 +60,7 @@ export default function CheckoutPage() {
           </article>
           <article className="rounded-[var(--radius-lg)] border border-[var(--sun-300)] bg-[var(--sun-100)]/82 p-5 shadow-[var(--shadow-soft)] backdrop-blur-sm">
             <CreditCard className="h-5 w-5 text-brand-600" />
-            <p className="mt-3 text-sm font-semibold text-brand-950">Pronto para a payment layer</p>
+            <p className="mt-3 text-sm font-semibold text-brand-950">Pronto para pagamento</p>
             <p className="mt-2 text-sm leading-6 text-brand-900/78">O pedido ja nasce real hoje e abre caminho limpo para o pagamento na proxima etapa.</p>
           </article>
         </div>

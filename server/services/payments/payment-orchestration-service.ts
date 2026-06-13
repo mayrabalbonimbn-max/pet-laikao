@@ -146,8 +146,8 @@ async function createPaymentIntentForAppointment({
       appointment.id,
       "Cobranca criada",
       purpose === "appointment_balance"
-        ? "Link da InfinitePay gerado para cobrar o saldo restante do agendamento."
-        : "Checkout integrado da InfinitePay criado e vinculado ao hold do agendamento."
+        ? "Link de pagamento gerado para cobrar o saldo restante do agendamento."
+        : "Cobranca online criada e vinculada ao agendamento."
     );
 
     return {
@@ -165,7 +165,7 @@ async function createPaymentIntentForAppointment({
     await addAppointmentTimeline(
       appointment.id,
       "Falha ao criar cobranca",
-      "A InfinitePay nao conseguiu preparar a cobranca para este agendamento."
+      "Nao foi possivel preparar a cobranca para este agendamento."
     );
     throw error;
   }
@@ -245,7 +245,7 @@ async function createPaymentIntentForOrder({
       expiresAt: providerCheckout.expiresAt
     });
 
-    await addOrderTimeline(order.id, "Cobranca criada", "Checkout integrado da InfinitePay criado para este pedido.");
+    await addOrderTimeline(order.id, "Cobranca criada", "Cobranca online criada para este pedido.");
 
     return {
       payment: mapPaymentToIntentView(savedPayment),
@@ -301,7 +301,7 @@ async function applyPaymentResultToAppointment({
       await addAppointmentTimeline(
         appointment.id,
         "Pagamento aprovado apos expiracao/cancelamento",
-        "A InfinitePay confirmou o pagamento, mas o hold ja nao era mais valido. Revisao manual necessaria."
+        "O pagamento foi confirmado, mas a reserva ja nao era mais valida. Revisao manual necessaria."
       );
       return appointment;
     }
@@ -320,8 +320,8 @@ async function applyPaymentResultToAppointment({
       saved.id,
       payment.purpose === "appointment_deposit" ? "Sinal confirmado" : "Pagamento integral confirmado",
       payment.purpose === "appointment_deposit"
-        ? "Pagamento de 50% confirmado pela InfinitePay."
-        : "Pagamento integral confirmado pela InfinitePay."
+        ? "Pagamento de 50% confirmado."
+        : "Pagamento integral confirmado."
     );
     return saved;
   }
@@ -330,7 +330,7 @@ async function applyPaymentResultToAppointment({
     const transitioned = transitionAppointment(appointment, { type: "payment_failed" });
     const saved = await saveAppointment(transitioned);
     await updateAppointmentHoldStatus(saved.id, "released");
-    await addAppointmentTimeline(saved.id, "Pagamento falhou", "A InfinitePay recusou a tentativa e o slot foi liberado.");
+    await addAppointmentTimeline(saved.id, "Pagamento falhou", "A tentativa de pagamento falhou e o slot foi liberado.");
     return saved;
   }
 

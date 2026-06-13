@@ -1,6 +1,5 @@
 import { db } from "@/server/db/client";
 import { transitionAppointment } from "@/domains/appointments/state-machine";
-import { ensureAppointmentSeedData } from "@/server/services/appointment-seed-service";
 import { AppointmentRecord } from "@/domains/appointments/types";
 
 declare global {
@@ -13,8 +12,6 @@ function canRunWorker() {
 }
 
 export async function expireAppointmentHoldsBatch() {
-  await ensureAppointmentSeedData();
-
   const expiredHolds = await db.appointmentHold.findMany({
     where: {
       status: "active",
