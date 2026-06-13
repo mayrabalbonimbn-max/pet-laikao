@@ -33,7 +33,7 @@ export function ProductCard({ product }: { product: ProductPreview; compact?: bo
       </Link>
 
       <div className="corpo">
-        <span className="marca-prod">{product.category}</span>
+        <span className="marca-prod">{product.brand ?? product.category}</span>
         <h3>
           <Link href={href}>{product.name}</Link>
         </h3>

@@ -28,6 +28,7 @@ function computeProductPreview(product: Awaited<ReturnType<typeof listProductRec
     id: product.id,
     slug: product.slug,
     name: product.name,
+    brand: product.brand,
     category: product.categoryName ?? "Sem categoria",
     priceLabel: formatCurrency((firstVariant?.priceCents ?? 0) / 100),
     priceCents: firstVariant?.priceCents ?? 0,

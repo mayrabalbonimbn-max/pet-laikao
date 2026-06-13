@@ -2,7 +2,7 @@ import { revalidatePath } from "next/cache";
 import Image from "next/image";
 
 import { EmptyState } from "@/components/feedback/empty-state";
-import { updateProductAdminAction } from "@/domains/catalog/actions";
+import { createProductAdminAction, updateProductAdminAction } from "@/domains/catalog/actions";
 import { listCatalogCategories } from "@/domains/catalog/queries";
 import { productStatusLabels } from "@/domains/catalog/constants";
 import { listProductRecords } from "@/server/repositories/commerce-repository";
@@ -10,6 +10,92 @@ import { getProductImageStorage } from "@/server/storage/products-storage";
 import { formatCurrency } from "@/lib/formatters";
 
 export const dynamic = "force-dynamic";
+
+function slugify(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+async function uploadImagesFromForm(formData: FormData, altFallback: string, startOrder: number) {
+  const storage = getProductImageStorage();
+  const uploaded = [];
+  const files = [...formData.getAll("galleryFiles"), formData.get("imageFile")].filter(Boolean);
+  for (const file of files) {
+    if (!(file instanceof File) || file.size <= 0) continue;
+    const stored = await storage.save({
+      bytes: Buffer.from(await file.arrayBuffer()),
+      originalName: file.name,
+      mimeType: file.type
+    });
+    uploaded.push({
+      imageUrl: stored.imageUrl,
+      imagePath: stored.imagePath,
+      imageThumbUrl: stored.imageThumbUrl,
+      imageThumbPath: stored.imageThumbPath,
+      alt: altFallback || "Produto Laikao",
+      mimeType: stored.mimeType,
+      sizeBytes: stored.sizeBytes,
+      width: stored.width,
+      height: stored.height,
+      displayOrder: startOrder + uploaded.length,
+      isPrimary: false
+    });
+  }
+  return uploaded;
+}
+
+function toCents(value: FormDataEntryValue | null) {
+  const reais = Number(value ?? 0);
+  return Number.isFinite(reais) && reais > 0 ? Math.round(reais * 100) : 0;
+}
+
+// "Preço normal" é o de tabela; "preço promocional" é o menor, cobrado na oferta.
+// No banco, o preço de venda (priceCents) é sempre o menor; o "de" riscado vai em compareAtCents.
+function resolvePricing(normal: FormDataEntryValue | null, promo: FormDataEntryValue | null) {
+  const normalCents = toCents(normal);
+  const promoCents = toCents(promo);
+  if (promoCents > 0 && promoCents < normalCents) {
+    return { variantPriceCents: promoCents, variantCompareAtCents: normalCents };
+  }
+  return { variantPriceCents: normalCents, variantCompareAtCents: undefined };
+}
+
+async function createProduct(formData: FormData) {
+  "use server";
+
+  const name = String(formData.get("name") ?? "").trim();
+  const slug = (String(formData.get("slug") ?? "").trim() || slugify(name));
+
+  const images = await uploadImagesFromForm(formData, name, 0);
+  if (images.length > 0) {
+    images[0].isPrimary = true;
+  }
+
+  await createProductAdminAction({
+    name,
+    slug,
+    brand: String(formData.get("brand") ?? "").trim() || undefined,
+    description: String(formData.get("description") ?? "").trim(),
+    categoryId: String(formData.get("categoryId") ?? "") || undefined,
+    status: String(formData.get("status") ?? "active"),
+    featured: formData.get("featured") === "on",
+    active: formData.get("active") === "on",
+    imageLabel: String(formData.get("imageLabel") ?? "").trim() || name,
+    mainImageUrl: images[0]?.imageUrl,
+    images,
+    ...resolvePricing(formData.get("priceReais"), formData.get("promoReais")),
+    variantStockQuantity: Number(formData.get("stockQuantity") ?? 0)
+  });
+
+  revalidatePath("/admin/produtos");
+  revalidatePath("/produtos");
+  revalidatePath(`/produto/${slug}`);
+  revalidatePath("/");
+}
 
 async function saveProduct(formData: FormData) {
   "use server";
@@ -43,29 +129,9 @@ async function saveProduct(formData: FormData) {
       imageThumbPath: String(formData.get(`imageThumbPath:${id}`) ?? "")
     }));
 
-  const uploadedImages = [];
-  const files = [...formData.getAll("galleryFiles"), formData.get("imageFile")].filter(Boolean);
-  for (const file of files) {
-    if (!(file instanceof File) || file.size <= 0) continue;
-    const uploaded = await storage.save({
-      bytes: Buffer.from(await file.arrayBuffer()),
-      originalName: file.name,
-      mimeType: file.type
-    });
-
-    uploadedImages.push({
-      imageUrl: uploaded.imageUrl,
-      imagePath: uploaded.imagePath,
-      imageThumbUrl: uploaded.imageThumbUrl,
-      imageThumbPath: uploaded.imageThumbPath,
-      alt: String(formData.get("name") ?? "Produto Laikao"),
-      mimeType: uploaded.mimeType,
-      sizeBytes: uploaded.sizeBytes,
-      width: uploaded.width,
-      height: uploaded.height,
-      displayOrder: existingImages.length + uploadedImages.length,
-      isPrimary: existingImages.length === 0 && uploadedImages.length === 0
-    });
+  const uploadedImages = await uploadImagesFromForm(formData, String(formData.get("name") ?? "Produto Laikao"), existingImages.length);
+  if (existingImages.length === 0 && uploadedImages.length > 0) {
+    uploadedImages[0].isPrimary = true;
   }
 
   const images = [...existingImages, ...uploadedImages].sort((left, right) => left.displayOrder - right.displayOrder);
@@ -78,6 +144,7 @@ async function saveProduct(formData: FormData) {
     id: String(formData.get("id") ?? ""),
     name: String(formData.get("name") ?? ""),
     slug: String(formData.get("slug") ?? ""),
+    brand: String(formData.get("brand") ?? "").trim() || undefined,
     description: String(formData.get("description") ?? ""),
     categoryId: String(formData.get("categoryId") ?? "") || undefined,
     status: String(formData.get("status") ?? "draft"),
@@ -86,7 +153,7 @@ async function saveProduct(formData: FormData) {
     imageLabel: String(formData.get("imageLabel") ?? "Imagem"),
     mainImageUrl,
     images,
-    variantPriceCents: Math.round(Number(formData.get("priceReais") ?? 0) * 100),
+    ...resolvePricing(formData.get("priceReais"), formData.get("promoReais")),
     variantStockQuantity: Number(formData.get("stockQuantity") ?? 0)
   });
 
@@ -105,14 +172,77 @@ export default async function AdminProductsPage() {
     <div className="space-y-6">
       <div className="space-y-2">
         <p className="eyebrow">Produtos</p>
-        <h1 className="page-title">Cadastre e atualize os produtos da loja: preço, estoque, categoria e fotos.</h1>
+        <h1 className="page-title">Cadastre e atualize os produtos da loja: marca, preço, oferta, estoque, categoria e fotos.</h1>
       </div>
+
+      <section className="surface-default border border-brand-100 bg-white p-5 shadow-[var(--shadow-soft)]">
+        <h2 className="font-heading text-xl font-semibold text-ink-900">Novo produto</h2>
+        <p className="mt-1 text-sm text-stone-500">Preencha o essencial e salve. Depois você pode voltar e ajustar fotos e detalhes na lista abaixo.</p>
+        <form action={createProduct} className="mt-4 grid gap-3 md:grid-cols-2">
+          <label className="grid gap-1 text-xs font-semibold text-stone-600">
+            Nome do produto
+            <input name="name" placeholder="Ex: Premier Fórmula Cães Adultos" className="rounded-[12px] border border-stone-200 px-3 py-2" required />
+          </label>
+          <label className="grid gap-1 text-xs font-semibold text-stone-600">
+            Marca
+            <input name="brand" placeholder="Ex: Premier" className="rounded-[12px] border border-stone-200 px-3 py-2" />
+          </label>
+          <label className="grid gap-1 text-xs font-semibold text-stone-600">
+            Link da loja (slug), opcional
+            <input name="slug" placeholder="deixe vazio para gerar do nome" className="rounded-[12px] border border-stone-200 px-3 py-2" />
+          </label>
+          <label className="grid gap-1 text-xs font-semibold text-stone-600">
+            Categoria
+            <select name="categoryId" className="rounded-[12px] border border-stone-200 px-3 py-2">
+              <option value="">Sem categoria</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>{category.name}</option>
+              ))}
+            </select>
+          </label>
+          <label className="grid gap-1 text-xs font-semibold text-stone-600">
+            Preço normal (R$)
+            <input name="priceReais" type="number" min="0" step="0.01" placeholder="0,00" className="rounded-[12px] border border-stone-200 px-3 py-2" required />
+          </label>
+          <label className="grid gap-1 text-xs font-semibold text-stone-600">
+            Preço promocional (R$), opcional
+            <input name="promoReais" type="number" min="0" step="0.01" placeholder="menor que o normal" className="rounded-[12px] border border-stone-200 px-3 py-2" />
+          </label>
+          <label className="grid gap-1 text-xs font-semibold text-stone-600">
+            Estoque (unidades)
+            <input name="stockQuantity" type="number" min="0" defaultValue={0} className="rounded-[12px] border border-stone-200 px-3 py-2" required />
+          </label>
+          <label className="grid gap-1 text-xs font-semibold text-stone-600">
+            Situação
+            <select name="status" defaultValue="active" className="rounded-[12px] border border-stone-200 px-3 py-2">
+              {Object.entries(productStatusLabels).map(([value, label]) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
+            </select>
+          </label>
+          <label className="grid gap-1 text-xs font-semibold text-stone-600">
+            Rótulo da imagem (acessibilidade)
+            <input name="imageLabel" placeholder="Ex: Embalagem da ração" className="rounded-[12px] border border-stone-200 px-3 py-2" />
+          </label>
+          <label className="grid gap-1 text-xs font-semibold text-stone-600">
+            Foto principal (opcional)
+            <input type="file" name="imageFile" accept="image/jpeg,image/png,image/webp" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
+          </label>
+          <textarea name="description" placeholder="Descrição curta do produto (mínimo 4 letras)" className="md:col-span-2 rounded-[12px] border border-stone-200 px-3 py-2" rows={2} required />
+          <div className="flex items-center gap-4 rounded-[12px] border border-stone-200 px-3 py-2 md:col-span-2">
+            <label className="inline-flex items-center gap-2 text-sm text-stone-700"><input type="checkbox" name="active" defaultChecked /> Ativo (aparece na loja)</label>
+            <label className="inline-flex items-center gap-2 text-sm text-stone-700"><input type="checkbox" name="featured" /> Destaque</label>
+          </div>
+          <p className="md:col-span-2 text-xs text-stone-500">Preço promocional: preencha só em oferta, com um valor menor que o preço normal. A loja cobra o promocional, risca o normal e mostra o selo Oferta.</p>
+          <button className="md:col-span-2 rounded-[12px] bg-brand-500 px-4 py-2 text-sm font-semibold text-white">Cadastrar produto</button>
+        </form>
+      </section>
 
       <div className="grid gap-4">
         {products.length === 0 ? (
           <EmptyState
             title="Nenhum produto ainda"
-            description="Cadastre o primeiro produto e ele aparece aqui com preço, estoque, categoria e fotos, prontinho para a loja."
+            description="Cadastre o primeiro produto no formulário acima e ele aparece aqui com preço, estoque, categoria e fotos, prontinho para a loja."
           />
         ) : products.map((product) => {
           const variant = product.variants[0];
@@ -123,6 +253,7 @@ export default async function AdminProductsPage() {
                 <input type="hidden" name="id" value={product.id} />
                 <input type="hidden" name="currentMainImageUrl" value={product.mainImageUrl ?? ""} />
                 <input name="name" defaultValue={product.name} className="rounded-[12px] border border-stone-200 px-3 py-2" required />
+                <input name="brand" defaultValue={product.brand ?? ""} placeholder="Marca" className="rounded-[12px] border border-stone-200 px-3 py-2" />
                 <input name="slug" defaultValue={product.slug} className="rounded-[12px] border border-stone-200 px-3 py-2" required />
                 <input name="imageLabel" defaultValue={product.imageLabel} className="rounded-[12px] border border-stone-200 px-3 py-2" required />
                 <select name="categoryId" defaultValue={product.categoryId ?? ""} className="rounded-[12px] border border-stone-200 px-3 py-2">
@@ -140,9 +271,19 @@ export default async function AdminProductsPage() {
                   <label className="inline-flex items-center gap-2 text-sm text-stone-700"><input type="checkbox" name="active" defaultChecked={product.active} /> Ativo</label>
                   <label className="inline-flex items-center gap-2 text-sm text-stone-700"><input type="checkbox" name="featured" defaultChecked={product.featured} /> Destaque</label>
                 </div>
-                <input name="priceReais" type="number" min="0" step="0.01" defaultValue={((variant?.priceCents ?? 0) / 100).toFixed(2)} className="rounded-[12px] border border-stone-200 px-3 py-2" required />
-                <input name="stockQuantity" type="number" min="0" defaultValue={variant?.stockQuantity ?? 0} className="rounded-[12px] border border-stone-200 px-3 py-2" required />
-                <p className="text-xs text-stone-500">Preço atual: {formatCurrency((variant?.priceCents ?? 0) / 100)} | Reservado: {variant?.reservedQuantity ?? 0}</p>
+                <label className="grid gap-1 text-xs font-semibold text-stone-600">
+                  Preço normal (R$)
+                  <input name="priceReais" type="number" min="0" step="0.01" defaultValue={(((variant?.compareAtCents && variant.compareAtCents > variant.priceCents ? variant.compareAtCents : variant?.priceCents) ?? 0) / 100).toFixed(2)} className="rounded-[12px] border border-stone-200 px-3 py-2" required />
+                </label>
+                <label className="grid gap-1 text-xs font-semibold text-stone-600">
+                  Preço promocional (R$), opcional
+                  <input name="promoReais" type="number" min="0" step="0.01" defaultValue={variant?.compareAtCents && variant.compareAtCents > variant.priceCents ? (variant.priceCents / 100).toFixed(2) : ""} placeholder="menor que o normal" className="rounded-[12px] border border-stone-200 px-3 py-2" />
+                </label>
+                <label className="grid gap-1 text-xs font-semibold text-stone-600">
+                  Estoque (unidades)
+                  <input name="stockQuantity" type="number" min="0" defaultValue={variant?.stockQuantity ?? 0} className="rounded-[12px] border border-stone-200 px-3 py-2" required />
+                </label>
+                <p className="text-xs text-stone-500 md:col-span-3">Preço atual: {formatCurrency((variant?.priceCents ?? 0) / 100)} | Reservado: {variant?.reservedQuantity ?? 0}</p>
                 <textarea name="description" defaultValue={product.description} className="md:col-span-3 rounded-[12px] border border-stone-200 px-3 py-2" rows={2} required />
 
                 <div className="md:col-span-3 rounded-[14px] border border-stone-200 p-3">

@@ -65,7 +65,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 <span className="promo-badge-hot">{product.categoryName ?? "Produto"}</span>
                 <StockStatusBadge status={stockStatus} />
               </div>
-              <h1 className="mt-4 font-heading text-4xl font-extrabold leading-tight text-brand-900 sm:text-5xl">
+              {product.brand ? (
+                <p className="mt-3 text-xs font-extrabold uppercase tracking-[0.14em] text-[var(--magenta-600)]">{product.brand}</p>
+              ) : null}
+              <h1 className="mt-2 font-heading text-4xl font-extrabold leading-tight text-brand-900 sm:text-5xl">
                 {product.name}
               </h1>
               <p className="mt-3 max-w-2xl text-base font-semibold leading-7 text-brand-950/75">
