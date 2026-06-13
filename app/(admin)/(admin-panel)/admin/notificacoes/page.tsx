@@ -6,27 +6,27 @@ import { EmptyState } from "@/components/feedback/empty-state";
 import { InlineNotice } from "@/components/feedback/inline-notice";
 
 export default function AdminNotificationsPage() {
-  const headers = ["Canal", "Evento", "Destinatario", "Status", "Referencia"];
+  const headers = ["Canal", "Evento", "Destinatário", "Status", "Referência"];
   const rows: ReactNode[][] = [];
 
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <p className="eyebrow">Notificacoes</p>
-        <h1 className="page-title">Fila de envio, falhas e rastreabilidade visiveis para operacao e suporte.</h1>
+        <p className="eyebrow">Notificações</p>
+        <h1 className="page-title">Avisos enviados aos clientes: e-mail, WhatsApp e push, com o status de cada envio.</h1>
       </div>
-      <FilterBar placeholder="Buscar por canal, evento ou destinatario" primaryFilterLabel="Canal" />
+      <FilterBar placeholder="Buscar por canal, evento ou destinatário" primaryFilterLabel="Canal" />
 
       <InlineNotice
-        title="Painel em preparacao"
-        description="Ainda nao existem registros persistidos de notificacao neste ambiente. Nenhum alerta ativo no momento."
+        title="Sem avisos por enquanto"
+        description="Quando os envios automáticos forem ativados, cada e-mail, WhatsApp e push aparece aqui com o status."
       />
 
       <div className="space-y-3">
         <DataTable headers={headers} rows={rows} />
         <EmptyState
-          title="Nenhuma notificacao registrada"
-          description="Quando o envio persistente estiver ativo, eventos reais de e-mail, WhatsApp e PWA aparecerao aqui com status e referencia."
+          title="Nenhuma notificação ainda"
+          description="Assim que os envios forem ativados, os avisos de e-mail, WhatsApp e push aparecem aqui com status e referência."
         />
       </div>
     </div>

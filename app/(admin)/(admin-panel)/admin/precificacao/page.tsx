@@ -46,9 +46,9 @@ export default async function AdminPricingPage({
 
   const metricCards = [
     {
-      label: "Preco sugerido",
+      label: "Preço sugerido",
       value: formatCurrency(recommendation.suggestedPriceCents / 100),
-      helper: "Calculado sobre custo + extras + markup desejado.",
+      helper: "Calculado sobre custo + extras + margem desejada.",
       tone: "success" as const
     },
     {
@@ -60,7 +60,7 @@ export default async function AdminPricingPage({
     {
       label: "Margem final",
       value: `${recommendation.marginPercent.toFixed(2)}%`,
-      helper: "Margem percentual no preco sugerido.",
+      helper: "Margem percentual no preço sugerido.",
       tone: "warning" as const
     }
   ];
@@ -68,14 +68,14 @@ export default async function AdminPricingPage({
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <p className="eyebrow">Precificacao</p>
-        <h1 className="page-title">Calculadora pratica para precificar mercadoria com mais seguranca operacional.</h1>
+        <p className="eyebrow">Precificação</p>
+        <h1 className="page-title">Calcule o preço de venda com custo, extras e a margem que você quer.</h1>
       </div>
 
       {rows.length === 0 ? (
         <EmptyState
           title="Sem SKUs para precificar"
-          description="Quando houver variantes no catalogo, esta tela passa a servir tanto como calculadora isolada quanto como atalho para atualizar o estoque."
+          description="Quando houver produtos no catálogo, esta tela funciona como calculadora e como atalho para atualizar o preço no estoque."
         />
       ) : (
         <>
@@ -88,7 +88,7 @@ export default async function AdminPricingPage({
           <div className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
             <section className="surface-default border border-stone-100 bg-white p-5 shadow-[var(--shadow-soft)]">
               <h2 className="font-heading text-xl font-semibold text-ink-900">Calculadora</h2>
-              <p className="mt-1 text-sm text-stone-500">Use so para simular ou conecte o resultado ao SKU selecionado.</p>
+              <p className="mt-1 text-sm text-stone-500">Use só para simular ou aplique o resultado ao produto selecionado.</p>
               <form className="mt-4 grid gap-3">
                 <select name="variantId" defaultValue={selectedVariantId} className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm">
                   {rows.map((row: InventoryAdminRow) => (
@@ -115,7 +115,7 @@ export default async function AdminPricingPage({
                   <div className="rounded-[16px] bg-sand-50 p-4">
                     <p className="font-semibold text-ink-900">{selected.productName}</p>
                     <p className="text-sm text-stone-500">{selected.variantName} • {selected.sku}</p>
-                    <p className="mt-2 text-sm text-stone-500">Preco atual: {formatCurrency(selected.priceCents / 100)}</p>
+                    <p className="mt-2 text-sm text-stone-500">Preço atual: {formatCurrency(selected.priceCents / 100)}</p>
                   </div>
                   <input
                     type="number"
@@ -125,7 +125,7 @@ export default async function AdminPricingPage({
                     defaultValue={(recommendation.suggestedPriceCents / 100).toFixed(2)}
                     className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm"
                   />
-                  <button className="rounded-[12px] bg-ink-900 px-4 py-2 text-sm font-semibold text-white">Aplicar preco sugerido</button>
+                  <button className="rounded-[12px] bg-ink-900 px-4 py-2 text-sm font-semibold text-white">Aplicar preço sugerido</button>
                 </form>
               ) : null}
             </section>

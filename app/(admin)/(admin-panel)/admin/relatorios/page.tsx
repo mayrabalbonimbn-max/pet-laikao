@@ -21,11 +21,11 @@ export default async function AdminReportsPage({
     {
       label: "Entradas no ano",
       value: formatCurrency(report.totals.inflowCents / 100),
-      helper: "Lancamentos gerenciais e recebimentos integrados.",
+      helper: "Lançamentos e recebimentos do período.",
       tone: "success" as const
     },
     {
-      label: "Saidas no ano",
+      label: "Saídas no ano",
       value: formatCurrency(report.totals.outflowCents / 100),
       helper: "Despesas, compras e retiradas registradas.",
       tone: "danger" as const
@@ -33,7 +33,7 @@ export default async function AdminReportsPage({
     {
       label: "Saldo anual",
       value: formatCurrency(report.totals.balanceCents / 100),
-      helper: "Apoio gerencial para organizacao e conversa com a contabilidade.",
+      helper: "Apoio para a organização e a conversa com a contabilidade.",
       tone: report.totals.balanceCents >= 0 ? ("success" as const) : ("warning" as const)
     }
   ];
@@ -41,8 +41,8 @@ export default async function AdminReportsPage({
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <p className="eyebrow">Relatorios</p>
-        <h1 className="page-title">Estrutura anual exportavel para apoio contábil, sem prometer declaracao fiscal automatica.</h1>
+        <p className="eyebrow">Relatórios</p>
+        <h1 className="page-title">Resumo anual do que entrou e saiu, pronto para exportar e levar ao contador.</h1>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -58,14 +58,14 @@ export default async function AdminReportsPage({
               <label className="mb-1 block text-sm font-medium text-ink-900">Ano</label>
               <input type="number" name="year" defaultValue={year} className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
             </div>
-            <button className="rounded-[12px] bg-brand-500 px-4 py-2 text-sm font-semibold text-white">Atualizar relatorio</button>
+            <button className="rounded-[12px] bg-brand-500 px-4 py-2 text-sm font-semibold text-white">Atualizar relatório</button>
           </form>
           <a href={`/api/admin/reports/annual?year=${year}`} className="rounded-[12px] bg-ink-900 px-4 py-2 text-sm font-semibold text-white">
             Exportar CSV anual
           </a>
         </div>
         <p className="mt-3 text-sm text-stone-500">
-          Este material serve como organizacao gerencial exportavel para contador ou contadora. Nao substitui obrigacoes fiscais oficiais.
+          Serve como organização gerencial para exportar e levar ao contador ou contadora. Não substitui obrigações fiscais oficiais.
         </p>
       </section>
 
@@ -76,7 +76,7 @@ export default async function AdminReportsPage({
             {report.categoryTotals.length === 0 ? (
               <EmptyState
                 title="Sem dados para este ano"
-                description="Quando houver movimentacoes e recebimentos registrados, o resumo anual aparecera aqui pronto para exportacao."
+                description="Quando houver movimentações e recebimentos registrados, o resumo anual aparece aqui pronto para exportação."
               />
             ) : (
               report.categoryTotals.map((item) => (
@@ -103,7 +103,7 @@ export default async function AdminReportsPage({
                   <th className="pb-3 pr-4">Data</th>
                   <th className="pb-3 pr-4">Origem</th>
                   <th className="pb-3 pr-4">Categoria</th>
-                  <th className="pb-3 pr-4">Descricao</th>
+                  <th className="pb-3 pr-4">Descrição</th>
                   <th className="pb-3 text-right">Valor</th>
                 </tr>
               </thead>

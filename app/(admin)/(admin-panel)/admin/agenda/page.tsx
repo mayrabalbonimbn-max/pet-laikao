@@ -90,8 +90,8 @@ export default async function AdminAgendaPage({
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <p className="eyebrow">Agenda operacional</p>
-        <h1 className="page-title">Fonte unica da rotina com banho e tosa, bloqueios, compromissos pessoais e administracao interna.</h1>
+        <p className="eyebrow">Agenda</p>
+        <h1 className="page-title">Toda a rotina em um lugar: banho e tosa, bloqueios e compromissos da loja.</h1>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -104,20 +104,20 @@ export default async function AdminAgendaPage({
         <section className="surface-default border border-stone-100 bg-white p-5 shadow-[var(--shadow-soft)]">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="font-heading text-xl font-semibold text-ink-900">Visualizacao</h2>
-              <p className="text-sm text-stone-500">Mensal, semanal ou diaria sem separar o que impacta a operacao real.</p>
+              <h2 className="font-heading text-xl font-semibold text-ink-900">Visualização</h2>
+              <p className="text-sm text-stone-500">Veja por mês, semana ou dia, com tudo que ocupa a rotina.</p>
             </div>
             <div className="flex flex-wrap gap-2">
               <a href={`/admin/agenda?view=month&date=${date}`} className={`rounded-full px-3 py-2 text-sm font-medium ${view === "month" ? "bg-brand-500 text-white" : "bg-sand-50 text-ink-900"}`}>Mensal</a>
               <a href={`/admin/agenda?view=week&date=${date}`} className={`rounded-full px-3 py-2 text-sm font-medium ${view === "week" ? "bg-brand-500 text-white" : "bg-sand-50 text-ink-900"}`}>Semanal</a>
-              <a href={`/admin/agenda?view=day&date=${date}`} className={`rounded-full px-3 py-2 text-sm font-medium ${view === "day" ? "bg-brand-500 text-white" : "bg-sand-50 text-ink-900"}`}>Diaria</a>
+              <a href={`/admin/agenda?view=day&date=${date}`} className={`rounded-full px-3 py-2 text-sm font-medium ${view === "day" ? "bg-brand-500 text-white" : "bg-sand-50 text-ink-900"}`}>Diária</a>
             </div>
           </div>
 
           {items.length === 0 ? (
             <EmptyState
-              title="Agenda sem itens nesta janela"
-              description="Os agendamentos publicos seguem intactos. Quando houver bloqueios ou compromissos administrativos, eles aparecerao aqui e podem travar a disponibilidade do site."
+              title="Nada marcado neste período"
+              description="Os agendamentos dos clientes seguem normais. Quando você adicionar bloqueios ou compromissos, eles aparecem aqui e podem fechar horários no site."
             />
           ) : view === "month" ? (
             <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-3">
@@ -167,10 +167,10 @@ export default async function AdminAgendaPage({
         </section>
 
         <section className="surface-default border border-stone-100 bg-white p-5 shadow-[var(--shadow-soft)]">
-          <h2 className="font-heading text-xl font-semibold text-ink-900">Novo evento operacional</h2>
-          <p className="mt-1 text-sm text-stone-500">Se marcar impacto na disponibilidade, o site passa a respeitar esse bloqueio.</p>
+          <h2 className="font-heading text-xl font-semibold text-ink-900">Novo evento</h2>
+          <p className="mt-1 text-sm text-stone-500">Se marcar que fecha horário, o site deixa de oferecer esse período.</p>
           <form action={createEvent} className="mt-4 grid gap-3">
-            <input name="title" placeholder="Titulo do evento" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" required />
+            <input name="title" placeholder="Título do evento" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" required />
             <div className="grid gap-3 sm:grid-cols-2">
               <select name="category" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm">
                 {Object.entries(adminCalendarCategoryLabels).map(([value, label]) => (
@@ -178,7 +178,7 @@ export default async function AdminAgendaPage({
                 ))}
               </select>
               <select name="serviceId" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm">
-                <option value="">Todos os servicos</option>
+                <option value="">Todos os serviços</option>
                 {services.map((service) => (
                   <option key={service.id} value={service.id}>{service.name}</option>
                 ))}
@@ -192,10 +192,10 @@ export default async function AdminAgendaPage({
               <input name="customerName" placeholder="Cliente (opcional)" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
               <input name="petName" placeholder="Pet (opcional)" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
             </div>
-            <textarea name="notes" rows={3} placeholder="Observacoes" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
+            <textarea name="notes" rows={3} placeholder="Observações" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
             <label className="inline-flex items-center gap-2 text-sm text-stone-700">
               <input type="checkbox" name="impactAvailability" />
-              Impactar a disponibilidade publica do site
+              Fechar este horário no site
             </label>
             <label className="inline-flex items-center gap-2 text-sm text-stone-700">
               <input type="checkbox" name="isAllDay" />
