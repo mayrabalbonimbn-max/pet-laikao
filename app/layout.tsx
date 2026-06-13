@@ -1,23 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Baloo_2, Nunito } from "next/font/google";
 
 import "@/app/globals.css";
+import { body, heading } from "@/app/fonts";
 import { ToastSystem } from "@/components/feedback/toast-system";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
-
-const heading = Baloo_2({
-  subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
-  variable: "--font-heading"
-});
-
-const body = Nunito({
-  subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
-  style: ["normal", "italic"],
-  variable: "--font-body"
-});
 
 export const metadata: Metadata = {
   title: {
