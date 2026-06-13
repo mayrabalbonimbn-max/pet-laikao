@@ -19,7 +19,7 @@ export default async function AdminOrdersPage() {
   const paidOrders = orders.filter((order) => order.paymentStatus === "paid").length;
   const totalCents = orders.reduce((sum, order) => sum + order.totalCents, 0);
 
-  const headers = ["Pedido", "Cliente", "Total", "Pedido", "Financeiro", "Fulfillment", "Estoque", "Acao"];
+  const headers = ["Pedido", "Cliente", "Total", "Status", "Pagamento", "Separação", "Estoque", "Ação"];
   const rows = orders.map((order) => [
     <div key={`${order.id}-id`}>
       <p className="font-semibold text-ink-900">{order.orderNumber}</p>
@@ -50,11 +50,12 @@ export default async function AdminOrdersPage() {
     <div className="space-y-6">
       <div className="space-y-2">
         <p className="eyebrow">Pedidos</p>
-        <h1 className="page-title">Fila comercial e logistica com leitura real de pedido, financeiro, fulfillment e reserva de estoque.</h1>
+        <h1 className="page-title">Pedidos da loja, do pagamento à entrega.</h1>
+        <p className="text-sm text-stone-500">Acompanhe cada pedido em um lugar só: pagamento, separação, estoque e status. O que mudar aqui reflete no site na hora.</p>
       </div>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <MetricCard item={{ label: "Total de pedidos", value: String(orders.length), helper: "Pedidos reais registrados na loja.", tone: "neutral" }} />
-        <MetricCard item={{ label: "Aguardando pagamento", value: String(pendingOrders), helper: "Pedidos ainda sem confirmacao financeira.", tone: "warning" }} />
+        <MetricCard item={{ label: "Aguardando pagamento", value: String(pendingOrders), helper: "Pedidos ainda sem confirmação de pagamento.", tone: "warning" }} />
         <MetricCard item={{ label: "Pedidos pagos", value: String(paidOrders), helper: "Pedidos com pagamento confirmado.", tone: "success" }} />
         <MetricCard item={{ label: "Valor em pedidos", value: `R$ ${(totalCents / 100).toFixed(2).replace(".", ",")}`, helper: `${reservedOrders} com estoque reservado.`, tone: "neutral" }} />
       </div>
@@ -62,8 +63,8 @@ export default async function AdminOrdersPage() {
 
       {orders.length === 0 ? (
         <EmptyState
-          title="Nenhum pedido registrado"
-          description="Quando uma compra real for criada no checkout, o pedido aparecera aqui com cliente, pagamento, fulfillment e estoque."
+          title="Nenhum pedido ainda"
+          description="Quando uma compra for finalizada no checkout, o pedido aparece aqui com cliente, pagamento, separação e estoque."
         />
       ) : (
         <>

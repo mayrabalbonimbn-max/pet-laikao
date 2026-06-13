@@ -106,7 +106,7 @@ export function AdminSidebar() {
 
       <div className="border-t border-white/10 p-4">
         <div className="rounded-2xl bg-white/[0.06] px-4 py-3 text-xs leading-5 text-white/60">
-          Base pronta para separar API, filas e automacoes sem mudar a rotina da operacao.
+          Tudo conectado: o que muda aqui aparece no site e na operação na hora.
         </div>
       </div>
     </aside>
