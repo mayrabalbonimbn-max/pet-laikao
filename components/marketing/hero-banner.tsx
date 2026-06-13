@@ -1,85 +1,87 @@
-import Image from "next/image";
 import Link from "next/link";
-import { CalendarDays, MessageCircle, ShoppingBag, Sparkles } from "lucide-react";
 
 import { siteConfig } from "@/config/site";
+import { publicRoutes } from "@/lib/routes";
+
+function Paw({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <circle cx="6" cy="9" r="2" />
+      <circle cx="12" cy="6.5" r="2.1" />
+      <circle cx="18" cy="9" r="2" />
+      <path d="M12 11.5c-2.6 0-4.7 2-4.7 4.2 0 1.5 1.2 2.3 2.7 2.3.9 0 1.4-.3 2-.3s1.1.3 2 .3c1.5 0 2.7-.8 2.7-2.3 0-2.2-2.1-4.2-4.7-4.2z" />
+    </svg>
+  );
+}
 
 export function HeroBanner() {
   return (
-    <section className="relative overflow-hidden bg-brand-900 px-0 py-6 text-white sm:py-8">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(239,79,179,0.34),transparent_32%),radial-gradient(circle_at_82%_14%,rgba(214,167,255,0.24),transparent_30%),linear-gradient(135deg,#2b0e46_0%,#6817b5_58%,#9f38f6_100%)]" />
-      <div className="content-container relative">
-        <div className="overflow-hidden rounded-[34px] border-[4px] border-white/20 bg-[#fff9f2] p-5 text-brand-950 shadow-[0_24px_70px_rgba(0,0,0,0.22)] sm:p-8">
-          <div className="grid gap-8 lg:grid-cols-[0.96fr_0.72fr] lg:items-center">
-            <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="relative h-20 w-20 overflow-hidden rounded-full border-[4px] border-brand-900 bg-white shadow-[0_7px_0_rgba(104,23,181,0.16)]">
-                  <Image src="/brand/logo-laikao-purple.jpeg" alt="Pet Shop Laikao" fill className="object-cover" priority />
-                </div>
-                <div>
-                  <p className="inline-flex rounded-full bg-[var(--sun-300)] px-3 py-1 text-xs font-extrabold uppercase tracking-[0.12em] text-brand-950">
-                    Pet Shop Laikao
-                  </p>
-                  <p className="mt-2 text-sm font-extrabold uppercase tracking-[0.12em] text-[var(--magenta-600)]">
-                    Loja e estetica animal
-                  </p>
-                </div>
-              </div>
+    <section className="hero">
+      <div className="lk-wrap hero-grid">
+        <div>
+          <span className="selo">
+            <Paw className="paw" /> Estetica animal &middot; Zona Norte SP
+          </span>
+          <h1>
+            O seu pet bem cuidado, do <span className="rosa">banho</span> ao petisco.
+          </h1>
+          <p className="tag">Paixao que une, amor que cuida.</p>
+          <p className="sub">
+            A Cris e a equipe da Laikao dao banho, tosa e atencao de verdade pro seu bicho, com loja completa, retirada e iFood
+            ate meia-noite.
+          </p>
+          <div className="hero-acoes">
+            <Link className="btn btn--rosa" href={publicRoutes.schedule}>
+              Agendar banho e tosa
+            </Link>
+            <a className="btn btn--zap" href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.8.7.8-2.7-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.8.9-.3.2-.5 0a6.6 6.6 0 0 1-1.9-1.2 7.3 7.3 0 0 1-1.4-1.7c-.1-.2 0-.4.1-.5l.4-.4.2-.4a.4.4 0 0 0 0-.4c0-.1-.5-1.3-.7-1.8s-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11 11 0 0 0 4.3 3.8c.6.2 1 .4 1.4.5a3.3 3.3 0 0 0 1.5.1c.5-.1 1.4-.6 1.6-1.1s.2-1 .1-1.1z" />
+              </svg>
+              WhatsApp
+            </a>
+          </div>
+          <div className="chips">
+            <span className="chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M12 2v20M5 8c0-3 3-5 7-5M19 8c0-3-3-5-7-5" />
+                <path d="M5 8c-2 4 0 9 7 12 7-3 9-8 7-12" />
+              </svg>
+              Banho e tosa
+            </span>
+            <span className="chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 7v5l3 2" />
+              </svg>
+              iFood ate meia-noite
+            </span>
+            <span className="chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M3 7h13v8H3z" />
+                <path d="M16 10h3l2 3v2h-5z" />
+                <circle cx="7" cy="17" r="1.6" />
+                <circle cx="17" cy="17" r="1.6" />
+              </svg>
+              Entrega ou retirada
+            </span>
+          </div>
+        </div>
 
-              <div>
-                <h1 className="font-heading text-4xl font-extrabold leading-[0.98] text-brand-900 sm:text-6xl">
-                  Aqui tem tudo para o seu pet.
-                </h1>
-                <p className="mt-4 max-w-2xl text-base font-semibold leading-7 text-brand-950/80 sm:text-lg">
-                  Banho, tosa, produtos, retirada, iFood e atendimento direto em uma experiencia mais bonita,
-                  roxa e organizada do Laikao.
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Link
-                  href={siteConfig.quickLinks.schedule.href}
-                  className="inline-flex min-h-13 items-center justify-center gap-2 rounded-full bg-[var(--magenta-600)] px-6 py-3 text-sm font-extrabold uppercase text-white shadow-[0_6px_0_rgba(43,14,70,0.22)] transition-transform hover:-translate-y-0.5"
-                >
-                  Agendar banho e tosa
-                  <CalendarDays className="h-4 w-4" />
-                </Link>
-                <Link
-                  href="/produtos"
-                  className="inline-flex min-h-13 items-center justify-center gap-2 rounded-full border-2 border-brand-900 bg-[var(--sun-300)] px-6 py-3 text-sm font-extrabold uppercase text-brand-950 shadow-[0_6px_0_rgba(43,14,70,0.14)] transition-transform hover:-translate-y-0.5"
-                >
-                  Ver produtos
-                  <ShoppingBag className="h-4 w-4" />
-                </Link>
-              </div>
-            </div>
-
-            <div className="rounded-[28px] bg-brand-900 p-5 text-white">
-              <p className="inline-flex rounded-full bg-white px-3 py-1 text-xs font-extrabold uppercase tracking-[0.12em] text-brand-900">
-                Estetica Animal
-              </p>
-              <h2 className="mt-4 font-heading text-4xl font-extrabold leading-none text-white">
-                Cuidado, beleza e carinho.
-              </h2>
-              <div className="mt-5 grid gap-2">
-                {["Banho", "Tosa", "Hidratacao", "Escovacao", "Corte de unhas"].map((item) => (
-                  <div key={item} className="flex items-center gap-3 rounded-full bg-white px-3 py-2 text-brand-900">
-                    <span className="grid h-8 w-8 place-items-center rounded-full bg-[var(--magenta-600)] text-white">
-                      <Sparkles className="h-4 w-4" />
-                    </span>
-                    <span className="text-sm font-extrabold uppercase">{item}</span>
-                  </div>
-                ))}
-              </div>
-              <a
-                href={siteConfig.whatsappUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-3 text-sm font-extrabold uppercase text-white"
-              >
-                Falar no WhatsApp
-                <MessageCircle className="h-4 w-4" />
-              </a>
+        <div className="photo-frame" aria-label="Foto da Cris com um pet">
+          <div className="ph-fallback">
+            <Paw className="big-paw" />
+            <span>Coloque aqui uma foto da Cris com um pet feliz</span>
+          </div>
+          <div className="frame-badge">
+            <span className="dot" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 20.5s-6.5-4.2-8.6-8.4C1.8 8.7 3.3 5.5 6.4 5.5c1.8 0 3 1.2 3.6 2.2.6-1 1.8-2.2 3.6-2.2 3.1 0 4.6 3.2 3 6.6-2.1 4.2-8.2 8.4-8.2 8.4z" />
+              </svg>
+            </span>
+            <div>
+              <b>Atendida pela Cris</b>
+              <small>Quem cuida tem nome e rosto</small>
             </div>
           </div>
         </div>

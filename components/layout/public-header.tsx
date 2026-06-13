@@ -1,60 +1,95 @@
-import Image from "next/image";
-import Link from "next/link";
-import { CalendarDays, MessageCircle, ShoppingBag } from "lucide-react";
+"use client";
 
-import { MobileNavSheet } from "@/components/layout/mobile-nav-sheet";
-import { siteConfig } from "@/config/site";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+
 import { publicRoutes } from "@/lib/routes";
 
 const navItems = [
+  { label: "Inicio", href: publicRoutes.home },
   { label: "Servicos", href: publicRoutes.services },
   { label: "Produtos", href: publicRoutes.products },
   { label: "Promocoes", href: publicRoutes.promotions },
   { label: "Contato", href: publicRoutes.contact }
 ];
 
-export async function PublicHeader() {
+function Paw({ className }: { className?: string }) {
   return (
-    <header className="sticky top-0 z-40 border-b border-brand-100 bg-white/95 backdrop-blur-md">
-      <div className="content-container flex min-h-20 items-center justify-between gap-4 py-3">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="relative h-12 w-12 overflow-hidden rounded-full border-2 border-brand-900 bg-white">
-            <Image src="/brand/logo-laikao-white.jpeg" alt="Logo Pet Shop Laikao" fill className="object-cover" />
-          </div>
-          <div>
-            <p className="font-heading text-lg font-extrabold text-brand-900">Pet Shop Laikao</p>
-            <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[var(--magenta-600)]">
-              Loja e estetica animal
-            </p>
-          </div>
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <circle cx="6" cy="9" r="2" />
+      <circle cx="12" cy="6.5" r="2.1" />
+      <circle cx="18" cy="9" r="2" />
+      <path d="M12 11.5c-2.6 0-4.7 2-4.7 4.2 0 1.5 1.2 2.3 2.7 2.3.9 0 1.4-.3 2-.3s1.1.3 2 .3c1.5 0 2.7-.8 2.7-2.3 0-2.2-2.1-4.2-4.7-4.2z" />
+    </svg>
+  );
+}
+
+export function PublicHeader() {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+
+  return (
+    <header className="topo">
+      <div className="lk-wrap bar">
+        <Link className="marca" href={publicRoutes.home} aria-label="Pet Shop Laikao, inicio">
+          <span className="stamp" aria-hidden="true">
+            <Paw />
+          </span>
+          <span>
+            <span className="pet">Pet Shop</span> <span className="lk">Laikao</span>
+          </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 lg:flex">
+        <nav className="nav" aria-label="Principal">
           {navItems.map((item) => (
-            <Link key={item.href} href={item.href} className="text-sm font-extrabold text-brand-900 hover:text-[var(--magenta-600)]">
+            <Link
+              key={item.href}
+              href={item.href}
+              className={isActive(item.href) ? "ativo" : undefined}
+              aria-current={isActive(item.href) ? "page" : undefined}
+            >
               {item.label}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
-          <a href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer" className="inline-flex h-11 items-center gap-2 rounded-full border border-brand-200 bg-white px-4 text-sm font-extrabold text-brand-900 hover:border-brand-700">
-            <MessageCircle className="h-4 w-4 text-success-500" />
-            WhatsApp
-          </a>
-          <a href={siteConfig.quickLinks.ifood.href} target="_blank" rel="noreferrer" className="inline-flex h-11 items-center gap-2 rounded-full bg-[var(--sun-300)] px-4 text-sm font-extrabold text-brand-950 hover:bg-[var(--sun-500)]">
-            <ShoppingBag className="h-4 w-4" />
-            iFood
-          </a>
-          <Link href={siteConfig.quickLinks.schedule.href} className="inline-flex h-11 items-center gap-2 rounded-full bg-[var(--magenta-600)] px-4 text-sm font-extrabold text-white hover:bg-[var(--magenta-500)]">
-            <CalendarDays className="h-4 w-4" />
+        <div className="topo-dir">
+          <Link className="btn btn--rosa topo-cta" href={publicRoutes.schedule}>
             Agendar
           </Link>
+          <button
+            className="burger"
+            type="button"
+            aria-label="Abrir menu"
+            aria-expanded={open}
+            aria-controls="menuMob"
+            onClick={() => setOpen((value) => !value)}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+          </button>
         </div>
+      </div>
 
-        <div className="lg:hidden">
-          <MobileNavSheet />
-        </div>
+      <div className={open ? "menu-mob open" : "menu-mob"} id="menuMob">
+        {navItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={isActive(item.href) ? "ativo" : undefined}
+            aria-current={isActive(item.href) ? "page" : undefined}
+            onClick={() => setOpen(false)}
+          >
+            {item.label}
+          </Link>
+        ))}
+        <Link className="btn btn--rosa" href={publicRoutes.schedule} onClick={() => setOpen(false)}>
+          Agendar banho e tosa
+        </Link>
       </div>
     </header>
   );

@@ -1,18 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope, Sora } from "next/font/google";
+import { Baloo_2, Nunito } from "next/font/google";
 
 import "@/app/globals.css";
 import { ToastSystem } from "@/components/feedback/toast-system";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
-const heading = Sora({
+const heading = Baloo_2({
   subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
   variable: "--font-heading"
 });
 
-const body = Manrope({
+const body = Nunito({
   subsets: ["latin"],
+  weight: ["400", "600", "700", "800"],
+  style: ["normal", "italic"],
   variable: "--font-body"
 });
 
@@ -39,7 +42,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#9f2bb8",
+  themeColor: "#E5197F",
   viewportFit: "cover"
 };
 

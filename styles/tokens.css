@@ -1,40 +1,45 @@
 :root {
-  --font-heading: "Sora", "Manrope", system-ui, sans-serif;
-  --font-body: "Manrope", system-ui, sans-serif;
+  --font-heading: "Baloo 2", "Comic Sans MS", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  --brand-50: #fcf7ff;
-  --brand-100: #f5e9ff;
-  --brand-200: #e7cfff;
-  --brand-300: #d6a7ff;
-  --brand-400: #bd74ff;
-  --brand-500: #9f38f6;
-  --brand-600: #8122dc;
-  --brand-700: #6817b5;
-  --brand-800: #51108d;
-  --brand-900: #3d0f67;
-  --brand-950: #2b0e46;
+  /* Paleta Pet Shop Laikao: rosa magenta + roxo (CLAUDE.md sec. 2).
+     A escala --brand vai do creme/rosa-suave (claro) ao roxo-profundo
+     (escuro), passando pelo rosa de marca no meio. Assim os componentes
+     existentes que usam brand-500/600 ficam rosa (CTAs) e brand-800/900
+     ficam roxo/roxo-profundo (titulos, rodape, faixas escuras). */
+  --brand-50: #fff5fa;
+  --brand-100: #fce4f0;
+  --brand-200: #f7c6e0;
+  --brand-300: #f29cc9;
+  --brand-400: #ff4fa8;
+  --brand-500: #e5197f;
+  --brand-600: #c2186e;
+  --brand-700: #9b2486;
+  --brand-800: #7b2d9e;
+  --brand-900: #4a1568;
+  --brand-950: #2a1b30;
 
-  --magenta-100: #ffe0f3;
-  --magenta-300: #ff94d2;
-  --magenta-500: #ef4fb3;
-  --magenta-600: #d63a9c;
+  --magenta-100: #fce4f0;
+  --magenta-300: #ff94c9;
+  --magenta-500: #ff4fa8;
+  --magenta-600: #e5197f;
   --sun-100: #fff1a8;
   --sun-300: #ffd85a;
   --sun-500: #ffbe1b;
 
-  --sand-50: #fffdfb;
-  --sand-100: #faf4ee;
-  --sand-200: #e4d8cb;
-  --stone-100: #ede9e4;
-  --stone-300: #b7aca1;
-  --stone-500: #756c64;
-  --ink-700: #2f2a35;
-  --ink-900: #16131b;
-  --teal-500: #1c8f85;
+  --sand-50: #fff5fa;
+  --sand-100: #f4e9fb;
+  --sand-200: #ead9ee;
+  --stone-100: #ead9ee;
+  --stone-300: #c9aed2;
+  --stone-500: #6b5570;
+  --ink-700: #6b5570;
+  --ink-900: #2a1b30;
+  --teal-500: #1fae54;
   --amber-500: #d48a1d;
   --rose-500: #c54552;
-  --success-500: #23845d;
+  --success-500: #1fae54;
   --warning-500: #d48a1d;
   --error-500: #c54552;
   --info-500: #2b7dbb;
@@ -42,14 +47,36 @@
   --low-stock-500: #cc6a22;
   --blocked-500: #6d6780;
 
-  --radius-sm: 10px;
-  --radius-md: 14px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
+  /* Nomes do guia (CLAUDE.md) para uso direto nos componentes do site */
+  --rosa: #e5197f;
+  --rosa-claro: #ff4fa8;
+  --rosa-suave: #fce4f0;
+  --roxo: #7b2d9e;
+  --roxo-profundo: #4a1568;
+  --lavanda: #f4e9fb;
+  --creme: #fff5fa;
+  --branco: #ffffff;
+  --carvao: #2a1b30;
+  --tinta-suave: #6b5570;
+  --linha: #ead9ee;
+  --verde: #1fae54;
+  --ifood: #ea1d2c;
 
-  --shadow-soft: 0 10px 30px rgba(32, 16, 51, 0.08);
-  --shadow-elevated: 0 18px 50px rgba(32, 16, 51, 0.14);
-  --shadow-focus: 0 0 0 4px rgba(141, 57, 244, 0.18);
+  --raio: 22px;
+  --raio-sm: 14px;
+
+  --radius-sm: 14px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+
+  --sombra: 0 18px 40px -20px rgba(74, 21, 104, 0.35);
+  --sombra-suave: 0 10px 30px -18px rgba(74, 21, 104, 0.3);
+  --shadow-soft: 0 10px 30px -18px rgba(74, 21, 104, 0.3);
+  --shadow-elevated: 0 18px 40px -20px rgba(74, 21, 104, 0.35);
+  --shadow-focus: 0 0 0 4px rgba(229, 25, 127, 0.18);
+
+  --container: 1140px;
 
   --space-1: 4px;
   --space-2: 8px;
