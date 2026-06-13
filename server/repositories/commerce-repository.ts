@@ -159,6 +159,7 @@ function mapProductRecord(product: ProductWithRelations): ProductRecord {
     categoryName: product.category?.name,
     slug: product.slug,
     name: product.name,
+    brand: product.brand ?? undefined,
     description: product.description,
     status: product.status as ProductRecord["status"],
     featured: product.featured,
@@ -341,10 +342,26 @@ export async function upsertCategoryRecord(input: {
   });
 }
 
-export async function updateProductAdminRecord(input: {
-  id: string;
+type ProductImageInput = {
+  id?: string;
+  imageUrl: string;
+  imagePath: string;
+  imageThumbUrl: string;
+  imageThumbPath: string;
+  alt: string;
+  mimeType: string;
+  sizeBytes: number;
+  width: number;
+  height: number;
+  displayOrder: number;
+  isPrimary: boolean;
+};
+
+export type ProductWriteInput = {
+  id?: string;
   name: string;
   slug: string;
+  brand?: string;
   description: string;
   categoryId?: string;
   status: ProductRecord["status"];
@@ -352,21 +369,135 @@ export async function updateProductAdminRecord(input: {
   active: boolean;
   imageLabel: string;
   mainImageUrl?: string;
-  images?: Array<{
-    id?: string;
-    imageUrl: string;
-    imagePath: string;
-    imageThumbUrl: string;
-    imageThumbPath: string;
-    alt: string;
-    mimeType: string;
-    sizeBytes: number;
-    width: number;
-    height: number;
-    displayOrder: number;
-    isPrimary: boolean;
-  }>;
+  images?: ProductImageInput[];
   variantPriceCents: number;
+  variantCompareAtCents?: number;
+  variantStockQuantity: number;
+};
+
+function normalizeProductImages(images: ProductImageInput[] | undefined, mainImageUrl?: string) {
+  const normalized = images?.map((image, index) => ({
+    ...image,
+    id: image.id ?? nextId("pimg"),
+    displayOrder: Number.isFinite(image.displayOrder) ? image.displayOrder : index,
+    isPrimary: image.isPrimary
+  })) ?? [];
+  const hasPrimary = normalized.some((image) => image.isPrimary);
+  const withPrimary = normalized.map((image, index) => ({
+    ...image,
+    isPrimary: hasPrimary ? image.isPrimary : index === 0
+  }));
+  const resolvedMainImageUrl =
+    withPrimary.find((image) => image.isPrimary)?.imageUrl ?? withPrimary[0]?.imageUrl ?? mainImageUrl ?? null;
+  return { images: withPrimary, mainImageUrl: resolvedMainImageUrl };
+}
+
+function makeVariantSku(slug: string) {
+  const base = slug
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return base || `SKU-${randomUUID().slice(0, 8).toUpperCase()}`;
+}
+
+export async function createProductRecord(input: ProductWriteInput) {
+  await ensureInfrastructure();
+
+  const existing = await db.product.findUnique({ where: { slug: input.slug } });
+  if (existing) {
+    throw new Error("Ja existe um produto com este slug. Use outro slug.");
+  }
+
+  const productId = input.id ?? nextId("prod");
+  const variantId = nextId("var");
+  const { images, mainImageUrl } = normalizeProductImages(input.images, input.mainImageUrl);
+  const compareAtCents =
+    input.variantCompareAtCents && input.variantCompareAtCents > input.variantPriceCents
+      ? input.variantCompareAtCents
+      : null;
+
+  await db.$transaction(async (tx) => {
+    await tx.product.create({
+      data: {
+        id: productId,
+        slug: input.slug,
+        name: input.name,
+        brand: input.brand ?? null,
+        description: input.description,
+        categoryId: input.categoryId ?? null,
+        status: input.status,
+        featured: input.featured,
+        active: input.active,
+        imageLabel: input.imageLabel,
+        mainImageUrl
+      }
+    });
+
+    await tx.productVariant.create({
+      data: {
+        id: variantId,
+        productId,
+        slug: input.slug,
+        title: "Padrao",
+        sku: makeVariantSku(input.slug),
+        priceCents: input.variantPriceCents,
+        compareAtCents,
+        stockQuantity: input.variantStockQuantity,
+        active: input.active
+      }
+    });
+
+    for (const image of images) {
+      await tx.productImage.create({
+        data: {
+          id: image.id,
+          productId,
+          imageUrl: image.imageUrl,
+          imagePath: image.imagePath,
+          imageThumbUrl: image.imageThumbUrl,
+          imageThumbPath: image.imageThumbPath,
+          alt: image.alt,
+          mimeType: image.mimeType,
+          sizeBytes: image.sizeBytes,
+          width: image.width,
+          height: image.height,
+          displayOrder: image.displayOrder,
+          isPrimary: image.isPrimary
+        }
+      });
+    }
+  });
+
+  return { id: productId, created: true as const };
+}
+
+export async function upsertProductBySlugRecord(input: ProductWriteInput) {
+  await ensureInfrastructure();
+
+  const existing = await db.product.findUnique({ where: { slug: input.slug } });
+  if (!existing) {
+    return createProductRecord(input);
+  }
+
+  await updateProductAdminRecord({ ...input, id: existing.id });
+  return { id: existing.id, created: false as const };
+}
+
+export async function updateProductAdminRecord(input: {
+  id: string;
+  name: string;
+  slug: string;
+  brand?: string;
+  description: string;
+  categoryId?: string;
+  status: ProductRecord["status"];
+  featured: boolean;
+  active: boolean;
+  imageLabel: string;
+  mainImageUrl?: string;
+  images?: ProductImageInput[];
+  variantPriceCents: number;
+  variantCompareAtCents?: number;
   variantStockQuantity: number;
 }) {
   await ensureInfrastructure();
@@ -379,24 +510,18 @@ export async function updateProductAdminRecord(input: {
   }
 
   await db.$transaction(async (tx) => {
-    const normalizedImages = input.images?.map((image, index) => ({
-      ...image,
-      id: image.id ?? nextId("pimg"),
-      displayOrder: Number.isFinite(image.displayOrder) ? image.displayOrder : index,
-      isPrimary: image.isPrimary
-    })) ?? [];
-    const hasPrimary = normalizedImages.some((image) => image.isPrimary);
-    const images = normalizedImages.map((image, index) => ({
-      ...image,
-      isPrimary: hasPrimary ? image.isPrimary : index === 0
-    }));
-    const mainImageUrl = images.find((image) => image.isPrimary)?.imageUrl ?? images[0]?.imageUrl ?? input.mainImageUrl ?? null;
+    const { images, mainImageUrl } = normalizeProductImages(input.images, input.mainImageUrl);
+    const compareAtCents =
+      input.variantCompareAtCents && input.variantCompareAtCents > input.variantPriceCents
+        ? input.variantCompareAtCents
+        : null;
 
     await tx.product.update({
       where: { id: input.id },
       data: {
         name: input.name,
         slug: input.slug,
+        brand: input.brand ?? null,
         description: input.description,
         categoryId: input.categoryId ?? null,
         status: input.status,
@@ -460,8 +585,23 @@ export async function updateProductAdminRecord(input: {
         where: { id: firstVariant.id },
         data: {
           priceCents: input.variantPriceCents,
+          compareAtCents,
           stockQuantity: input.variantStockQuantity,
           updatedAt: new Date()
+        }
+      });
+    } else {
+      await tx.productVariant.create({
+        data: {
+          id: nextId("var"),
+          productId: input.id,
+          slug: input.slug,
+          title: "Padrao",
+          sku: makeVariantSku(input.slug),
+          priceCents: input.variantPriceCents,
+          compareAtCents,
+          stockQuantity: input.variantStockQuantity,
+          active: input.active
         }
       });
     }
@@ -491,6 +631,7 @@ export async function listAdminProductRows(): Promise<AdminProductRow[]> {
       id: product.id,
       slug: product.slug,
       name: product.name,
+      brand: product.brand ?? undefined,
       categoryName: product.categoryName ?? "Sem categoria",
       priceLabel: formatCurrency((firstVariant?.priceCents ?? 0) / 100),
       stockStatus,

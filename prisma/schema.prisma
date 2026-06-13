@@ -226,6 +226,7 @@ model Product {
   categoryId      String?
   slug            String              @unique
   name            String
+  brand           String?
   description     String
   status          String
   featured        Boolean             @default(false)

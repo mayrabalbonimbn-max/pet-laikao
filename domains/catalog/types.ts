@@ -59,6 +59,7 @@ export type ProductRecord = {
   categoryName?: string;
   slug: string;
   name: string;
+  brand?: string;
   description: string;
   status: ProductStatus;
   featured: boolean;
@@ -75,6 +76,7 @@ export type ProductPreview = {
   id: string;
   slug: string;
   name: string;
+  brand?: string;
   category: string;
   priceLabel: string;
   priceCents?: number;
@@ -91,6 +93,7 @@ export type AdminProductRow = {
   id: string;
   slug: string;
   name: string;
+  brand?: string;
   categoryName: string;
   priceLabel: string;
   stockStatus: StockStatus;
