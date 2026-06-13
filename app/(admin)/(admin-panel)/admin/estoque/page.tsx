@@ -149,35 +149,66 @@ export default async function AdminInventoryPage() {
                   </div>
 
                   <div className="grid gap-4 xl:grid-cols-2">
-                    <form action={updateVariant} className="grid gap-3">
+                    <form action={updateVariant} className="grid gap-3 rounded-[14px] border border-stone-100 bg-sand-50/40 p-4">
+                      <div>
+                        <p className="text-sm font-semibold text-ink-900">1. Dados do item</p>
+                        <p className="text-xs text-stone-500">Quanto custa, por quanto vende, o alerta de estoque baixo e o fornecedor. Use quando esses valores mudarem.</p>
+                      </div>
                       <input type="hidden" name="variantId" value={row.variantId} />
-                      <select name="supplierId" defaultValue={row.supplierId ?? ""} className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm">
-                        <option value="">Sem fornecedor</option>
-                        {suppliers.map((supplier: SupplierRecord) => (
-                          <option key={supplier.id} value={supplier.id}>{supplier.name}</option>
-                        ))}
-                      </select>
+                      <label className="grid gap-1 text-xs font-semibold text-stone-600">
+                        Fornecedor
+                        <select name="supplierId" defaultValue={row.supplierId ?? ""} className="mt-1 rounded-[12px] border border-stone-200 px-3 py-2 text-sm font-normal">
+                          <option value="">Sem fornecedor</option>
+                          {suppliers.map((supplier: SupplierRecord) => (
+                            <option key={supplier.id} value={supplier.id}>{supplier.name}</option>
+                          ))}
+                        </select>
+                      </label>
                       <div className="grid gap-3 sm:grid-cols-3">
-                        <input type="number" min="0" step="0.01" name="costReais" defaultValue={(row.costCents / 100).toFixed(2)} className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
-                        <input type="number" min="0" step="0.01" name="priceReais" defaultValue={(row.priceCents / 100).toFixed(2)} className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
-                        <input type="number" min="0" name="minimumStock" defaultValue={row.minimumStock} className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
+                        <label className="grid gap-1 text-xs font-semibold text-stone-600">
+                          Custo (R$)
+                          <input type="number" min="0" step="0.01" name="costReais" defaultValue={(row.costCents / 100).toFixed(2)} className="mt-1 rounded-[12px] border border-stone-200 px-3 py-2 text-sm font-normal" />
+                        </label>
+                        <label className="grid gap-1 text-xs font-semibold text-stone-600">
+                          Preço de venda (R$)
+                          <input type="number" min="0" step="0.01" name="priceReais" defaultValue={(row.priceCents / 100).toFixed(2)} className="mt-1 rounded-[12px] border border-stone-200 px-3 py-2 text-sm font-normal" />
+                        </label>
+                        <label className="grid gap-1 text-xs font-semibold text-stone-600">
+                          Alerta de mínimo
+                          <input type="number" min="0" name="minimumStock" defaultValue={row.minimumStock} className="mt-1 rounded-[12px] border border-stone-200 px-3 py-2 text-sm font-normal" />
+                        </label>
                       </div>
                       <button className="rounded-[12px] bg-ink-900 px-4 py-2 text-sm font-semibold text-white">Salvar dados do item</button>
                     </form>
 
-                    <form action={createMovement} className="grid gap-3">
+                    <form action={createMovement} className="grid gap-3 rounded-[14px] border border-stone-100 bg-sand-50/40 p-4">
+                      <div>
+                        <p className="text-sm font-semibold text-ink-900">2. Entrada ou saída de estoque</p>
+                        <p className="text-xs text-stone-500">
+                          <b>Entrada</b>: chegou mercadoria. <b>Saída</b>: saiu sem ser venda (perda, uso, brinde). <b>Ajuste</b>: corrigir para a quantidade que você contou.
+                        </p>
+                      </div>
                       <input type="hidden" name="variantId" value={row.variantId} />
                       <div className="grid gap-3 sm:grid-cols-3">
-                        <select name="movementType" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm">
-                          <option value="entry">Entrada</option>
-                          <option value="exit">Saída</option>
-                          <option value="adjustment">Ajuste para valor final</option>
-                        </select>
-                        <input type="number" min="0" name="quantity" placeholder="Quantidade" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" required />
-                        <input type="number" min="0" step="0.01" name="unitCostReais" placeholder="Custo unitário" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
+                        <label className="grid gap-1 text-xs font-semibold text-stone-600">
+                          O que aconteceu?
+                          <select name="movementType" className="mt-1 rounded-[12px] border border-stone-200 px-3 py-2 text-sm font-normal">
+                            <option value="entry">Entrada (chegou)</option>
+                            <option value="exit">Saída (perda/uso)</option>
+                            <option value="adjustment">Ajuste (contagem real)</option>
+                          </select>
+                        </label>
+                        <label className="grid gap-1 text-xs font-semibold text-stone-600">
+                          Quantidade
+                          <input type="number" min="0" name="quantity" placeholder="Ex.: 10" className="mt-1 rounded-[12px] border border-stone-200 px-3 py-2 text-sm font-normal" required />
+                        </label>
+                        <label className="grid gap-1 text-xs font-semibold text-stone-600">
+                          Custo por unidade (R$)
+                          <input type="number" min="0" step="0.01" name="unitCostReais" placeholder="Opcional" className="mt-1 rounded-[12px] border border-stone-200 px-3 py-2 text-sm font-normal" />
+                        </label>
                       </div>
-                      <input name="reason" placeholder="Motivo da movimentação" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" required />
-                      <textarea name="notes" rows={2} placeholder="Observações" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
+                      <input name="reason" placeholder="Motivo (ex.: compra do fornecedor, perda por validade)" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" required />
+                      <textarea name="notes" rows={2} placeholder="Observações (opcional)" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
                       <button className="rounded-[12px] bg-brand-500 px-4 py-2 text-sm font-semibold text-white">Registrar movimentação</button>
                     </form>
                   </div>
