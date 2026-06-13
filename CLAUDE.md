@@ -1,45 +1,195 @@
-# CLAUDE.md — Guia de Design e UI/UX do site Pet Shop Laikão
+# CLAUDE.md — Pet Shop Laikão (fonte de verdade única)
 
-Este documento é a fonte de verdade para reconstruir o site da **Pet Shop Laikão** no projeto Next.js, seguindo **à risca** o design e a UX já aprovados. Leia tudo antes de escrever código. Não improvise estilo, cor, tom de voz ou estrutura: o que está aqui já foi decidido.
+Este é o documento mestre do projeto. Ele consolida o escopo de produto (antigo `AGENTS.md`) e a lei de design/UX já aprovada. O conteúdo essencial de ambos está aqui, então **não é preciso ler outro arquivo de instrução**. Em qualquer conflito, este arquivo manda.
 
-A referência visual pronta está nos arquivos HTML/CSS/JS de `laikao-site/` (versão com `styles.css` + `app.js` separados). Use-os como espelho fiel do resultado esperado.
-
----
-
-## 0. Regras invioláveis (leia primeiro)
-
-Estas regras valem para o site inteiro. Quebrar qualquer uma delas é considerado erro.
-
-1. **Nada de jargão técnico para o cliente.** Nunca exibir termos como "checkout integrado da InfinitePay", "state machine", "hold temporário", "catálogo centralizado em domínio". O cliente é dono de pet, não desenvolvedor. Toda copy visível é calorosa e simples.
-2. **As páginas Produtos e Promoções nunca podem aparecer vazias para o cliente.** Nada de "0 produtos", "Nenhum produto encontrado" como estado da página, nem "Em breve" como página inteira. Estado vazio só é aceitável quando o próprio cliente filtra e não acha nada (e mesmo assim com mensagem amigável e botão de limpar filtro).
-3. **Identidade é rosa + roxo, calorosa e de bairro.** Não é SaaS minimalista, não é corporativo, não é o roxo lavado do site antigo. Use a paleta definida na seção 2.
-4. **Sem em-dash (—) em nenhuma copy.** Use vírgula, dois-pontos, ponto ou parênteses.
-5. **A Cris aparece.** Quem cuida tem nome e rosto. Mantenha os espaços de foto da Cris e da loja, e o selo "Atendida pela Cris".
-6. **Mobile-first.** Tudo precisa funcionar bem a partir de 360px de largura.
-7. **Dados reais sempre.** Use os links, endereço, telefone, serviços e preços da seção 8. Não invente dado de contato.
+A referência visual pronta está nos arquivos HTML/CSS/JS em `laikao-site/` e no detalhamento em `guia-design-referencia.md`. Em dúvida de aparência, reproduza o que está lá. Reproduza, não reinvente.
 
 ---
 
-## 1. Contexto e objetivo
+## Como o Claude Code deve trabalhar neste projeto
 
-A Pet Shop Laikão é um pet shop de bairro na Vila Nova Cachoeirinha, Zona Norte de São Paulo, da Cris. Faz banho e tosa, vende produtos (ração, petisco, higiene, beleza, acessórios, brinquedos), entrega pelo iFood até meia-noite e atende presencialmente.
+Faça sempre nesta ordem:
 
-O site antigo falhava porque: traía a marca (roxo corporativo, sem rosa, sem pets, sem a Cris), tinha páginas mortas (Produtos com "0 produtos", Promoções com "Em breve"), vazava jargão de dev para o cliente e tinha copy que descrevia o próprio design em vez de falar com a pessoa.
+1. **Ler este `CLAUDE.md` inteiro.**
+2. **Explorar o repositório e reportar o estado real** antes de agir. Não assuma que uma feature está pronta só porque está listada aqui; confirme no código. Liste o que existe de fato (rotas, schema Prisma, integrações, scripts).
+3. **Propor o plano da etapa** (objetivo, o que vai fazer, riscos, decisões) e **aguardar meu OK** antes de criar ou mover arquivos quando o assunto for amplo.
+4. **Executar em branch isolada** (ou git worktree). Nada de commit direto na branch de produção.
+5. **Validar com build/typecheck** e mostrar a saída real antes de dizer que terminou.
+6. **Resumir** o que foi feito, o que ficou pendente e a próxima etapa lógica.
 
-O objetivo do novo site é parecer um pet shop querido e confiável, vender produtos de forma simples e deixar o agendamento fácil.
+Guard-rails de produção (invioláveis):
+- O site e o admin no ar (Next em `:3000`) precisam continuar funcionando o tempo todo.
+- Não rodar migrations destrutivas nem `prisma migrate reset` contra o banco de produção. Gerar a migration e me mostrar o SQL antes de aplicar. Para testar, usar database separado (`laikao_dev`).
+- Não tocar em nginx, PM2, `.env` de produção nem em arquivos fora do repo sem minha aprovação. Nunca colar conteúdo de `.env` na conversa.
+- Antes de qualquer ação irreversível (mover/renomear pastas do app que está no ar, apagar arquivos, deletar dados), parar e confirmar.
+
+---
+
+## 0. Regras invioláveis
+
+Quebrar qualquer uma destas é erro.
+
+**Produto**
+1. Não entregar solução genérica, improvisada ou superficial. Em dúvida entre "rápido" e "bem feito", escolher bem feito, com arquitetura correta.
+2. Multi-page / multi-route de verdade. Nunca reduzir a one page nem a landing.
+3. Mobile-first real (não desktop espremido). Funciona bem a partir de 360px.
+4. Todo fluxo central tem estados claros de carregando, vazio, erro, sucesso, indisponível e confirmação.
+5. Zero gaps entre front, backend, pagamentos, agenda, admin e notificações. Tudo conversa com tudo.
+
+**Visual e copy**
+6. O **roxo é a identidade da Laikão e domina o site** (fundo roxo estrutural), com rosa como acento. Seguir o design já feito, aplicado sobre base roxa. Áreas de catálogo, checkout e admin usam superfícies claras sobre o roxo para legibilidade. Deve parecer uma **rede grande e consolidada** na completude e no acabamento, com a cara roxa própria da marca. Não é SaaS frio nem o roxo lavado do site antigo, e não pode parecer loja pequena. (Ver seção 1.)
+7. Nada de jargão técnico para o cliente (nada de "checkout integrado da InfinitePay", "state machine", "hold temporário"). Copy calorosa e simples.
+8. As páginas Produtos e Promoções nunca aparecem vazias para o cliente. Nada de "0 produtos" ou "Em breve" como página. Vazio só quando o cliente filtra e não acha, com mensagem amigável e botão de limpar.
+9. Sem em-dash (—) em nenhuma copy. Use vírgula, dois-pontos, ponto ou parênteses.
+10. O toque humano da Cris aparece como **sinal de confiança** (quem cuida tem nome e rosto), de forma sutil e elegante, sem fazer o site parecer loja pequena. Manter os espaços de foto da Cris e da loja, integrados a um layout de rede grande.
+11. Dados reais sempre (links, endereço, telefone, serviços e preços da seção 9). Não inventar contato.
+
+---
+
+## 1. Missão e marca
+
+A Pet Shop Laikão fica na Vila Nova Cachoeirinha, Zona Norte de São Paulo, e é da Cris. Faz banho e tosa, vende produtos (ração, petisco, higiene, beleza, acessórios, brinquedos), entrega pelo iFood até meia-noite e atende presencialmente.
+
+A dona quer que o site **pareça uma rede de pet shop grande, consolidada e profissional**, com venda online e agendamento de serviços funcionando direitinho. Não tratar como "site simples de pet shop": a referência de completude e operação é uma **plataforma comercial completa** no nível de Petz, Cobasi ou Petlove (catálogo forte, busca, carrinho, conta, checkout, agenda séria). Tudo polido, escalável e operacionalmente confiável.
+
+**Identidade visual (decidida):** o **roxo é a identidade histórica da Laikão** e deve dominar. O site usa **fundo roxo** como cor estrutural da marca, com rosa como acento de ação e destaque. Seguir o design já feito (componentes, selo, tipografia, paleta), aplicado sobre base roxa. A completude e o profissionalismo são de rede grande; a cara é roxa e própria, não um clone claro de concorrente.
+
+**Como fazer roxo dominante e ainda parecer rede grande (execução):** o roxo domina a estrutura (header, herói, faixas, seções de destaque, rodapé, navegação). As áreas de catálogo e leitura intensa (grade de produtos, página de produto, carrinho, checkout, formulários da agenda, admin) usam **cards e superfícies claras sobre o fundo roxo**, porque foto de produto e listas longas precisam de fundo claro para ler bem e valorizar a imagem. Resultado: marca roxa forte e e-commerce legível ao mesmo tempo.
+
+**Toque humano:** a Cris aparece como sinal de confiança e diferencial (quem cuida tem nome e rosto), de forma elegante, sem fazer parecer loja pequena.
 
 **Tagline oficial:** "Paixão que une, amor que cuida."
 
+### DECISÃO DE BRAND (resolvida)
+A Cris quer **fundo roxo**, mantendo o design já feito. Roxo sempre foi a identidade da Laikão. **Direção fixada: fundo roxo dominante (estrutura), rosa como acento, superfícies de catálogo/checkout/admin em claro sobre o roxo para legibilidade.** Os tokens da seção 6 continuam valendo; o que muda é a cor estrutural de fundo: o fundo geral passa de `--creme` para roxo (use `--roxo-profundo` como base estrutural, ou um roxo de fundo dedicado), e `--creme`/`--branco` passam a ser as superfícies dos cards e blocos de conteúdo. A paleta (rosa, roxo, lavanda) não muda. Base clara dominante fica descartada.
+
 ---
 
-## 2. Design tokens
+## 2. Arquitetura técnica
 
-Defina exatamente estes valores. No Next, coloque em `app/globals.css` dentro de `:root` (ou no `@theme` se usar Tailwind v4). Não altere os hex.
+### Estado atual (confirmar no servidor/repo)
+- Frontend Next do Laikão roda via **PM2** (`npm start`) em **`/var/www/laikao`**, porta **3000**. Os domínios `petlaikao.com.br` e `admin.petlaikao.com.br` apontam ambos para `127.0.0.1:3000` no nginx.
+- Não existe API separada hoje. O que houver de agenda/produtos/admin está dentro do Next.
+- **PostgreSQL** ativo em `127.0.0.1:5432` (localhost). **Prisma** em uso (reaproveitar o schema existente).
+- Padrão dos outros projetos: backend próprio sob PM2 com sufixo `-api`.
 
+### Alvo
+- **Next.js** como frontend (preservado).
+- **NestJS** como API principal, separada, modular.
+- **PostgreSQL** definitivo (o que já existe), database dedicado `laikao`.
+- **Prisma** mantido. **Sem Supabase.**
+- shared types/schemas quando fizer sentido.
+
+> Nota de convenção: NestJS é mais pesado que o padrão `src/server.js` dos outros `-api`. Mantido por ser o projeto robusto. Registrar essa divergência ao propor.
+
+### Deploy e roteamento (não alterar sem aprovação)
+- Nova API sobe no PM2 como **`laikao-api`**, porta **4018** (confirmar livre com `ss -tulpn | grep :4018`).
+- nginx: adicionar `location /api/ { proxy_pass http://127.0.0.1:4018/; }` nos blocos de `petlaikao.com.br` e `admin.petlaikao.com.br`.
+
+### Organização (monorepo, se não bagunçar)
+Preferência: `apps/web` (Next), `apps/api` (NestJS), `packages/shared` (tipos/schemas). Risco: o deploy atual roda `npm start` em `/var/www/laikao`; o monorepo não pode quebrar isso nem o PM2 `laikao`. Ao propor, descrever exatamente como introduzir o monorepo sem derrubar produção (inclusive a opção de começar a API como app irmão em `/var/www/laikao/api` e consolidar depois). Se recomendar outra organização, justificar.
+
+### Migração incremental (não reescrever tudo de uma vez)
+Módulos previstos na API: `auth`, `appointments`, `catalog`, `promotions`, `uploads`, `orders`, `payments`, `inventory`, `finance`, `reports`, `notifications`.
+
+Ordem de extração:
+1. `auth` admin
+2. `appointments` (agenda)
+3. `catalog` (produtos, categorias, serviços)
+4. `promotions`
+5. `uploads`
+
+Depois: `orders` → checkout → `payments` → `inventory` → `finance` → `reports`.
+
+Compatibilidade temporária: o Next pode seguir chamando as rotas atuais enquanto a API sobe em paralelo, migrando rota a rota, sem big bang.
+
+---
+
+## 3. Sitemap
+
+### Rotas públicas
+`/` (Home), `/servicos`, `/servicos/[slug]`, `/agenda`, `/produtos`, `/produto/[slug]`, `/promocoes`, `/sobre`, `/contato`, `/carrinho`, `/checkout`, `/minha-conta` (se houver login cliente), e políticas (`/privacidade`, `/termos`, `/trocas-e-devolucoes`, `/politica-de-agendamento`).
+
+> Observação: a referência estática em `laikao-site/` cobre Início, Serviços, Produtos, Promoções e Contato. O alvo completo acima é o destino; chegar lá por fases.
+
+### Rotas administrativas
+`/admin`, `/admin/dashboard`, `/admin/agendamentos`, `/admin/pedidos`, `/admin/produtos`, `/admin/clientes`, `/admin/servicos`, `/admin/calendario`, `/admin/cupons`, `/admin/notificacoes`, `/admin/banners`, `/admin/financeiro`, `/admin/automacoes`, `/admin/configuracoes`.
+
+---
+
+## 4. Domínio / entidades principais
+
+Modelar no Prisma (confirmar o que já existe antes de criar). Núcleo esperado:
+
+- **Usuario** (admin), com papel/permissão e auth segura.
+- **Cliente** (tutor), opcional login; dados de contato e pets.
+- **Pet** (nome, espécie, porte, observações), ligado ao Cliente.
+- **Servico** (nome, slug, preço, duração, regras).
+- **Agendamento** (serviço, pet, tutor, data, horário, status, valor pago, saldo pendente, forma de pagamento, observações). Estados claros e histórico.
+- **DisponibilidadeAgenda / Bloqueio** (slots, intervalos, limites de encaixe, dias/horários bloqueados).
+- **Categoria** e **Produto** (nome, slug, marca, descrição, fotos, preço, preço promocional, estoque, variações se houver, destaque, promo).
+- **Pedido** e **ItemPedido** (itens, quantidades, subtotal, frete/retirada, cupom, status).
+- **Pagamento** (origem: agendamento ou pedido; método Pix/cartão; valor pago; restante; status; referência do provedor; webhook).
+- **Promocao / Cupom** (regra, validade, ativo).
+- **Banner** e **ConteudoInstitucional** (gerenciáveis pelo admin).
+- **Notificacao** (tipo, destino, status) e **Lead/Mensagem de contato**.
+- **MovimentoEstoque** (entrada/saída) para o módulo de inventory/finance.
+
+Para a vitrine, o formato que o frontend já espera (mantenha a forma de saída da API compatível):
+```ts
+type Produto = {
+  id: string; nome: string; marca: string;
+  cat: "Rações"|"Petiscos"|"Higiene"|"Beleza"|"Acessórios"|"Brinquedos";
+  desc: string; preco: number; precoAntes?: number; promo?: boolean;
+  estoque: "ok"|"pouco"|"fora"; // pouco => Últimas unidades; fora => Indisponível
+};
+```
+
+---
+
+## 5. Requisitos funcionais (alvo do produto)
+
+### Home
+Forte, comercial, clara, sem ser confusa nem longa demais: hero/banner, destaque de serviços, destaque de produtos, CTA de agendamento, prova de confiança/diferenciais, atalhos rápidos, bloco de contato/WhatsApp, chamada de promoções.
+
+### Agenda online (parte crítica)
+- Calendário com visões mensal, semanal e diária.
+- Datas e horários disponíveis; bloqueio de indisponíveis; fluxo simples; mobile excelente; confirmação visual clara.
+- Fluxo: escolher serviço → pet/infos → data → horário → resumo → pagamento → confirmação → e-mail para a Cris + admin atualizado.
+- Regras: duração por serviço, intervalos, bloqueios, limite de encaixes, reagendamento, cancelamento com regras, observações, histórico.
+
+### Pagamento do agendamento
+- **50% via Pix** (reserva), **100% via Pix**, **cartão de crédito**.
+- Integrado ao fluxo (não separar de forma confusa). Falha bem tratada. Status no admin e para o cliente. Se 50%: horário reservado + saldo restante registrado e visível no admin.
+
+### Loja / vitrine
+Grid responsivo, busca, filtros, categorias, página de produto, preço, estoque, fotos, descrição, variações, carrinho, checkout. Preparada para crescer (destaques, promoções, combos, banners, recomendados).
+
+### Carrinho e checkout
+Adicionar/remover, ajustar quantidade, subtotal, frete/retirada, cupom (se implementar), pagamento, confirmação e status do pedido. Sem atrito no celular.
+
+### PWA
+Instalável, responsivo de verdade, ícone próprio, splash, bom no touch, sem bugs de viewport/safe-area. Notificações para promoções, status de pedido, confirmação de agendamento e lembretes (estruturar a base sem prometer o que o navegador não entrega).
+
+### E-mails automáticos
+Para a Cris a cada novo agendamento, nova venda, pagamento confirmado, cancelamento, reagendamento (com nome, contato, serviço/pedido, data/hora, valor, status, link para o admin). Para o cliente: confirmações e atualização de status.
+
+### Automação WhatsApp
+Acionar comunicação no fluxo de agendamento (confirmação, lembrete do dia, mensagens operacionais, aviso à Cris). Arquitetura organizada, sem gambiarra; se depender de provedor/API, deixar o fluxo pronto e bem definido.
+
+### Admin robusto
+Gerenciar produtos, categorias, estoque, pedidos, banners, textos, serviços, agenda, horários, bloqueios, clientes, pagamentos, cupons, notificações, automações, conteúdo e configurações. Dashboard com visão de vendas, agendamentos e próximos atendimentos, atalhos, filtros, busca, status visuais claros. Bom no desktop, aceitável no tablet/mobile. Evitar excesso de cliques e telas quebradas.
+
+---
+
+## 6. Sistema visual (lei de design)
+
+Detalhe completo e CSS de referência em `laikao-site/styles.css` e `guia-design-referencia.md`. Resumo normativo:
+
+### 6.1 Tokens (não alterar os hex)
 ```css
 :root{
-  /* cores */
-  --rosa:#E5197F;          /* cor de marca principal, CTAs */
+  --rosa:#E5197F;          /* marca principal, CTAs */
   --rosa-claro:#FF4FA8;    /* hover de rosa */
   --rosa-suave:#FCE4F0;    /* fundos suaves, ícones */
   --roxo:#7B2D9E;          /* secundária */
@@ -52,25 +202,15 @@ Defina exatamente estes valores. No Next, coloque em `app/globals.css` dentro de
   --linha:#EAD9EE;         /* bordas */
   --verde:#1FAE54;         /* WhatsApp */
   --ifood:#EA1D2C;         /* referência iFood */
-
-  /* forma */
-  --raio:22px;             /* cards */
-  --raio-sm:14px;
+  --raio:22px; --raio-sm:14px;
   --sombra:0 18px 40px -20px rgba(74,21,104,.35);
   --sombra-suave:0 10px 30px -18px rgba(74,21,104,.30);
-  --container:1140px;      /* largura máxima do conteúdo */
+  --container:1140px;
 }
 ```
+Uso (fundo roxo dominante): **fundo geral roxo** (`--roxo-profundo` como base estrutural); superfícies de conteúdo, cards de produto, painéis de catálogo, checkout e admin em `--branco`/`--creme` sobre o roxo, para leitura e para valorizar fotos; títulos sobre claro em `--roxo-profundo`, corpo `--carvao`, secundário `--tinta-suave`; sobre o roxo, texto em branco; botão rosa só para a ação principal de cada bloco; `--lavanda` para blocos claros suaves; WhatsApp sempre verde; iFood sempre na cor iFood. Garanta contraste AA em texto sobre roxo.
 
-Regra de uso de cor:
-- Fundo geral do site: `--creme`. Seções alternadas: `--lavanda`.
-- Texto de título: `--roxo-profundo`. Texto corpo: `--carvao`. Texto secundário: `--tinta-suave`.
-- Ação principal (botão rosa) só para a ação mais importante de cada bloco. WhatsApp sempre verde. iFood sempre na cor iFood.
-- Faixa e rodapé escuros usam `--roxo-profundo` com texto branco.
-
----
-
-## 3. Tipografia
+### 6.2 Tipografia
 
 Duas fontes do Google Fonts. No Next, carregue com `next/font/google` e exponha como CSS variables.
 
@@ -92,7 +232,7 @@ Regras:
 
 ---
 
-## 4. Elemento de assinatura: o selo
+### 6.3 Elemento de assinatura: o selo
 
 O selo é a marca registrada visual do site. Use no topo de cada seção principal, como "eyebrow".
 
@@ -109,18 +249,18 @@ A **patinha** (paw) é um SVG de 3 dedos + almofada, sempre `viewBox="0 0 24 24"
 
 ---
 
-## 5. Componentes (reproduzir exatamente)
+### 6.4 Componentes (reproduzir exatamente)
 
 Cada componente abaixo já existe no CSS de referência (`styles.css`). Porte-os como componentes React reutilizáveis.
 
-### 5.1 Header / navegação (`<Header/>`)
+#### Header / navegação (`<Header/>`)
 - Sticky no topo, fundo `--creme` com `backdrop-filter: blur(10px)` e borda inferior `--linha`. Altura 70px.
 - Esquerda: marca = selo redondo rosa com patinha + "Pet Shop" (roxo profundo) "Laikão" (rosa), em Baloo 2.
 - Centro/direita (desktop ≥980px): nav com 5 links (Início, Serviços, Produtos, Promoções, Contato). O link da página atual recebe `aria-current="page"` e a classe ativa (cor rosa + sublinhado animado que cresce da esquerda).
 - Direita: botão rosa "Agendar".
 - Mobile (<980px): nav some, aparece o botão hambúrguer que abre um menu vertical (`.menu-mob`). O menu fecha ao clicar em qualquer link. Use `aria-expanded` no botão.
 
-### 5.2 Botões (`<Botao/>`)
+#### Botões (`<Botao/>`)
 Variantes (pílula, min-height 48px, Baloo 2 peso 700):
 - `btn--rosa`: fundo `--rosa`, hover `--rosa-claro` + translateY(-2px). Ação principal.
 - `btn--roxo`: fundo `--roxo-profundo`. Ação secundária escura.
@@ -129,59 +269,59 @@ Variantes (pílula, min-height 48px, Baloo 2 peso 700):
 - `btn--claro`: translúcido branco, só dentro de bandas coloridas.
 - Foco visível obrigatório: `outline:3px solid var(--rosa-claro); outline-offset:3px`.
 
-### 5.3 Herói (home)
+#### Herói (home)
 - Duas colunas no desktop (texto + moldura de foto), uma coluna no mobile.
 - Blobs de fundo (rosa-suave e lavanda) com blur, decorativos, `z-index:0`.
 - Conteúdo: selo, h1 com palavra-chave em rosa, tagline em itálico, subtítulo, dois botões (Agendar rosa + WhatsApp verde), e três "chips" (Banho e tosa, iFood até meia-noite, Entrega ou retirada).
 
-### 5.4 Moldura de foto (`<MolduraFoto/>`)
+#### Moldura de foto (`<MolduraFoto/>`)
 - `aspect-ratio` 4/5 (ou 1/1 na variante quadro), cantos arredondados, `outline:5px solid #fff` por dentro, borda tracejada interna, sombra.
 - **Fallback obrigatório:** quando não há foto, mostra fundo em degradê da marca + patinha grande + legenda ("Coloque aqui uma foto da Cris com um pet feliz"). Nunca pode aparecer espaço quebrado.
 - Quando houver imagem real, ela cobre tudo com `object-fit:cover`.
 - Componente recebe `src?`, `alt`, `legenda`, `variante`.
 
-### 5.5 Cabeçalho de página interna (`<PageHead/>`)
+#### Cabeçalho de página interna (`<PageHead/>`)
 Para Serviços, Produtos, Promoções e Contato. Selo + h1 (palavra em rosa) + parágrafo + ações opcionais. Blob radial decorativo no canto.
 
-### 5.6 Faixa rápida
+#### Faixa rápida
 Barra `--roxo-profundo`, texto branco, 4 itens com ícone (horário, bairro, telefone, @instagram). Vira coluna no mobile.
 
-### 5.7 Cards de serviço
+#### Cards de serviço
 Card branco, ícone em quadrado `--rosa-suave`, título, descrição, bloco de meta (Valor + Duração em Baloo 2) e duas ações: "Agendar" (rosa) e "Ver detalhes" (linha).
 
-### 5.8 Loja / Produtos (ver seção 6 para a lógica)
+#### Loja / Produtos (ver seção 6 para a lógica)
 - Layout duas colunas no desktop: sidebar de filtros (260px) + vitrine. Uma coluna no mobile.
 - Sidebar: busca com ícone de lupa + lista de categorias (botões, o ativo fica rosa, com contagem).
 - Topo da vitrine: contador "N produtos" + select de ordenação.
 - Grade de produtos responsiva (1 / 2 / 3 colunas conforme largura).
 - Card de produto: thumb com ícone-fallback por categoria, tag de categoria, selo de estado (Oferta / Últimas unidades / Indisponível), marca, nome, descrição, preço (com preço "antes" riscado quando em promoção) e botão "Adicionar". Estado indisponível desabilita o botão.
 
-### 5.9 Carrinho (drawer)
+#### Carrinho (drawer)
 - Botão flutuante `cart-fab` (roxo profundo) com badge de quantidade. Fica acima do botão de WhatsApp.
 - Abre um drawer lateral da direita com overlay. Fecha por overlay, botão X ou tecla Esc.
 - Lista de itens com thumb, nome, preço, controle de quantidade (− e +) e remover.
 - Rodapé do drawer: total + nota sobre confirmação no atendimento + botão verde "Finalizar no WhatsApp".
 - Estado vazio do carrinho: ícone + mensagem amigável.
 
-### 5.10 Cards de promoção
+#### Cards de promoção
 Card branco com "faixinha" (categoria da oferta em rosa, caixa-alta), título, descrição e CTA. Variante `promo--futuro` (tracejada, fundo lavanda) para o estado "novas campanhas em breve". Destaque grande em degradê roxo→rosa no topo da página.
 
-### 5.11 Contato
+#### Contato
 4 vcards (WhatsApp, Instagram, Endereço, Horário) com ícone, texto e link. Mapa do Google embutido via `<iframe>` (`output=embed`, sem precisar de API key). Nota de LGPD ligando à política de privacidade.
 
-### 5.12 Rodapé
+#### Rodapé
 Fundo `--roxo-profundo`. Três colunas: marca + endereço + horário; navegação; canais. Linha final com copyright e links de privacidade/termos/trocas.
 
-### 5.13 WhatsApp flutuante
+#### WhatsApp flutuante
 Botão redondo verde fixo no canto inferior direito, em todas as páginas, com `aria-label`.
 
 ---
 
-## 6. A loja: modelo de dados e comportamento
+### 6.5 A loja: modelo de dados e comportamento
 
 A loja é client-side na referência, com checkout via WhatsApp. No Next, monte como Client Component (ou conecte ao backend/checkout real da Laikão se já existir; nesse caso mantenha a mesma UI).
 
-### Modelo de produto
+#### Modelo de produto
 ```ts
 type Produto = {
   id: string;
@@ -196,7 +336,7 @@ type Produto = {
 };
 ```
 
-### Comportamento exigido
+#### Comportamento exigido
 - **Categorias:** "Todos" + as 6 categorias, cada uma com contagem real.
 - **Busca:** filtra por nome, marca, descrição e categoria (case-insensitive).
 - **Ordenação:** Relevância (ordem original), Menor preço, Maior preço, Em promoção.
@@ -219,7 +359,7 @@ type Produto = {
 
 ---
 
-## 7. Estrutura de rotas (Next App Router)
+### 6.6 Estrutura de rotas (Next App Router)
 
 5 páginas, header e footer compartilhados via layout. Não duplique header/footer em cada página: use um `layout.tsx`.
 
@@ -245,32 +385,9 @@ components/
 
 ---
 
-## 8. Conteúdo real (usar exatamente)
+### 6.7 Tom de voz e copy
 
-**Contato e endereço**
-- Endereço: Rua Franklin do Amaral, 271, Vila Nova Cachoeirinha, São Paulo SP
-- Horário: segunda a sábado, das 8h às 19h (iFood até meia-noite)
-- Telefone/WhatsApp: (11) 98051-2871 → link `https://wa.me/5511980512871`
-- Instagram: @pet_laikao → `https://instagram.com/pet_laikao`
-- iFood: `https://www.ifood.com.br/delivery/sao-paulo-sp/pet-shop-laikao-vila-nova-cachoeirinha/d7c31af8-0c1f-4649-b99b-0aaf09ce7adf?UTM_Medium=share`
-- Mapa (iframe): `https://www.google.com/maps?q=Rua+Franklin+do+Amaral+271,+Vila+Nova+Cachoeirinha,+Sao+Paulo,+SP&output=embed`
-
-**Serviços (valores reais)**
-- Banho e tosa premium: R$ 110, 90 min. Detalhe: `/servicos/banho-e-tosa-premium`
-- Banho terapêutico: R$ 78, 60 min. Detalhe: `/servicos/banho-terapeutico`
-- Tosa higiênica: R$ 65, 45 min. Detalhe: `/servicos/tosa-higienica`
-- Também fazem: hidratação, escovação, corte de unhas. Atendem cães e gatos.
-- Nota de cuidado (manter): pet com pulga ou carrapato precisa ser medicado na hora, para não contaminar o ambiente nem os outros clientes.
-
-**Produtos visíveis na comunicação** (use como base, confirme preços com a Cris): Premier (ração), Golden (ração), bifinho/petisco, Shampoo Neutro 500ml, Spray Hidratante 250ml, Spray Higiene e Perfume 250ml, coleira, comedouro, brinquedos.
-
-**Páginas de política existentes** (linkar no rodapé): `/privacidade`, `/termos`, `/trocas-e-devolucoes`, `/politica-de-agendamento`.
-
----
-
-## 9. Tom de voz e copy
-
-Caloroso, de bairro, direto, sem firula técnica. Fala com o dono do pet, não com outro dev.
+Próximo, confiável e claro, profissional sem ser frio. Fala com o dono do pet de forma acessível, mas com a segurança de uma rede grande, não de loja pequena. Sem firula técnica e sem jargão de dev.
 
 | Não escreva | Escreva |
 |---|---|
@@ -287,7 +404,7 @@ Regras de copy:
 
 ---
 
-## 10. Acessibilidade e responsividade
+### 6.8 Acessibilidade e responsividade
 
 - Breakpoints usados na referência: 520, 680, 760, 900, 920, 980, 1020, 1080px. Mantenha a lógica mobile-first.
 - Contraste: texto sobre fundo claro usa `--carvao`/`--roxo-profundo`; sobre rosa/roxo usa branco. Não use `--tinta-suave` sobre cor forte.
@@ -299,33 +416,88 @@ Regras de copy:
 
 ---
 
-## 11. Checklist final (rodar antes de dar como pronto)
+---
 
-- [ ] As 5 rotas existem e a navegação entre elas funciona, com link ativo correto.
-- [ ] Header e footer vêm do layout compartilhado (não duplicados).
-- [ ] Paleta rosa + roxo aplicada; nenhum resquício do roxo lavado antigo.
-- [ ] Nenhum SVG sem width/height (nada de patinha gigante azul).
-- [ ] Fontes Baloo 2 + Nunito carregando via next/font.
-- [ ] Produtos: busca, filtro de categoria, ordenação, carrinho e checkout WhatsApp funcionando.
-- [ ] Carrinho persiste e fecha por overlay/X/Esc.
-- [ ] Produtos e Promoções nunca aparecem vazias para o cliente.
-- [ ] Zero jargão técnico em texto visível.
-- [ ] Zero em-dash na copy.
-- [ ] Espaços de foto da Cris e da loja com fallback (nada quebrado sem imagem).
-- [ ] Mapa, WhatsApp, Instagram e iFood com os links reais da seção 8.
-- [ ] Responsivo testado em 360, 375, 768, 1024 e desktop.
-- [ ] Foco visível e `prefers-reduced-motion` respeitado.
-- [ ] Metadata e theme-color por página.
+## 7. Estados, qualidade e o que não fazer
+
+**Estados obrigatórios** em cada fluxo: carregando, vazio, erro, sucesso, indisponível, confirmação. Feedback visual sempre.
+
+**Critério de qualidade:** o projeto só é bom se entregar ao mesmo tempo visual forte, navegação clara, mobile excelente, agenda utilizável, pagamento bem integrado, loja convincente, admin robusto, automações úteis e base pronta para crescer. Se uma parte crítica estiver fraca, não está pronto.
+
+**Prioridade em conflito:** (1) arquitetura certa, (2) mobile UX, (3) agenda + pagamento confiáveis, (4) admin robusto, (5) loja/checkout, (6) notificações/automações, (7) polimento visual.
+
+**Não fazer:** reduzir a landing/one page; layout genérico de template; ignorar mobile ou admin; agenda superficial; e-commerce fake; pagamentos mal amarrados; deixar fluxo central sem estado de erro/sucesso; produto bonito e operacionalmente fraco (ou o contrário); tomar atalho que gere retrabalho grande; presumir que "depois arruma".
+
+**Segurança:** auth admin segura, regras de permissão, validação no servidor, proteção de rotas admin, integridade de pagamentos, consistência entre agenda e pagamento, logs úteis, tratamento de erro real.
+
+**SEO/performance:** carregamento rápido, imagens otimizadas, metadados por página, estrutura indexável, páginas de produto amigáveis, Core Web Vitals, mobile forte.
 
 ---
 
-## 12. Como usar este guia
+## 8. Fases de trabalho
 
-1. Comece pelos tokens (seção 2) e fontes (seção 3) em `globals.css` e `fonts.ts`.
-2. Monte o layout compartilhado com Header, Footer e ZapFloat.
-3. Construa os componentes da seção 5 isolados, conferindo contra `styles.css`.
-4. Monte as 5 páginas com o conteúdo real da seção 8.
-5. Implemente a loja (seção 6) por último, como client component.
-6. Rode o checklist da seção 11.
+Trabalhar em fases explícitas; ao iniciar uma, dizer objetivo, o que vai fazer e riscos; ao terminar, resumir o feito, o pendente e o próximo passo.
 
-Em qualquer dúvida de aparência, o comportamento correto é o que está nos arquivos de `laikao-site/`. Reproduza, não reinvente.
+1. **Framing**: consolidar escopo, páginas, fluxos, módulos, entidades, integrações, prioridades.
+2. **Arquitetura**: front, API (NestJS), banco (Prisma/Postgres), pagamentos, agenda, notificações, automações, admin, PWA. Justificar escolhas.
+3. **Design system e UX**: já definido na seção 6; aplicar, não reinventar.
+4. **Base**: app shell, rotas, layout, home, páginas principais, componentes.
+5. **Módulos críticos** (ordem): agenda → pagamento do agendamento → loja/produtos → checkout → admin → e-mails → notificações → WhatsApp → PWA.
+6. **QA e hardening**: fluxos quebrados, mobile, estados vazios, validações, acessibilidade, performance, integração.
+7. **Polimento**: refino visual, microinterações, cópia, banners, otimizações.
+
+Para a etapa atual da API: ler e reportar, propor arquitetura e plano de fases, esperar OK, então em branch criar o esqueleto NestJS (PrismaModule, config/env, healthcheck, CORS, tratamento de erro) e implementar `auth` admin (e encostar em `appointments` se seguro), rodar build/typecheck e mostrar a saída.
+
+---
+
+## 9. Conteúdo real (usar exatamente)
+
+**Contato e endereço**
+- Rua Franklin do Amaral, 271, Vila Nova Cachoeirinha, São Paulo SP
+- Segunda a sábado, 8h às 19h (iFood até meia-noite)
+- WhatsApp (11) 98051-2871 → `https://wa.me/5511980512871`
+- Instagram @pet_laikao → `https://instagram.com/pet_laikao`
+- iFood → `https://www.ifood.com.br/delivery/sao-paulo-sp/pet-shop-laikao-vila-nova-cachoeirinha/d7c31af8-0c1f-4649-b99b-0aaf09ce7adf?UTM_Medium=share`
+- Mapa (iframe) → `https://www.google.com/maps?q=Rua+Franklin+do+Amaral+271,+Vila+Nova+Cachoeirinha,+Sao+Paulo,+SP&output=embed`
+
+**Serviços (valores reais)**
+- Banho e tosa premium: R$ 110, 90 min → `/servicos/banho-e-tosa-premium`
+- Banho terapêutico: R$ 78, 60 min → `/servicos/banho-terapeutico`
+- Tosa higiênica: R$ 65, 45 min → `/servicos/tosa-higienica`
+- Também: hidratação, escovação, corte de unhas. Cães e gatos.
+- Nota de cuidado (manter): pet com pulga ou carrapato precisa ser medicado na hora, para não contaminar o ambiente nem os outros clientes.
+
+**Produtos da comunicação** (base; confirmar preços com a Cris): Premier (ração), Golden (ração), bifinho/petisco, Shampoo Neutro 500ml, Spray Hidratante 250ml, Spray Higiene e Perfume 250ml, coleira, comedouro, brinquedos.
+
+---
+
+## 10. Checklists
+
+### Design / frontend
+- [ ] Rotas existem e a navegação funciona, com link ativo correto.
+- [ ] Header e footer vêm do layout compartilhado.
+- [ ] Fundo roxo dominante aplicado, com cards/superfícies claras nas áreas de catálogo e checkout; rosa como acento; sem resquício do roxo lavado antigo.
+- [ ] Nenhum SVG sem width/height.
+- [ ] Baloo 2 + Nunito via next/font.
+- [ ] Loja: busca, filtro, ordenação, carrinho e checkout funcionando; carrinho persiste e fecha por overlay/X/Esc.
+- [ ] Produtos e Promoções nunca vazias para o cliente.
+- [ ] Zero jargão técnico; zero em-dash.
+- [ ] Fotos com fallback (nada quebrado sem imagem).
+- [ ] Links reais (mapa, WhatsApp, Instagram, iFood).
+- [ ] Responsivo em 360, 375, 768, 1024 e desktop.
+- [ ] Foco visível e `prefers-reduced-motion` respeitado.
+- [ ] Metadata e theme-color `#E5197F` por página.
+
+### API / backend
+- [ ] Trabalho em branch isolada; produção intacta.
+- [ ] Esqueleto NestJS com módulos previstos; PrismaModule + config/env + healthcheck + CORS + erro tratado.
+- [ ] Schema Prisma existente reaproveitado, não recriado.
+- [ ] Migrations revisadas (SQL mostrado) antes de aplicar; sem reset em produção.
+- [ ] `auth` admin implementado e protegendo rotas.
+- [ ] Build/typecheck passando, com saída mostrada.
+- [ ] Plano de migração por fases, riscos e próximos passos entregues.
+- [ ] Trechos de PM2 (`laikao-api`, porta 4018) e nginx (`/api/`) entregues para eu aplicar, não aplicados sem aprovação.
+
+---
+
+Em qualquer dúvida de aparência ou comportamento de UI, a verdade é `laikao-site/`. Em qualquer dúvida de escopo, é este arquivo. Reproduza o aprovado, confirme o que não tiver certeza, e não invente o que este `CLAUDE.md` não autorizar.

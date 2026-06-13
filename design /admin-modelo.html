@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Laikão Admin | Modelo de aba</title>
+<meta name="theme-color" content="#2A0B3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+/* =========================================================
+   LAIKÃO ADMIN  -  modelo de aba (padrão para as 11 abas)
+   Sidebar roxa escura (identidade) + conteúdo claro (trabalho).
+   Toda aba segue: cabeçalho > KPIs > filtros > tabela/lista >
+   estado vazio > (painel/form opcional).
+   ========================================================= */
+:root{
+  --rosa:#E5197F; --rosa-claro:#FF4FA8; --rosa-suave:#FCE4F0;
+  --roxo:#7B2D9E; --roxo-profundo:#4A1568;
+  --side:#280A3A; --side-2:#1F0730; --side-hover:rgba(255,255,255,.07);
+  --side-linha:rgba(255,255,255,.10);
+  --lavanda:#F4E9FB; --creme:#FAF5FC; --branco:#FFFFFF;
+  --carvao:#2A1B30; --tinta:#6B5570; --linha:#EBDDF0;
+  --verde:#1FAE54; --verde-bg:#E4F7EC; --amber:#B7791F; --amber-bg:#FCEFD6;
+  --vermelho:#C0395B; --vermelho-bg:#FBE4EA; --info:#6D3B94; --info-bg:#EFE6F8;
+  --raio:18px; --raio-sm:12px;
+  --sombra:0 14px 34px -22px rgba(74,21,104,.45);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Nunito",system-ui,sans-serif;color:var(--carvao);background:var(--creme);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Baloo 2",cursive;margin:0;color:var(--roxo-profundo);letter-spacing:-.01em;line-height:1.1}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+
+.app{display:grid;grid-template-columns:268px 1fr;min-height:100vh}
+
+/* ===== sidebar ===== */
+.side{background:linear-gradient(180deg,var(--side),var(--side-2));color:#fff;display:flex;flex-direction:column;padding:18px 14px;gap:14px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.side-brand{display:flex;align-items:center;gap:.6rem;padding:6px 6px 2px}
+.side-brand .av{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,var(--rosa),var(--roxo));display:grid;place-items:center;font-family:"Baloo 2",cursive;font-weight:800;font-size:1.3rem;color:#fff;flex:none}
+.side-brand b{font-family:"Baloo 2",cursive;font-size:1.18rem;display:block;line-height:1}
+.side-brand span{font-size:.8rem;color:rgba(255,255,255,.6);font-weight:600}
+.hoje{background:rgba(255,255,255,.05);border:1px solid var(--side-linha);border-radius:var(--raio-sm);padding:14px}
+.hoje .lab{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.55);font-weight:800}
+.hoje p{margin:.4rem 0 .7rem;font-size:.92rem;color:rgba(255,255,255,.82);font-weight:600}
+.hoje .bar{height:6px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}
+.hoje .bar i{display:block;height:100%;width:62%;background:linear-gradient(90deg,var(--rosa),var(--rosa-claro))}
+.nav-grupo{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:800;margin:8px 8px 4px}
+.nav a{display:flex;align-items:center;gap:.75rem;padding:.62rem .7rem;border-radius:12px;color:rgba(255,255,255,.82);font-weight:700;font-size:.96rem;margin-bottom:2px}
+.nav a .ic{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.07);display:grid;place-items:center;flex:none;color:rgba(255,255,255,.8)}
+.nav a .ic svg{width:18px;height:18px}
+.nav a:hover{background:var(--side-hover);color:#fff}
+.nav a.ativo{background:#fff;color:var(--roxo-profundo)}
+.nav a.ativo .ic{background:var(--rosa-suave);color:var(--rosa)}
+.side-foot{margin-top:auto;background:rgba(255,255,255,.05);border:1px solid var(--side-linha);border-radius:var(--raio-sm);padding:12px;font-size:.82rem;color:rgba(255,255,255,.6);line-height:1.4}
+
+/* ===== topbar ===== */
+.main{display:flex;flex-direction:column;min-width:0}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(250,245,252,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--linha);padding:14px 28px;display:flex;align-items:center;gap:16px}
+.topbar .eyebrow{flex:none}
+.topbar .eyebrow .k{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--rosa);font-weight:800}
+.topbar .eyebrow .s{font-size:.86rem;color:var(--tinta);font-weight:600}
+.topbar .busca{flex:1;position:relative;max-width:620px;margin:0 auto}
+.topbar .busca svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--tinta)}
+.topbar .busca input{width:100%;height:46px;border-radius:999px;border:1px solid var(--linha);background:#fff;padding:0 18px 0 44px;font-family:inherit;font-size:.96rem;color:var(--carvao)}
+.topbar .busca input:focus{outline:none;border-color:var(--rosa);box-shadow:0 0 0 3px var(--rosa-suave)}
+.topbar .acoes{display:flex;align-items:center;gap:10px;flex:none}
+.icobtn{width:46px;height:46px;border-radius:13px;background:#fff;border:1px solid var(--linha);display:grid;place-items:center;color:var(--roxo-profundo)}
+.icobtn svg{width:21px;height:21px}
+.userchip{display:flex;align-items:center;gap:.6rem;background:#fff;border:1px solid var(--linha);border-radius:14px;padding:.4rem .8rem .4rem .5rem}
+.userchip .av{width:34px;height:34px;border-radius:10px;background:var(--rosa-suave);display:grid;place-items:center;color:var(--rosa)}
+.userchip .av svg{width:18px;height:18px}
+.userchip b{font-family:"Baloo 2",cursive;font-size:.95rem;color:var(--roxo-profundo);line-height:1}
+.userchip span{font-size:.76rem;color:var(--tinta);font-weight:700}
+.btn-sair{background:none;border:1px solid var(--linha);border-radius:12px;padding:.6rem 1rem;font-weight:800;color:var(--roxo-profundo);font-size:.8rem;letter-spacing:.08em}
+.btn-sair:hover{border-color:var(--rosa);color:var(--rosa)}
+
+/* ===== conteúdo ===== */
+.conteudo{padding:30px 28px 60px;max-width:1280px}
+.page-head{margin-bottom:22px}
+.page-head .k{font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--rosa);font-weight:800}
+.page-head h1{font-size:clamp(1.6rem,3.6vw,2.3rem);font-weight:800;margin:.4rem 0 0;max-width:24ch}
+.page-head p{color:var(--tinta);margin:.5rem 0 0;font-size:1rem;max-width:62ch}
+
+/* botões */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-family:"Baloo 2",cursive;font-weight:700;font-size:.95rem;padding:.7rem 1.2rem;border-radius:12px;border:none;min-height:44px;transition:transform .15s,background .15s}
+.btn svg{width:18px;height:18px}
+.btn--rosa{background:var(--rosa);color:#fff}
+.btn--rosa:hover{background:var(--rosa-claro);transform:translateY(-1px)}
+.btn--linha{background:#fff;color:var(--roxo-profundo);border:1px solid var(--linha)}
+.btn--linha:hover{border-color:var(--rosa);color:var(--rosa)}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:22px}
+@media(min-width:780px){.kpis{grid-template-columns:repeat(4,1fr)}}
+.kpi{background:#fff;border:1px solid var(--linha);border-radius:var(--raio);padding:20px;box-shadow:var(--sombra)}
+.kpi.top-amber{border-top:3px solid var(--amber)}
+.kpi.top-verde{border-top:3px solid var(--verde)}
+.kpi .lab{font-size:.9rem;color:var(--tinta);font-weight:700}
+.kpi .num{font-family:"Baloo 2",cursive;font-weight:800;font-size:2.1rem;color:var(--roxo-profundo);line-height:1.1;margin:.3rem 0}
+.kpi .help{font-size:.84rem;color:var(--tinta)}
+
+/* toolbar */
+.toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;background:#fff;border:1px solid var(--linha);border-radius:var(--raio);padding:16px;margin-bottom:18px;box-shadow:var(--sombra)}
+.toolbar .busca-in{flex:1;min-width:220px;position:relative}
+.toolbar .busca-in svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--tinta)}
+.toolbar .busca-in input{width:100%;height:44px;border-radius:11px;border:1px solid var(--linha);padding:0 14px 0 40px;font-family:inherit;font-size:.95rem;color:var(--carvao);background:var(--creme)}
+.toolbar .busca-in input:focus{outline:none;border-color:var(--rosa);box-shadow:0 0 0 3px var(--rosa-suave)}
+.toolbar select{height:44px;border-radius:11px;border:1px solid var(--linha);padding:0 14px;font-family:inherit;font-weight:700;color:var(--roxo-profundo);background:#fff}
+.toolbar select:focus{outline:none;border-color:var(--rosa)}
+.toolbar .filtros{height:44px;border-radius:11px;border:1px solid var(--linha);background:#fff;padding:0 16px;font-weight:700;color:var(--roxo-profundo);display:inline-flex;align-items:center;gap:.5rem}
+.toolbar .filtros svg{width:18px;height:18px}
+
+/* tabela */
+.tabela-card{background:#fff;border:1px solid var(--linha);border-radius:var(--raio);box-shadow:var(--sombra);overflow:hidden}
+.tabela-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
+thead th{text-align:left;font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;color:var(--tinta);font-weight:800;padding:14px 18px;background:var(--lavanda);white-space:nowrap}
+tbody td{padding:15px 18px;border-top:1px solid var(--linha);font-size:.94rem;vertical-align:middle}
+tbody tr:hover{background:var(--creme)}
+.cod{font-family:"Baloo 2",cursive;font-weight:700;color:var(--roxo-profundo)}
+.cli b{display:block;color:var(--carvao)}
+.cli span{font-size:.82rem;color:var(--tinta)}
+.val{font-family:"Baloo 2",cursive;font-weight:700;color:var(--roxo-profundo)}
+.badge{display:inline-flex;align-items:center;gap:.4rem;font-weight:800;font-size:.78rem;padding:.32rem .7rem;border-radius:999px}
+.badge::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.badge.pago{color:var(--verde);background:var(--verde-bg)}
+.badge.aguardando{color:var(--amber);background:var(--amber-bg)}
+.badge.preparo{color:var(--info);background:var(--info-bg)}
+.badge.cancelado{color:var(--vermelho);background:var(--vermelho-bg)}
+.row-acao{background:none;border:1px solid var(--linha);border-radius:10px;width:36px;height:36px;display:grid;place-items:center;color:var(--roxo-profundo)}
+.row-acao:hover{border-color:var(--rosa);color:var(--rosa)}
+.row-acao svg{width:18px;height:18px}
+
+/* estado vazio (reaproveitar quando não houver registros) */
+.vazio{padding:54px 24px;text-align:center}
+.vazio .ic{width:64px;height:64px;border-radius:18px;background:var(--rosa-suave);display:grid;place-items:center;color:var(--rosa);margin:0 auto 14px}
+.vazio .ic svg{width:30px;height:30px}
+.vazio h3{font-size:1.3rem}
+.vazio p{color:var(--tinta);margin:.5rem auto 0;max-width:48ch}
+
+@media(max-width:920px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;left:0;top:0;z-index:60;width:268px;transform:translateX(-100%);transition:transform .25s}
+  .side.aberta{transform:none}
+  .topbar .eyebrow{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ===================== SIDEBAR (igual em todas as abas) ===================== -->
+  <aside class="side" id="side">
+    <div class="side-brand">
+      <span class="av">L</span>
+      <span><b>Laikão Admin</b><span>Painel comercial</span></span>
+    </div>
+
+    <div class="hoje">
+      <span class="lab">Hoje</span>
+      <p>Agenda, loja e pagamentos em uma rotina só.</p>
+      <div class="bar"><i></i></div>
+    </div>
+
+    <nav class="nav" aria-label="Navegação do admin">
+      <div class="nav-grupo">Visão geral</div>
+      <a href="#"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg></span> Dashboard</a>
+
+      <div class="nav-grupo">Operação</div>
+      <a href="#"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></span> Agenda</a>
+      <a href="#"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3h6v3H9zM8 11h8M8 15h6"/></svg></span> Agendamentos</a>
+      <a href="#" class="ativo"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14l-1 13H6z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg></span> Pedidos</a>
+      <a href="#"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12l2.5 2.5L16 9"/></svg></span> Promoções</a>
+      <a href="#"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span> Financeiro</a>
+      <a href="#"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span> Relatórios</a>
+      <a href="#"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></span> Notificações</a>
+
+      <div class="nav-grupo">Catálogo</div>
+      <a href="#"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="4" rx="1"/><rect x="3" y="10" width="18" height="4" rx="1"/><rect x="3" y="16" width="18" height="4" rx="1"/></svg></span> Categorias</a>
+      <a href="#"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8l9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/></svg></span> Produtos</a>
+      <a href="#"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><circle cx="12" cy="15" r="3"/></svg></span> Estoque</a>
+      <a href="#"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4.5"/></svg></span> Precificação</a>
+      <a href="#"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.5 15.5M14 14l6 6"/></svg></span> Serviços</a>
+    </nav>
+
+    <div class="side-foot">Tudo conectado: o que muda aqui aparece no site e na operação na hora.</div>
+  </aside>
+
+  <!-- ===================== ÁREA PRINCIPAL ===================== -->
+  <div class="main">
+
+    <!-- topbar (igual em todas as abas) -->
+    <header class="topbar">
+      <button class="icobtn" id="abreMenu" style="display:none" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <div class="eyebrow">
+        <div class="k">Operação Laikão</div>
+        <div class="s">Agenda, pedidos, loja e financeiro conectados</div>
+      </div>
+      <div class="busca">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+        <input type="search" placeholder="Buscar cliente, pet, pedido, agendamento ou pagamento" aria-label="Buscar" />
+      </div>
+      <div class="acoes">
+        <button class="icobtn" aria-label="Notificações"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></button>
+        <div class="userchip">
+          <span class="av"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></span>
+          <span><b>Gestão Laikão</b><span>Super admin</span></span>
+        </div>
+        <button class="btn-sair">SAIR</button>
+      </div>
+    </header>
+
+    <main class="conteudo">
+
+      <!-- (1) CABEÇALHO DA PÁGINA  -  título OPERACIONAL, sem jargão de dev -->
+      <div class="page-head">
+        <div class="k">Pedidos</div>
+        <h1>Pedidos da loja, do pagamento à entrega.</h1>
+        <p>Acompanhe cada pedido em um lugar só: pagamento, separação, estoque e status. O que mudar aqui reflete no site na hora.</p>
+      </div>
+
+      <!-- (2) KPIs  -  4 cards de número -->
+      <section class="kpis">
+        <div class="kpi"><div class="lab">Total de pedidos</div><div class="num">128</div><div class="help">Pedidos reais registrados na loja.</div></div>
+        <div class="kpi top-amber"><div class="lab">Aguardando pagamento</div><div class="num">7</div><div class="help">Ainda sem confirmação financeira.</div></div>
+        <div class="kpi top-verde"><div class="lab">Pedidos pagos</div><div class="num">119</div><div class="help">Com pagamento confirmado.</div></div>
+        <div class="kpi"><div class="lab">Valor em pedidos</div><div class="num">R$ 8.430</div><div class="help">12 com estoque reservado.</div></div>
+      </section>
+
+      <!-- (3) BARRA DE FILTROS  -  busca + status + mais filtros + ação principal -->
+      <div class="toolbar">
+        <div class="busca-in">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+          <input type="search" placeholder="Buscar por pedido ou cliente" aria-label="Buscar pedidos" />
+        </div>
+        <select aria-label="Status do pedido">
+          <option>Todos os status</option>
+          <option>Aguardando pagamento</option>
+          <option>Pago</option>
+          <option>Em separação</option>
+          <option>Cancelado</option>
+        </select>
+        <button class="filtros"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg> Mais filtros</button>
+        <button class="btn btn--rosa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Novo pedido</button>
+      </div>
+
+      <!-- (4) TABELA  -  o elemento central reutilizável.
+           Linhas de exemplo. Os selos de status são o padrão pra todas as abas. -->
+      <div class="tabela-card">
+        <div class="tabela-wrap">
+          <table>
+            <thead>
+              <tr><th>Pedido</th><th>Cliente</th><th>Itens</th><th>Valor</th><th>Pagamento</th><th>Status</th><th></th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="cod">#1042</td>
+                <td class="cli"><b>Ana Souza</b><span>Pet: Thor</span></td>
+                <td>3 itens</td>
+                <td class="val">R$ 232,70</td>
+                <td>Pix</td>
+                <td><span class="badge pago">Pago</span></td>
+                <td><button class="row-acao" aria-label="Abrir pedido"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></td>
+              </tr>
+              <tr>
+                <td class="cod">#1041</td>
+                <td class="cli"><b>Bruno Lima</b><span>Pet: Mel</span></td>
+                <td>1 item</td>
+                <td class="val">R$ 159,90</td>
+                <td>Cartão</td>
+                <td><span class="badge aguardando">Aguardando</span></td>
+                <td><button class="row-acao" aria-label="Abrir pedido"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></td>
+              </tr>
+              <tr>
+                <td class="cod">#1040</td>
+                <td class="cli"><b>Carla Dias</b><span>Pet: Bidu</span></td>
+                <td>5 itens</td>
+                <td class="val">R$ 318,40</td>
+                <td>Pix</td>
+                <td><span class="badge preparo">Em separação</span></td>
+                <td><button class="row-acao" aria-label="Abrir pedido"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></td>
+              </tr>
+              <tr>
+                <td class="cod">#1039</td>
+                <td class="cli"><b>Diego Reis</b><span>Pet: Luna</span></td>
+                <td>2 itens</td>
+                <td class="val">R$ 64,80</td>
+                <td>Pix</td>
+                <td><span class="badge cancelado">Cancelado</span></td>
+                <td><button class="row-acao" aria-label="Abrir pedido"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- (5) ESTADO VAZIO  -  use este bloco no lugar da tabela quando não houver registros.
+           Copy útil e acolhedora, nunca "0 / nada encontrado" seco.
+      <div class="tabela-card">
+        <div class="vazio">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14l-1 13H6z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg></div>
+          <h3>Nenhum pedido ainda</h3>
+          <p>Quando uma compra for finalizada no checkout, o pedido aparece aqui com cliente, pagamento, separação e estoque.</p>
+        </div>
+      </div>
+      -->
+
+    </main>
+  </div>
+</div>
+
+<script>
+  var b=document.getElementById("abreMenu"), s=document.getElementById("side");
+  function check(){ if(window.innerWidth<=920){ b.style.display="grid"; } else { b.style.display="none"; s.classList.remove("aberta"); } }
+  if(b){ b.addEventListener("click",function(){ s.classList.toggle("aberta"); }); window.addEventListener("resize",check); check(); }
+</script>
+</body>
+</html>
