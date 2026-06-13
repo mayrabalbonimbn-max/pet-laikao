@@ -145,7 +145,7 @@ export default function AdminPromotionsPage() {
     setSaving(false);
 
     if (!response.ok) {
-      setMessage(data.message ?? "Falha ao salvar promocao.");
+      setMessage(data.message ?? "Não foi possível salvar a promoção.");
       return;
     }
 
@@ -267,20 +267,20 @@ export default function AdminPromotionsPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <p className="eyebrow">Promocoes</p>
-        <h1 className="page-title">Campanhas reais com banner, preview e upload local na VPS.</h1>
+        <p className="eyebrow">Promoções</p>
+        <h1 className="page-title">Crie campanhas e ofertas com banner para aparecer no site.</h1>
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
         <section className="surface-default p-5">
-          <h2 className="font-heading text-xl font-semibold text-ink-900">Promocoes cadastradas</h2>
+          <h2 className="font-heading text-xl font-semibold text-ink-900">Promoções cadastradas</h2>
           {loading ? (
             <p className="mt-4 text-sm text-stone-500">Carregando...</p>
           ) : sortedRows.length === 0 ? (
             <div className="mt-4">
               <EmptyState
-                title="Nenhuma promocao cadastrada"
-                description="Crie uma campanha real quando houver oferta, banner ou comunicacao comercial aprovada. O admin nao preenche promocoes automaticamente."
+                title="Nenhuma promoção cadastrada"
+                description="Crie uma campanha quando tiver uma oferta ou banner para divulgar. As promoções aparecem no site assim que ativadas."
               />
             </div>
           ) : (
@@ -304,14 +304,14 @@ export default function AdminPromotionsPage() {
         </section>
 
         <form onSubmit={onSubmit} className="surface-default space-y-4 p-5">
-          <h2 className="font-heading text-xl font-semibold text-ink-900">{form.id ? "Editar promocao" : "Nova promocao"}</h2>
+          <h2 className="font-heading text-xl font-semibold text-ink-900">{form.id ? "Editar promoção" : "Nova promoção"}</h2>
           <input value={form.id} type="hidden" readOnly />
-          <input required value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} placeholder="Titulo" className="w-full rounded-xl border border-stone-200 px-3 py-2.5" />
+          <input required value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} placeholder="Título" className="w-full rounded-xl border border-stone-200 px-3 py-2.5" />
           <input required value={form.slug} onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))} placeholder="slug-promocao" className="w-full rounded-xl border border-stone-200 px-3 py-2.5" />
 
           <div className="grid gap-3 sm:grid-cols-2">
             <select value={form.type} onChange={(e) => setForm((f) => ({ ...f, type: e.target.value }))} className="rounded-xl border border-stone-200 px-3 py-2.5">
-              <option value="campaign">Campanha</option><option value="product">Produto</option><option value="service">Servico</option><option value="mixed">Misto</option>
+              <option value="campaign">Campanha</option><option value="product">Produto</option><option value="service">Serviço</option><option value="mixed">Misto</option>
             </select>
             <select value={form.status} onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))} className="rounded-xl border border-stone-200 px-3 py-2.5">
               <option value="draft">Rascunho</option><option value="scheduled">Agendada</option><option value="active">Ativa</option><option value="paused">Pausada</option><option value="expired">Expirada</option>
@@ -355,7 +355,7 @@ export default function AdminPromotionsPage() {
           <label className="flex items-center gap-2 text-sm font-medium text-ink-900"><input type="checkbox" checked={form.active} onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))} /> Promocao ativa</label>
 
           {message ? <p className="text-sm text-brand-700">{message}</p> : null}
-          <button disabled={saving || uploading} className="w-full rounded-xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white">{saving ? "Salvando..." : "Salvar promocao"}</button>
+          <button disabled={saving || uploading} className="w-full rounded-xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white">{saving ? "Salvando..." : "Salvar promoção"}</button>
         </form>
       </div>
     </div>

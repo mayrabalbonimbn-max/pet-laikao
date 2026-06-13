@@ -105,14 +105,14 @@ export default async function AdminProductsPage() {
     <div className="space-y-6">
       <div className="space-y-2">
         <p className="eyebrow">Produtos</p>
-        <h1 className="page-title">Produtos reais com preco, estoque, categoria e imagem real para operacao diaria.</h1>
+        <h1 className="page-title">Cadastre e atualize os produtos da loja: preço, estoque, categoria e fotos.</h1>
       </div>
 
       <div className="grid gap-4">
         {products.length === 0 ? (
           <EmptyState
-            title="Nenhum produto cadastrado"
-            description="A loja nao possui produtos reais cadastrados neste ambiente. Quando houver cadastro real, preco, estoque, categoria e imagens aparecerao aqui."
+            title="Nenhum produto ainda"
+            description="Cadastre o primeiro produto e ele aparece aqui com preço, estoque, categoria e fotos, prontinho para a loja."
           />
         ) : products.map((product) => {
           const variant = product.variants[0];
@@ -142,14 +142,14 @@ export default async function AdminProductsPage() {
                 </div>
                 <input name="priceReais" type="number" min="0" step="0.01" defaultValue={((variant?.priceCents ?? 0) / 100).toFixed(2)} className="rounded-[12px] border border-stone-200 px-3 py-2" required />
                 <input name="stockQuantity" type="number" min="0" defaultValue={variant?.stockQuantity ?? 0} className="rounded-[12px] border border-stone-200 px-3 py-2" required />
-                <p className="text-xs text-stone-500">Preco atual: {formatCurrency((variant?.priceCents ?? 0) / 100)} | Reservado: {variant?.reservedQuantity ?? 0}</p>
+                <p className="text-xs text-stone-500">Preço atual: {formatCurrency((variant?.priceCents ?? 0) / 100)} | Reservado: {variant?.reservedQuantity ?? 0}</p>
                 <textarea name="description" defaultValue={product.description} className="md:col-span-3 rounded-[12px] border border-stone-200 px-3 py-2" rows={2} required />
 
                 <div className="md:col-span-3 rounded-[14px] border border-stone-200 p-3">
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                       <p className="text-sm font-semibold text-ink-900">Galeria do produto</p>
-                      <p className="text-xs text-stone-500">A imagem primaria aparece nos cards e abre a galeria da PDP.</p>
+                      <p className="text-xs text-stone-500">A imagem principal aparece nos cards e abre a galeria do produto.</p>
                     </div>
                     <p className="text-xs font-semibold text-brand-700">{product.images.length} imagem(ns)</p>
                   </div>
@@ -191,7 +191,7 @@ export default async function AdminProductsPage() {
                       ))}
                     </div>
                   ) : (
-                    <p className="mt-2 text-xs text-stone-500">Sem imagens reais cadastradas. A PDP usa fallback visual elegante.</p>
+                    <p className="mt-2 text-xs text-stone-500">Sem fotos ainda. A página do produto mostra um visual de marca enquanto isso.</p>
                   )}
 
                   <div className="mt-4 grid gap-2 sm:grid-cols-2">
@@ -200,11 +200,11 @@ export default async function AdminProductsPage() {
                       <input type="file" name="imageFile" accept="image/jpeg,image/png,image/webp" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
                     </label>
                     <label className="grid gap-1 text-xs font-semibold text-stone-600">
-                      Adicionar varias imagens
+                      Adicionar várias imagens
                       <input type="file" name="galleryFiles" accept="image/jpeg,image/png,image/webp" multiple className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
                     </label>
                   </div>
-                  <p className="mt-2 text-xs text-stone-500">Formatos aceitos: JPG, PNG e WebP. Limite atual: 8MB por arquivo. Storage local em public/uploads/products.</p>
+                  <p className="mt-2 text-xs text-stone-500">Formatos aceitos: JPG, PNG e WebP. Limite de 8MB por arquivo.</p>
                 </div>
 
                 <button className="md:col-span-3 rounded-[12px] bg-brand-500 px-4 py-2 text-sm font-semibold text-white">Atualizar produto</button>

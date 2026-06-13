@@ -32,21 +32,21 @@ export default async function AdminServicesPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <p className="eyebrow">Servicos</p>
-        <h1 className="page-title">Servicos reais com preco, duracao, prioridade e elegibilidade.</h1>
+        <p className="eyebrow">Serviços</p>
+        <h1 className="page-title">Serviços de banho e tosa com preço, duração e para quais pets.</h1>
       </div>
 
       <section className="surface-default border border-brand-100 bg-white p-5 shadow-[var(--shadow-soft)]">
-        <h2 className="font-heading text-xl font-semibold text-ink-900">Novo servico</h2>
+        <h2 className="font-heading text-xl font-semibold text-ink-900">Novo serviço</h2>
         <form action={saveService} className="mt-4 grid gap-3 md:grid-cols-2">
           <input name="name" placeholder="Nome" className="rounded-[12px] border border-stone-200 px-3 py-2" required />
           <input name="slug" placeholder="Slug" className="rounded-[12px] border border-stone-200 px-3 py-2" required />
-          <input name="priceReais" type="number" step="0.01" min="0" placeholder="Preco (R$)" className="rounded-[12px] border border-stone-200 px-3 py-2" required />
-          <input name="durationMinutes" type="number" min="1" placeholder="Duracao (min)" className="rounded-[12px] border border-stone-200 px-3 py-2" required />
+          <input name="priceReais" type="number" step="0.01" min="0" placeholder="Preço (R$)" className="rounded-[12px] border border-stone-200 px-3 py-2" required />
+          <input name="durationMinutes" type="number" min="1" placeholder="Duração (min)" className="rounded-[12px] border border-stone-200 px-3 py-2" required />
           <input name="displayOrder" type="number" defaultValue={0} placeholder="Prioridade" className="rounded-[12px] border border-stone-200 px-3 py-2" />
           <label className="inline-flex items-center gap-2 text-sm text-stone-700"><input name="active" type="checkbox" defaultChecked /> Ativo</label>
           <select name="petSpecies" className="rounded-[12px] border border-stone-200 px-3 py-2">
-            <option value="all">Especie: todos</option>
+            <option value="all">Espécie: todos</option>
             <option value="dog">Cachorro</option>
             <option value="cat">Gato</option>
             <option value="other">Outros</option>
@@ -58,8 +58,8 @@ export default async function AdminServicesPage() {
             <option value="large">Grande</option>
             <option value="giant">Gigante</option>
           </select>
-          <textarea name="description" placeholder="Descricao" className="md:col-span-2 rounded-[12px] border border-stone-200 px-3 py-2" rows={2} required />
-          <button className="md:col-span-2 rounded-[12px] bg-brand-500 px-4 py-2 text-sm font-semibold text-white">Salvar servico</button>
+          <textarea name="description" placeholder="Descrição" className="md:col-span-2 rounded-[12px] border border-stone-200 px-3 py-2" rows={2} required />
+          <button className="md:col-span-2 rounded-[12px] bg-brand-500 px-4 py-2 text-sm font-semibold text-white">Salvar serviço</button>
         </form>
       </section>
 
@@ -75,7 +75,7 @@ export default async function AdminServicesPage() {
               <input name="durationMinutes" type="number" min="1" defaultValue={service.durationMinutes} className="rounded-[12px] border border-stone-200 px-3 py-2" required />
               <label className="inline-flex items-center gap-2 text-sm text-stone-700"><input name="active" type="checkbox" defaultChecked={service.active} /> Ativo</label>
               <select name="petSpecies" defaultValue={service.petSpecies ?? "all"} className="rounded-[12px] border border-stone-200 px-3 py-2">
-                <option value="all">Especie: todos</option>
+                <option value="all">Espécie: todos</option>
                 <option value="dog">Cachorro</option>
                 <option value="cat">Gato</option>
                 <option value="other">Outros</option>
@@ -83,13 +83,13 @@ export default async function AdminServicesPage() {
               <select name="petSize" defaultValue={service.petSize ?? "all"} className="rounded-[12px] border border-stone-200 px-3 py-2">
                 <option value="all">Porte: todos</option>
                 <option value="small">Pequeno</option>
-                <option value="medium">Medio</option>
+                <option value="medium">Médio</option>
                 <option value="large">Grande</option>
                 <option value="giant">Gigante</option>
               </select>
               <textarea name="description" defaultValue={service.description} className="md:col-span-3 rounded-[12px] border border-stone-200 px-3 py-2" rows={2} required />
-              <p className="md:col-span-3 text-xs text-stone-500">Preco atual: {formatCurrency(service.priceCents / 100)}</p>
-              <button className="md:col-span-3 rounded-[12px] bg-brand-500 px-4 py-2 text-sm font-semibold text-white">Atualizar servico</button>
+              <p className="md:col-span-3 text-xs text-stone-500">Preço atual: {formatCurrency(service.priceCents / 100)}</p>
+              <button className="md:col-span-3 rounded-[12px] bg-brand-500 px-4 py-2 text-sm font-semibold text-white">Atualizar serviço</button>
             </form>
           </article>
         ))}

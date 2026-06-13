@@ -130,7 +130,7 @@ export default async function AdminFinancePage({
     {
       label: "Falhas do gateway",
       value: String(gatewaySummary.failedCount),
-      helper: "Excecoes financeiras do fluxo online.",
+      helper: "Pagamentos que falharam e precisam de atenção.",
       tone: gatewaySummary.failedCount > 0 ? ("danger" as const) : ("neutral" as const)
     }
   ];
@@ -138,8 +138,8 @@ export default async function AdminFinancePage({
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <p className="eyebrow">Financeiro gerencial</p>
-        <h1 className="page-title">Caixa, despesas, compras e recebimentos organizados para a operacao diaria e apoio ao contador.</h1>
+        <p className="eyebrow">Financeiro</p>
+        <h1 className="page-title">Caixa, despesas, compras e recebimentos organizados para você e para o contador.</h1>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
@@ -153,7 +153,7 @@ export default async function AdminFinancePage({
           <div className="mb-4 flex flex-wrap items-end gap-3">
             <div className="min-w-[180px]">
               <p className="text-sm font-semibold text-ink-900">Filtros</p>
-              <p className="text-xs text-stone-500">Periodo, categoria e tipo de movimentacao.</p>
+              <p className="text-xs text-stone-500">Período, categoria e tipo de movimentação.</p>
             </div>
             <form className="grid flex-1 gap-3 md:grid-cols-3 xl:grid-cols-6">
               <input type="date" name="from" defaultValue={filters.from} className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
@@ -165,7 +165,7 @@ export default async function AdminFinancePage({
                 ))}
               </select>
               <select name="direction" defaultValue={filters.direction ?? ""} className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm">
-                <option value="">Todas direcoes</option>
+                <option value="">Todas as direções</option>
                 {Object.entries(financialDirectionLabels).map(([value, label]) => (
                   <option key={value} value={value}>{label}</option>
                 ))}
@@ -182,8 +182,8 @@ export default async function AdminFinancePage({
 
           {entries.length === 0 ? (
             <EmptyState
-              title="Nenhuma movimentacao gerencial cadastrada"
-              description="O financeiro online do site continua funcionando, mas o caixa da empresa ainda nao tem entradas, saidas ou compras registradas neste filtro."
+              title="Nenhuma movimentação no caixa ainda"
+              description="Os recebimentos do site seguem normais. Registre entradas, saídas e compras para acompanhar o caixa da loja por aqui."
             />
           ) : (
             <div className="overflow-x-auto">
@@ -191,7 +191,7 @@ export default async function AdminFinancePage({
                 <thead className="text-left text-stone-500">
                   <tr>
                     <th className="pb-3 pr-4">Data</th>
-                    <th className="pb-3 pr-4">Descricao</th>
+                    <th className="pb-3 pr-4">Descrição</th>
                     <th className="pb-3 pr-4">Categoria</th>
                     <th className="pb-3 pr-4">Tipo</th>
                     <th className="pb-3 pr-4">Forma</th>
@@ -240,8 +240,8 @@ export default async function AdminFinancePage({
           </section>
 
           <section className="surface-default border border-stone-100 bg-white p-5 shadow-[var(--shadow-soft)]">
-            <h2 className="font-heading text-xl font-semibold text-ink-900">Novo lancamento</h2>
-            <p className="mt-1 text-sm text-stone-500">Entradas, saidas, compras, retiradas e observacoes em um fluxo unico.</p>
+            <h2 className="font-heading text-xl font-semibold text-ink-900">Novo lançamento</h2>
+            <p className="mt-1 text-sm text-stone-500">Entradas, saídas, compras e retiradas em um lugar só.</p>
             <form action={createEntry} className="mt-4 grid gap-3">
               <select name="categoryId" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" required>
                 <option value="">Selecione a categoria</option>
@@ -261,8 +261,8 @@ export default async function AdminFinancePage({
                   ))}
                 </select>
               </div>
-              <input name="description" placeholder="Descricao do lancamento" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" required />
-              <textarea name="notes" rows={2} placeholder="Observacoes operacionais" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
+              <input name="description" placeholder="Descrição do lançamento" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" required />
+              <textarea name="notes" rows={2} placeholder="Observações" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
               <div className="grid gap-3 sm:grid-cols-2">
                 <input type="date" name="occurredOn" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" required />
                 <input type="number" min="0" step="0.01" name="amountReais" placeholder="Valor em reais" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" required />

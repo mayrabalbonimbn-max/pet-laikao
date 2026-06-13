@@ -73,7 +73,7 @@ export default async function AdminInventoryPage() {
     {
       label: "Alertas de estoque",
       value: String(totals.lowStockCount),
-      helper: "Itens abaixo do minimo ou zerados.",
+      helper: "Itens abaixo do mínimo ou zerados.",
       tone: totals.lowStockCount > 0 ? ("warning" as const) : ("success" as const)
     },
     {
@@ -93,8 +93,8 @@ export default async function AdminInventoryPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <p className="eyebrow">Estoque com custo</p>
-        <h1 className="page-title">Controle real de mercadoria com custo, fornecedor, minimo e historico de movimentacao.</h1>
+        <p className="eyebrow">Estoque</p>
+        <h1 className="page-title">Controle do estoque com custo, fornecedor, mínimo e histórico de movimentação.</h1>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -107,12 +107,12 @@ export default async function AdminInventoryPage() {
         <section className="surface-default border border-stone-100 bg-white p-5 shadow-[var(--shadow-soft)]">
           <div className="mb-4">
             <h2 className="font-heading text-xl font-semibold text-ink-900">Base de estoque</h2>
-            <p className="text-sm text-stone-500">Custo, margem atual, estoque minimo e fornecedor por variante.</p>
+            <p className="text-sm text-stone-500">Custo, margem atual, estoque mínimo e fornecedor de cada item.</p>
           </div>
           {rows.length === 0 ? (
             <EmptyState
-              title="Nenhuma variante encontrada"
-              description="Cadastre produtos e variantes primeiro para transformar o admin em controle de estoque real."
+              title="Nenhum item no estoque ainda"
+              description="Cadastre produtos primeiro e o controle de estoque aparece aqui com custo, mínimo, fornecedor e histórico."
             />
           ) : (
             <div className="space-y-4">
@@ -135,11 +135,11 @@ export default async function AdminInventoryPage() {
                       <p className="font-semibold text-ink-900">{row.stockQuantity}</p>
                     </div>
                     <div className="rounded-[12px] bg-sand-50 p-3">
-                      <p className="text-stone-500">Disponivel</p>
+                      <p className="text-stone-500">Disponível</p>
                       <p className="font-semibold text-ink-900">{row.availableQuantity}</p>
                     </div>
                     <div className="rounded-[12px] bg-sand-50 p-3">
-                      <p className="text-stone-500">Minimo</p>
+                      <p className="text-stone-500">Mínimo</p>
                       <p className="font-semibold text-ink-900">{row.minimumStock}</p>
                     </div>
                     <div className="rounded-[12px] bg-sand-50 p-3">
@@ -162,7 +162,7 @@ export default async function AdminInventoryPage() {
                         <input type="number" min="0" step="0.01" name="priceReais" defaultValue={(row.priceCents / 100).toFixed(2)} className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
                         <input type="number" min="0" name="minimumStock" defaultValue={row.minimumStock} className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
                       </div>
-                      <button className="rounded-[12px] bg-ink-900 px-4 py-2 text-sm font-semibold text-white">Salvar dados do SKU</button>
+                      <button className="rounded-[12px] bg-ink-900 px-4 py-2 text-sm font-semibold text-white">Salvar dados do item</button>
                     </form>
 
                     <form action={createMovement} className="grid gap-3">
@@ -170,15 +170,15 @@ export default async function AdminInventoryPage() {
                       <div className="grid gap-3 sm:grid-cols-3">
                         <select name="movementType" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm">
                           <option value="entry">Entrada</option>
-                          <option value="exit">Saida</option>
+                          <option value="exit">Saída</option>
                           <option value="adjustment">Ajuste para valor final</option>
                         </select>
                         <input type="number" min="0" name="quantity" placeholder="Quantidade" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" required />
-                        <input type="number" min="0" step="0.01" name="unitCostReais" placeholder="Custo unitario" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
+                        <input type="number" min="0" step="0.01" name="unitCostReais" placeholder="Custo unitário" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
                       </div>
-                      <input name="reason" placeholder="Motivo da movimentacao" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" required />
-                      <textarea name="notes" rows={2} placeholder="Observacoes" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
-                      <button className="rounded-[12px] bg-brand-500 px-4 py-2 text-sm font-semibold text-white">Registrar movimentacao</button>
+                      <input name="reason" placeholder="Motivo da movimentação" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" required />
+                      <textarea name="notes" rows={2} placeholder="Observações" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
+                      <button className="rounded-[12px] bg-brand-500 px-4 py-2 text-sm font-semibold text-white">Registrar movimentação</button>
                     </form>
                   </div>
                 </article>
@@ -190,22 +190,22 @@ export default async function AdminInventoryPage() {
         <div className="space-y-4">
           <section className="surface-default border border-stone-100 bg-white p-5 shadow-[var(--shadow-soft)]">
             <h2 className="font-heading text-xl font-semibold text-ink-900">Fornecedor</h2>
-            <p className="mt-1 text-sm text-stone-500">Base simples, clara e pronta para crescer.</p>
+            <p className="mt-1 text-sm text-stone-500">Cadastre seus fornecedores para organizar as compras.</p>
             <form action={createSupplier} className="mt-4 grid gap-3">
               <input name="name" placeholder="Nome do fornecedor" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" required />
               <input name="contactName" placeholder="Contato" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
               <input name="phone" placeholder="Telefone" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
               <input name="email" placeholder="E-mail" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
-              <textarea name="notes" rows={2} placeholder="Observacoes" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
+              <textarea name="notes" rows={2} placeholder="Observações" className="rounded-[12px] border border-stone-200 px-3 py-2 text-sm" />
               <button className="rounded-[12px] bg-brand-500 px-4 py-2 text-sm font-semibold text-white">Cadastrar fornecedor</button>
             </form>
           </section>
 
           <section className="surface-default border border-stone-100 bg-white p-5 shadow-[var(--shadow-soft)]">
-            <h2 className="font-heading text-xl font-semibold text-ink-900">Historico</h2>
+            <h2 className="font-heading text-xl font-semibold text-ink-900">Histórico</h2>
             <div className="mt-4 space-y-3">
               {history.length === 0 ? (
-                <p className="rounded-[12px] border border-dashed border-stone-200 p-4 text-sm text-stone-500">Nenhuma movimentacao registrada ainda.</p>
+                <p className="rounded-[12px] border border-dashed border-stone-200 p-4 text-sm text-stone-500">Nenhuma movimentação registrada ainda.</p>
               ) : (
                 history.slice(0, 12).map((item: InventoryAdminMovementRecord) => (
                   <div key={item.id} className="rounded-[12px] border border-stone-100 p-3 text-sm">
@@ -217,7 +217,7 @@ export default async function AdminInventoryPage() {
                       <p className="font-semibold text-ink-900">{item.quantity}</p>
                     </div>
                     <p className="mt-2 text-xs text-stone-500">
-                      Estoque apos movimento: {item.resultingStockQuantity ?? "-"} • {new Date(item.createdAt).toLocaleString("pt-BR", { timeZone: "UTC" })}
+                      Estoque após o movimento: {item.resultingStockQuantity ?? "-"} • {new Date(item.createdAt).toLocaleString("pt-BR", { timeZone: "UTC" })}
                     </p>
                   </div>
                 ))

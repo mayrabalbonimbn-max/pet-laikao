@@ -45,7 +45,7 @@ export default async function AdminDashboardPage() {
       value: String(todayAppointments.length),
       helper:
         todayAppointments.length > 0
-          ? `${pendingAppointments} com pendencia de pagamento`
+          ? `${pendingAppointments} com pendência de pagamento`
           : "Nenhum agendamento hoje",
       tone: pendingAppointments > 0 ? ("warning" as const) : ("neutral" as const)
     },
@@ -60,20 +60,20 @@ export default async function AdminDashboardPage() {
       value: formatCurrency(financeSummary.paidTotalCents / 100),
       helper:
         financeSummary.paidTotalCents > 0
-          ? "Total confirmado nas transacoes registradas"
+          ? "Total confirmado nos pagamentos recebidos"
           : "Sem recebimentos confirmados ainda",
       tone: financeSummary.paidTotalCents > 0 ? ("success" as const) : ("neutral" as const)
     },
     {
-      label: "Falhas criticas",
+      label: "Falhas críticas",
       value: String(criticalFailures),
-      helper: criticalFailures > 0 ? "Falhas reais de pagamento detectadas" : "Nenhuma falha critica no periodo",
+      helper: criticalFailures > 0 ? "Falhas de pagamento que precisam de atenção" : "Nenhuma falha crítica no período",
       tone: criticalFailures > 0 ? ("danger" as const) : ("success" as const)
     },
     {
-      label: "Promocoes ativas",
+      label: "Promoções ativas",
       value: String(activePromotions),
-      helper: activePromotions > 0 ? "Campanhas publicas ligadas ao admin" : "Nenhuma promocao ativa",
+      helper: activePromotions > 0 ? "Campanhas no ar para os clientes" : "Nenhuma promoção ativa",
       tone: activePromotions > 0 ? ("success" as const) : ("neutral" as const)
     }
   ];
@@ -82,7 +82,7 @@ export default async function AdminDashboardPage() {
     <div className="space-y-6">
       <div className="space-y-2">
         <p className="eyebrow">Dashboard</p>
-        <h1 className="page-title">Centro operacional do dia com agenda, pedidos, financeiro e alertas visiveis.</h1>
+        <h1 className="page-title">O dia da Laikão em um lugar só: agenda, pedidos, recebimentos e o que precisa de atenção.</h1>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
@@ -95,8 +95,8 @@ export default async function AdminDashboardPage() {
         <div className="surface-default p-6">
           <div className="mb-5 flex items-start justify-between gap-4">
             <div>
-              <h2 className="font-heading text-xl font-semibold">Proximos atendimentos</h2>
-              <p className="text-sm text-stone-500">O que precisa de atencao nas proximas horas.</p>
+              <h2 className="font-heading text-xl font-semibold">Próximos atendimentos</h2>
+              <p className="text-sm text-stone-500">O que precisa de atenção nas próximas horas.</p>
             </div>
           </div>
           <div className="space-y-3">
@@ -122,7 +122,7 @@ export default async function AdminDashboardPage() {
                     ) : (
                       <span className="text-sm text-stone-500">Pagamento em dia</span>
                     )}
-                    <DetailDrawer title={appointment.id} subtitle="Timeline, pagamento, status e automacoes." />
+                    <DetailDrawer title={appointment.id} subtitle="Histórico, pagamento e status do atendimento." />
                   </div>
                 </div>
               ))
@@ -155,8 +155,8 @@ export default async function AdminDashboardPage() {
           </div>
           <InlineNotice
             tone="warning"
-            title="Pendencias criticas devem ficar visiveis no topo"
-            description="Saldo pendente, pagamento falho, estoque travado e notificacao com erro precisam aparecer aqui sem esconder o resto da operacao."
+            title="Fique de olho nas pendências"
+            description="Saldo a receber, pagamento que falhou, estoque parado e aviso com erro aparecem aqui para você resolver primeiro."
           />
         </div>
       </div>

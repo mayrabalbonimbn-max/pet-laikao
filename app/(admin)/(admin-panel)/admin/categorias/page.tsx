@@ -27,7 +27,7 @@ export default async function AdminCategoriesPage() {
     <div className="space-y-6">
       <div className="space-y-2">
         <p className="eyebrow">Categorias</p>
-        <h1 className="page-title">Categorias de produto reais do catalogo (separadas dos servicos de agenda).</h1>
+        <h1 className="page-title">Organize a loja em categorias para o cliente achar tudo com facilidade.</h1>
       </div>
 
       <section className="surface-default border border-brand-100 bg-white p-5 shadow-[var(--shadow-soft)]">
@@ -37,7 +37,7 @@ export default async function AdminCategoriesPage() {
           <input name="slug" placeholder="Slug" className="rounded-[12px] border border-stone-200 px-3 py-2" required />
           <input name="displayOrder" type="number" defaultValue={0} className="rounded-[12px] border border-stone-200 px-3 py-2" />
           <label className="inline-flex items-center gap-2 text-sm text-stone-700"><input name="active" type="checkbox" defaultChecked /> Ativa</label>
-          <textarea name="description" placeholder="Descricao" className="md:col-span-2 rounded-[12px] border border-stone-200 px-3 py-2" rows={2} />
+          <textarea name="description" placeholder="Descrição" className="md:col-span-2 rounded-[12px] border border-stone-200 px-3 py-2" rows={2} />
           <button className="md:col-span-2 rounded-[12px] bg-brand-500 px-4 py-2 text-sm font-semibold text-white">Salvar categoria</button>
         </form>
       </section>

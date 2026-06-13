@@ -62,13 +62,13 @@ export default async function AdminAppointmentsPage() {
     <div className="space-y-6">
       <div className="space-y-2">
         <p className="eyebrow">Agendamentos</p>
-        <h1 className="page-title">Agenda operacional funcional com status protegidos, hold visível e timeline básica.</h1>
+        <h1 className="page-title">Todos os atendimentos da agenda: tutor, pet, serviço, pagamento e status.</h1>
       </div>
       <FilterBar placeholder="Buscar por cliente, pet ou código do agendamento" primaryFilterLabel="Status do atendimento" />
       {appointments.length === 0 ? (
         <EmptyState
-          title="Nenhum agendamento registrado"
-          description="Quando um cliente concluir uma reserva real pela agenda online, o atendimento aparecera aqui com tutor, pet, status financeiro e timeline."
+          title="Nenhum agendamento ainda"
+          description="Quando um cliente concluir uma reserva pela agenda online, o atendimento aparece aqui com tutor, pet, serviço, pagamento e status."
         />
       ) : (
         <>

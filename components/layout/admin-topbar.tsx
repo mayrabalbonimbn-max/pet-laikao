@@ -13,7 +13,7 @@ export async function AdminTopbar() {
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <AdminMobileNavSheet />
           <div className="hidden min-w-0 sm:block">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-700">Operacao Laikão</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-700">Operação Laikão</p>
             <p className="mt-0.5 truncate text-sm text-stone-500">Agenda, pedidos, loja e financeiro conectados</p>
           </div>
           <div className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-white bg-white/90 px-4 py-3 shadow-[0_12px_30px_rgba(32,16,51,0.07)] sm:max-w-xl lg:ml-8">
@@ -24,7 +24,7 @@ export async function AdminTopbar() {
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <button
             className="grid h-11 w-11 place-items-center rounded-2xl border border-white bg-white text-stone-500 shadow-[0_12px_30px_rgba(32,16,51,0.07)] transition hover:text-brand-700"
-            aria-label="Notificacoes"
+            aria-label="Notificações"
           >
             <Bell className="h-4 w-4" />
           </button>
@@ -33,8 +33,8 @@ export async function AdminTopbar() {
               <ShieldCheck className="h-4 w-4" />
             </span>
             <span>
-              <span className="block text-sm font-semibold leading-4 text-ink-900">{user?.name ?? "Gestao"}</span>
-              <span className="block text-xs capitalize text-stone-500">{user?.role ?? "operacoes"}</span>
+              <span className="block text-sm font-semibold leading-4 text-ink-900">{user?.name ?? "Gestão Laikão"}</span>
+              <span className="block text-xs capitalize text-stone-500">{user?.role ?? "Super admin"}</span>
             </span>
             <ChevronDown className="h-4 w-4 text-stone-500" />
           </div>
