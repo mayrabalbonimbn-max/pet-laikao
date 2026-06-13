@@ -6,6 +6,14 @@ export type PromotionBannerView = {
   title: string;
   subtitle?: string;
   imageUrl?: string;
+  imagePath?: string;
+  imageThumbUrl?: string;
+  imageThumbPath?: string;
+  imageAlt?: string;
+  imageMimeType?: string;
+  imageSizeBytes?: number;
+  imageWidth?: number;
+  imageHeight?: number;
   mobileImageUrl?: string;
   ctaLabel?: string;
   ctaLink?: string;

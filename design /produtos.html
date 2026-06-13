@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Produtos | Pet Shop Laikão</title>
+<meta name="description" content="Ração, petisco, higiene, beleza, acessórios e brinquedos na loja da Pet Shop Laikão. Compre e retire, ou peça no iFood." />
+<meta name="theme-color" content="#E5197F" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet" />
+<style>
+/* =========================================================
+   Pet Shop Laikão  -  estilos compartilhados
+   Paleta puxada do logo (rosa magenta + roxo), tipografia
+   Baloo 2 (display) + Nunito (corpo). Assinatura: selo/adesivo.
+   ========================================================= */
+
+:root{
+  --rosa:#E5197F;
+  --rosa-claro:#FF4FA8;
+  --rosa-suave:#FCE4F0;
+  --roxo:#7B2D9E;
+  --roxo-profundo:#4A1568;
+  --lavanda:#F4E9FB;
+  --creme:#FFF5FA;
+  --branco:#FFFFFF;
+  --carvao:#2A1B30;
+  --tinta-suave:#6B5570;
+  --linha:#EAD9EE;
+  --verde:#1FAE54;
+  --ifood:#EA1D2C;
+
+  --raio:22px;
+  --raio-sm:14px;
+  --sombra:0 18px 40px -20px rgba(74,21,104,.35);
+  --sombra-suave:0 10px 30px -18px rgba(74,21,104,.30);
+  --container:1140px;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:"Nunito",system-ui,sans-serif;
+  color:var(--carvao);
+  background:var(--creme);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+h1,h2,h3{font-family:"Baloo 2",cursive;line-height:1.08;margin:0;color:var(--roxo-profundo);letter-spacing:-.01em}
+
+.wrap{width:100%;max-width:var(--container);margin:0 auto;padding:0 20px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+/* ---------- botões ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.55rem;
+  font-family:"Baloo 2",cursive;font-weight:700;font-size:1.02rem;
+  padding:.85rem 1.5rem;border-radius:999px;border:none;cursor:pointer;
+  min-height:48px;transition:transform .18s ease,box-shadow .18s ease,background .18s ease;
+  will-change:transform;text-align:center;
+}
+.btn svg{width:20px;height:20px;flex:none}
+.btn--rosa{background:var(--rosa);color:#fff;box-shadow:0 10px 22px -10px rgba(229,25,127,.7)}
+.btn--rosa:hover{background:var(--rosa-claro);transform:translateY(-2px)}
+.btn--roxo{background:var(--roxo-profundo);color:#fff}
+.btn--roxo:hover{background:var(--roxo);transform:translateY(-2px)}
+.btn--linha{background:#fff;color:var(--roxo-profundo);box-shadow:inset 0 0 0 2px var(--linha)}
+.btn--linha:hover{box-shadow:inset 0 0 0 2px var(--rosa);color:var(--rosa);transform:translateY(-2px)}
+.btn--zap{background:var(--verde);color:#fff}
+.btn--zap:hover{background:#1c9c4c;transform:translateY(-2px)}
+.btn--bloco{width:100%}
+.btn:focus-visible{outline:3px solid var(--rosa-claro);outline-offset:3px}
+
+/* ---------- selo / assinatura ---------- */
+.selo{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-family:"Baloo 2",cursive;font-weight:700;font-size:.78rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--rosa);
+  background:#fff;padding:.5rem .95rem .45rem;border-radius:999px;
+  box-shadow:inset 0 0 0 2px #fff, inset 0 0 0 3.5px var(--rosa-suave);
+  position:relative;
+}
+.selo::before{content:"";position:absolute;inset:3px;border-radius:999px;border:1.6px dashed var(--rosa);opacity:.55;pointer-events:none}
+.selo .paw{width:15px;height:15px;color:var(--rosa)}
+
+/* ---------- header ---------- */
+.topo{position:sticky;top:0;z-index:50;background:rgba(255,245,250,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--linha)}
+.topo .bar{display:flex;align-items:center;justify-content:space-between;height:70px;gap:1rem}
+.marca{display:flex;align-items:center;gap:.6rem;font-family:"Baloo 2",cursive;font-weight:800;font-size:1.4rem;flex:none}
+.marca .pet{color:var(--roxo-profundo)}
+.marca .lk{color:var(--rosa)}
+.marca .stamp{width:34px;height:34px;border-radius:50%;background:var(--rosa);display:grid;place-items:center;color:#fff;flex:none;box-shadow:0 6px 14px -6px rgba(229,25,127,.8)}
+.marca .stamp svg{width:19px;height:19px}
+.nav{display:none;align-items:center;gap:1.6rem}
+.nav a{font-weight:700;color:var(--roxo-profundo);font-size:1rem;position:relative;padding:.2rem 0}
+.nav a::after{content:"";position:absolute;left:0;right:100%;bottom:-3px;height:2.5px;background:var(--rosa);border-radius:2px;transition:right .22s ease}
+.nav a:hover::after,.nav a:focus-visible::after,.nav a.ativo::after{right:0}
+.nav a.ativo{color:var(--rosa)}
+.topo-dir{display:flex;align-items:center;gap:.7rem}
+.topo-cta{display:none}
+.burger{display:inline-grid;place-items:center;width:46px;height:46px;border-radius:14px;background:#fff;border:1px solid var(--linha);color:var(--roxo-profundo);cursor:pointer}
+.burger svg{width:24px;height:24px}
+.menu-mob{display:none;flex-direction:column;gap:.2rem;padding:0 20px 16px;background:rgba(255,245,250,.98);border-bottom:1px solid var(--linha)}
+.menu-mob.open{display:flex}
+.menu-mob a{padding:.85rem .4rem;font-weight:700;color:var(--roxo-profundo);border-bottom:1px solid var(--linha)}
+.menu-mob a.ativo{color:var(--rosa)}
+.menu-mob .btn{margin-top:.7rem}
+@media(min-width:980px){
+  .nav{display:flex}
+  .topo-cta{display:inline-flex}
+  .burger{display:none}
+}
+
+/* ---------- seções ---------- */
+.sec{padding:74px 0}
+.sec--lav{background:var(--lavanda)}
+.sec-eyebrow{margin-bottom:14px}
+.sec h2{font-size:clamp(1.9rem,5vw,2.9rem);font-weight:800;max-width:20ch}
+.sec-lead{color:var(--tinta-suave);font-size:1.1rem;max-width:56ch;margin:.9rem 0 0}
+
+/* ---------- cabeçalho de página interna ---------- */
+.pagehead{position:relative;padding:54px 0 46px;overflow:hidden;background:linear-gradient(180deg,#fff, var(--creme))}
+.pagehead::before{content:"";position:absolute;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,var(--rosa-suave),transparent 70%);top:-110px;right:-70px;opacity:.55}
+.pagehead .inner{position:relative;z-index:1;max-width:760px}
+.pagehead h1{font-size:clamp(2.2rem,6vw,3.4rem);font-weight:800;margin-top:6px}
+.pagehead h1 .rosa{color:var(--rosa)}
+.pagehead p{color:var(--tinta-suave);font-size:1.12rem;margin:1rem 0 0;max-width:54ch}
+.pagehead-acoes{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1.6rem}
+
+/* ---------- herói (home) ---------- */
+.hero{position:relative;padding:54px 0 64px;overflow:hidden}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;filter:blur(8px);opacity:.5;z-index:0}
+.hero::before{width:340px;height:340px;background:radial-gradient(circle,var(--rosa-suave),transparent 70%);top:-90px;right:-60px}
+.hero::after{width:300px;height:300px;background:radial-gradient(circle,#EBD8FA,transparent 70%);bottom:-120px;left:-90px}
+.hero-grid{position:relative;z-index:1;display:grid;gap:40px;align-items:center}
+.hero h1{font-size:clamp(2.4rem,7.5vw,4.1rem);font-weight:800}
+.hero h1 .rosa{color:var(--rosa)}
+.hero .tag{font-family:"Baloo 2",cursive;font-weight:600;font-style:italic;color:var(--roxo);font-size:clamp(1.15rem,3.6vw,1.5rem);margin:.5rem 0 0}
+.hero p.sub{color:var(--tinta-suave);font-size:1.12rem;margin:1.1rem 0 0;max-width:46ch}
+.hero-acoes{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1.8rem}
+.chips{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.9rem}
+.chip{display:inline-flex;align-items:center;gap:.5rem;background:#fff;padding:.55rem .95rem;border-radius:999px;font-weight:700;font-size:.92rem;color:var(--roxo-profundo);box-shadow:var(--sombra-suave)}
+.chip svg{width:18px;height:18px;color:var(--rosa);flex:none}
+@media(min-width:920px){.hero-grid{grid-template-columns:1.05fr .95fr}}
+
+/* ---------- moldura de foto ---------- */
+.photo-frame{position:relative;border-radius:28px;overflow:hidden;aspect-ratio:4/5;background:radial-gradient(120% 90% at 50% 0%, #fff 0%, var(--rosa-suave) 45%, var(--lavanda) 100%);box-shadow:var(--sombra);display:grid;place-items:center;outline:5px solid #fff;outline-offset:-5px}
+.photo-frame::after{content:"";position:absolute;inset:14px;border-radius:20px;border:2px dashed rgba(123,45,158,.35);pointer-events:none}
+.photo-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.photo-frame--quadro{aspect-ratio:1/1}
+.ph-fallback{display:flex;flex-direction:column;align-items:center;gap:.6rem;text-align:center;padding:24px;color:var(--roxo);z-index:0}
+.ph-fallback .big-paw{width:96px;height:96px;color:var(--rosa);opacity:.85}
+.ph-fallback span{font-family:"Baloo 2",cursive;font-weight:600;font-size:1rem;max-width:22ch;color:var(--roxo-profundo);opacity:.85}
+.frame-badge{position:absolute;left:18px;bottom:18px;z-index:2;background:#fff;border-radius:16px;padding:.7rem .95rem;display:flex;align-items:center;gap:.6rem;box-shadow:var(--sombra-suave);max-width:78%}
+.frame-badge .dot{width:38px;height:38px;border-radius:50%;background:var(--rosa);display:grid;place-items:center;color:#fff;flex:none}
+.frame-badge .dot svg{width:20px;height:20px}
+.frame-badge b{display:block;font-family:"Baloo 2",cursive;color:var(--roxo-profundo);font-size:1rem;line-height:1.1}
+.frame-badge small{color:var(--tinta-suave);font-size:.82rem;font-weight:600}
+
+/* ---------- faixa rápida ---------- */
+.faixa{background:var(--roxo-profundo);color:#fff}
+.faixa .row{display:grid;grid-template-columns:1fr}
+.faixa .it{display:flex;align-items:center;gap:.75rem;padding:16px 0;font-weight:700;justify-content:center;text-align:center;border-bottom:1px solid rgba(255,255,255,.12)}
+.faixa .it:last-child{border-bottom:none}
+.faixa .it svg{width:20px;height:20px;color:var(--rosa-claro);flex:none}
+@media(min-width:760px){
+  .faixa .row{grid-template-columns:repeat(4,1fr)}
+  .faixa .it{border-bottom:none;border-right:1px solid rgba(255,255,255,.12);font-size:.96rem}
+  .faixa .it:last-child{border-right:none}
+}
+
+/* ---------- cards genéricos ---------- */
+.cards{display:grid;gap:22px;margin-top:42px;grid-template-columns:1fr}
+@media(min-width:680px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:980px){.cards{grid-template-columns:repeat(3,1fr)}}
+.card{background:#fff;border-radius:var(--raio);padding:26px;box-shadow:var(--sombra-suave);border:1px solid var(--linha);display:flex;flex-direction:column;gap:.5rem;transition:transform .2s ease,box-shadow .2s ease}
+.card:hover{transform:translateY(-4px);box-shadow:var(--sombra)}
+.card .ico{width:54px;height:54px;border-radius:16px;background:var(--rosa-suave);display:grid;place-items:center;color:var(--rosa);margin-bottom:.4rem}
+.card .ico svg{width:27px;height:27px}
+.card h3{font-size:1.4rem;font-weight:700}
+.card .meta{display:flex;gap:1.4rem;margin:.4rem 0 .2rem}
+.card .meta .v{font-family:"Baloo 2",cursive;font-weight:700;color:var(--roxo-profundo);font-size:1.25rem;line-height:1}
+.card .meta .k{display:block;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--tinta-suave);font-weight:700;margin-top:.25rem}
+.card p{color:var(--tinta-suave);font-size:.98rem;margin:.2rem 0 .9rem}
+.card .card-cta{margin-top:auto}
+.card .card-acoes{margin-top:auto;display:flex;gap:.6rem;flex-wrap:wrap}
+.card .card-acoes .btn{flex:1;min-width:130px}
+
+/* ---------- "o que fazemos" (home) cards-link ---------- */
+.linkcard{display:flex;flex-direction:column;gap:.5rem}
+.linkcard .seta{margin-top:auto;color:var(--rosa);font-family:"Baloo 2",cursive;font-weight:700;display:inline-flex;align-items:center;gap:.4rem}
+.linkcard .seta svg{width:18px;height:18px;transition:transform .18s ease}
+.linkcard:hover .seta svg{transform:translateX(4px)}
+
+/* ---------- sobre ---------- */
+.sobre-grid{display:grid;gap:38px;align-items:center}
+@media(min-width:920px){.sobre-grid{grid-template-columns:.92fr 1.08fr}}
+.sobre-grid .txt h2{font-size:clamp(1.9rem,5vw,2.8rem)}
+.sobre-grid .txt p{color:var(--tinta-suave);font-size:1.08rem;margin:1rem 0 0}
+.promessa{font-family:"Baloo 2",cursive;font-style:italic;font-weight:600;color:var(--rosa);font-size:clamp(1.3rem,4vw,1.75rem);margin:1.4rem 0 0;line-height:1.2}
+.selos-conf{display:flex;flex-wrap:wrap;gap:.7rem 1.4rem;margin-top:1.6rem}
+.selos-conf .s{display:flex;align-items:center;gap:.55rem;font-weight:700;color:var(--roxo-profundo)}
+.selos-conf .s svg{width:22px;height:22px;color:var(--rosa);flex:none}
+
+/* ---------- lista de inclusos (serviços) ---------- */
+.inclui{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:28px}
+.inclui .pill{display:inline-flex;align-items:center;gap:.5rem;background:#fff;border:1px solid var(--linha);border-radius:999px;padding:.6rem 1.1rem;font-weight:700;color:var(--roxo-profundo)}
+.inclui .pill svg{width:18px;height:18px;color:var(--rosa)}
+
+/* ---------- nota de cuidado ---------- */
+.nota{background:linear-gradient(120deg,var(--roxo-profundo),var(--roxo));color:#fff;border-radius:26px;padding:34px;display:grid;gap:18px;align-items:center}
+@media(min-width:760px){.nota{grid-template-columns:auto 1fr;gap:26px;padding:40px}}
+.nota .nico{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center;flex:none}
+.nota .nico svg{width:32px;height:32px;color:#fff}
+.nota h3{color:#fff;font-size:1.5rem;font-weight:700}
+.nota p{margin:.5rem 0 0;color:rgba(255,255,255,.88);font-size:1.04rem}
+.nota b{color:var(--rosa-claro)}
+
+/* ---------- banda CTA ---------- */
+.cta-band{background:var(--rosa);border-radius:26px;padding:40px;text-align:center;color:#fff}
+.cta-band h2{color:#fff;font-size:clamp(1.7rem,5vw,2.5rem);max-width:24ch;margin:0 auto}
+.cta-band p{color:rgba(255,255,255,.92);margin:.8rem auto 0;max-width:48ch;font-size:1.08rem}
+.cta-band .acoes{display:flex;flex-wrap:wrap;gap:.8rem;justify-content:center;margin-top:1.6rem}
+.cta-band .btn--linha{background:#fff}
+.cta-band .btn--claro{background:rgba(255,255,255,.16);color:#fff;box-shadow:inset 0 0 0 2px rgba(255,255,255,.5)}
+.cta-band .btn--claro:hover{background:rgba(255,255,255,.26);transform:translateY(-2px)}
+
+/* =========================================================
+   LOJA / PRODUTOS
+   ========================================================= */
+.loja{display:grid;gap:30px;align-items:start;margin-top:8px}
+@media(min-width:900px){.loja{grid-template-columns:260px 1fr}}
+
+.filtros{background:#fff;border:1px solid var(--linha);border-radius:var(--raio);padding:22px;position:sticky;top:86px}
+.filtros h3{font-size:1.1rem;font-weight:700;margin-bottom:.4rem}
+.filtros .grupo{padding:16px 0;border-bottom:1px solid var(--linha)}
+.filtros .grupo:last-child{border-bottom:none;padding-bottom:0}
+.filtros .glabel{font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta-suave);font-weight:800;margin-bottom:.7rem;display:block}
+.busca{position:relative}
+.busca svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--tinta-suave)}
+.busca input{width:100%;padding:.7rem .8rem .7rem 38px;border-radius:12px;border:1px solid var(--linha);font-family:inherit;font-size:1rem;color:var(--carvao);background:var(--creme)}
+.busca input:focus{outline:none;border-color:var(--rosa);box-shadow:0 0 0 3px var(--rosa-suave)}
+.catlist{display:flex;flex-direction:column;gap:.3rem}
+.catbtn{display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;background:none;border:none;cursor:pointer;font-family:inherit;font-weight:700;color:var(--roxo-profundo);padding:.55rem .6rem;border-radius:10px;font-size:.98rem}
+.catbtn:hover{background:var(--lavanda)}
+.catbtn.ativo{background:var(--rosa);color:#fff}
+.catbtn .qt{font-size:.8rem;opacity:.7;font-weight:700}
+.catbtn.ativo .qt{opacity:.9}
+
+.loja-topo{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;margin-bottom:18px}
+.loja-topo .conta{color:var(--tinta-suave);font-weight:700}
+.loja-topo .conta b{color:var(--roxo-profundo)}
+.ordenar{display:flex;align-items:center;gap:.5rem}
+.ordenar label{font-size:.85rem;color:var(--tinta-suave);font-weight:700}
+.ordenar select{padding:.55rem .8rem;border-radius:10px;border:1px solid var(--linha);font-family:inherit;font-weight:700;color:var(--roxo-profundo);background:#fff;cursor:pointer}
+.ordenar select:focus{outline:none;border-color:var(--rosa);box-shadow:0 0 0 3px var(--rosa-suave)}
+
+.grade{display:grid;gap:20px;grid-template-columns:1fr}
+@media(min-width:520px){.grade{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:900px){.grade{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1080px){.grade{grid-template-columns:repeat(3,1fr)}}
+
+.prod{background:#fff;border:1px solid var(--linha);border-radius:var(--raio);overflow:hidden;display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease}
+.prod:hover{transform:translateY(-4px);box-shadow:var(--sombra)}
+.prod .thumb{position:relative;aspect-ratio:1/1;background:linear-gradient(150deg,var(--lavanda),var(--rosa-suave));display:grid;place-items:center}
+.prod .thumb svg{width:64px;height:64px;color:var(--roxo);opacity:.55}
+.prod .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.prod .tag-cat{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.92);color:var(--roxo-profundo);font-weight:800;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;padding:.3rem .6rem;border-radius:999px}
+.prod .tag-promo{position:absolute;top:10px;right:10px;background:var(--rosa);color:#fff;font-weight:800;font-size:.72rem;padding:.3rem .6rem;border-radius:999px}
+.prod .corpo{padding:18px;display:flex;flex-direction:column;gap:.35rem;flex:1}
+.prod .corpo .marca-prod{font-size:.78rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--tinta-suave)}
+.prod .corpo h3{font-size:1.12rem;font-weight:700;line-height:1.15}
+.prod .corpo .desc{font-size:.88rem;color:var(--tinta-suave);margin:0}
+.prod .preco{display:flex;align-items:baseline;gap:.5rem;margin-top:.5rem}
+.prod .preco .agora{font-family:"Baloo 2",cursive;font-weight:800;color:var(--roxo-profundo);font-size:1.45rem}
+.prod .preco .antes{color:var(--tinta-suave);text-decoration:line-through;font-weight:700;font-size:.95rem}
+.prod .add{margin-top:14px}
+.prod .add .btn{width:100%}
+.prod.indisp{opacity:.62}
+.prod.indisp .add .btn{background:var(--linha);color:var(--tinta-suave);box-shadow:none;cursor:not-allowed}
+
+.vazio{grid-column:1/-1;text-align:center;padding:60px 20px;background:#fff;border:1px dashed var(--linha);border-radius:var(--raio)}
+.vazio svg{width:64px;height:64px;color:var(--rosa);opacity:.6;margin:0 auto 12px}
+.vazio h3{font-size:1.3rem}
+.vazio p{color:var(--tinta-suave);margin:.4rem 0 1.2rem}
+
+/* ---------- carrinho ---------- */
+.cart-fab{position:fixed;right:18px;bottom:88px;z-index:60;height:60px;padding:0 1.1rem;border-radius:999px;background:var(--roxo-profundo);color:#fff;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:.6rem;font-family:"Baloo 2",cursive;font-weight:700;font-size:1rem;box-shadow:0 14px 30px -10px rgba(74,21,104,.8);transition:transform .18s ease}
+.cart-fab:hover{transform:translateY(-2px)}
+.cart-fab svg{width:24px;height:24px}
+.cart-fab .badge{background:var(--rosa);color:#fff;border-radius:999px;min-width:24px;height:24px;display:grid;place-items:center;font-size:.85rem;padding:0 .3rem}
+.cart-fab:focus-visible{outline:3px solid var(--rosa-claro);outline-offset:3px}
+
+.overlay{position:fixed;inset:0;background:rgba(42,27,48,.5);z-index:70;opacity:0;visibility:hidden;transition:opacity .25s ease}
+.overlay.aberto{opacity:1;visibility:visible}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,100%);background:var(--creme);z-index:80;transform:translateX(100%);transition:transform .3s ease;display:flex;flex-direction:column;box-shadow:-20px 0 50px -20px rgba(0,0,0,.4)}
+.drawer.aberto{transform:none}
+.drawer-topo{display:flex;align-items:center;justify-content:space-between;padding:20px;border-bottom:1px solid var(--linha)}
+.drawer-topo h3{font-size:1.3rem}
+.drawer-fechar{width:42px;height:42px;border-radius:12px;border:1px solid var(--linha);background:#fff;cursor:pointer;display:grid;place-items:center;color:var(--roxo-profundo)}
+.drawer-fechar svg{width:22px;height:22px}
+.drawer-itens{flex:1;overflow:auto;padding:16px 20px;display:flex;flex-direction:column;gap:14px}
+.ci-item{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid var(--linha);border-radius:16px;padding:12px}
+.ci-item .ci-thumb{width:52px;height:52px;border-radius:12px;background:linear-gradient(150deg,var(--lavanda),var(--rosa-suave));display:grid;place-items:center;color:var(--roxo);flex:none}
+.ci-item .ci-thumb svg{width:26px;height:26px;opacity:.6}
+.ci-item .ci-info{flex:1;min-width:0}
+.ci-item .ci-info b{display:block;font-size:.95rem;color:var(--carvao);line-height:1.2}
+.ci-item .ci-info span{font-weight:800;color:var(--roxo-profundo);font-size:.95rem}
+.qtd{display:flex;align-items:center;gap:.4rem}
+.qtd button{width:30px;height:30px;border-radius:8px;border:1px solid var(--linha);background:#fff;cursor:pointer;font-size:1.1rem;line-height:1;color:var(--roxo-profundo);display:grid;place-items:center}
+.qtd button:hover{border-color:var(--rosa);color:var(--rosa)}
+.qtd span{min-width:20px;text-align:center;font-weight:800}
+.ci-rem{background:none;border:none;cursor:pointer;color:var(--tinta-suave);padding:4px}
+.ci-rem:hover{color:var(--rosa)}
+.ci-rem svg{width:18px;height:18px}
+.cart-vazio{text-align:center;color:var(--tinta-suave);padding:40px 10px}
+.cart-vazio svg{width:56px;height:56px;color:var(--rosa);opacity:.55;margin:0 auto 10px}
+.drawer-fim{padding:20px;border-top:1px solid var(--linha);background:#fff}
+.drawer-fim .total{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.4rem}
+.drawer-fim .total b{font-family:"Baloo 2",cursive;font-size:1.5rem;color:var(--roxo-profundo)}
+.drawer-fim .nota-frete{font-size:.82rem;color:var(--tinta-suave);margin:0 0 1rem}
+
+/* =========================================================
+   PROMOÇÕES
+   ========================================================= */
+.promo-destaque{background:linear-gradient(125deg,var(--roxo-profundo),var(--rosa));border-radius:var(--raio);padding:40px;color:#fff;display:grid;gap:18px;align-items:center;overflow:hidden;position:relative}
+@media(min-width:820px){.promo-destaque{grid-template-columns:1.2fr .8fr;padding:48px}}
+.promo-destaque .selo{background:rgba(255,255,255,.16);color:#fff;box-shadow:inset 0 0 0 3.5px rgba(255,255,255,.25)}
+.promo-destaque .selo::before{border-color:rgba(255,255,255,.6)}
+.promo-destaque .selo .paw{color:#fff}
+.promo-destaque h2{color:#fff;font-size:clamp(1.8rem,5vw,2.7rem);margin-top:.6rem}
+.promo-destaque p{color:rgba(255,255,255,.9);font-size:1.08rem;margin:.7rem 0 0}
+.promo-destaque .acoes{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1.4rem}
+.promo-grid{display:grid;gap:20px;grid-template-columns:1fr;margin-top:36px}
+@media(min-width:680px){.promo-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:980px){.promo-grid{grid-template-columns:repeat(3,1fr)}}
+.promo{background:#fff;border:1px solid var(--linha);border-radius:var(--raio);padding:26px;display:flex;flex-direction:column;gap:.4rem;position:relative;overflow:hidden;transition:transform .2s ease,box-shadow .2s ease}
+.promo:hover{transform:translateY(-4px);box-shadow:var(--sombra)}
+.promo .faixinha{font-family:"Baloo 2",cursive;font-weight:800;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--rosa)}
+.promo h3{font-size:1.35rem;font-weight:700}
+.promo p{color:var(--tinta-suave);font-size:.98rem;margin:.2rem 0 1rem}
+.promo .promo-cta{margin-top:auto}
+.promo--futuro{border-style:dashed;background:var(--lavanda);align-items:center;text-align:center;justify-content:center;min-height:180px;color:var(--roxo)}
+.promo--futuro svg{width:42px;height:42px;color:var(--rosa);opacity:.6;margin-bottom:.4rem}
+.promo--futuro b{font-family:"Baloo 2",cursive;font-size:1.1rem;color:var(--roxo-profundo)}
+
+/* =========================================================
+   CONTATO
+   ========================================================= */
+.visita-grid{display:grid;gap:22px;grid-template-columns:1fr}
+@media(min-width:640px){.visita-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1020px){.visita-grid{grid-template-columns:repeat(4,1fr)}}
+.vcard{background:#fff;border:1px solid var(--linha);border-radius:var(--raio);padding:24px;display:flex;flex-direction:column;gap:.5rem;transition:transform .18s ease,box-shadow .18s ease}
+.vcard:hover{transform:translateY(-3px);box-shadow:var(--sombra-suave)}
+.vcard .vi{width:48px;height:48px;border-radius:14px;background:var(--rosa-suave);display:grid;place-items:center;color:var(--rosa);margin-bottom:.3rem}
+.vcard .vi svg{width:24px;height:24px}
+.vcard h3{font-size:1.18rem;font-weight:700}
+.vcard p{color:var(--tinta-suave);font-size:.98rem;margin:0}
+.vcard a.link{color:var(--rosa);font-weight:700;margin-top:auto;display:inline-flex;align-items:center;gap:.35rem}
+.vcard a.link svg{width:16px;height:16px}
+.mapa{margin-top:34px;border-radius:var(--raio);overflow:hidden;border:1px solid var(--linha);box-shadow:var(--sombra-suave);background:var(--lavanda)}
+.mapa iframe{width:100%;height:380px;border:0;display:block}
+.lgpd{font-size:.85rem;color:var(--tinta-suave);margin-top:18px;max-width:70ch}
+.lgpd a{color:var(--rosa);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+
+/* =========================================================
+   RODAPÉ + whatsapp flutuante
+   ========================================================= */
+.rodape{background:var(--roxo-profundo);color:rgba(255,255,255,.78);padding:56px 0 28px}
+.rodape .grid{display:grid;gap:34px;grid-template-columns:1fr}
+@media(min-width:760px){.rodape .grid{grid-template-columns:1.6fr 1fr 1fr}}
+.rodape h4{font-family:"Baloo 2",cursive;color:#fff;font-size:1.05rem;letter-spacing:.04em;margin:0 0 1rem}
+.rodape .marca{color:#fff;margin-bottom:.8rem}
+.rodape .marca .pet{color:#fff}.rodape .marca .lk{color:var(--rosa-claro)}
+.rodape p{font-size:.95rem;margin:.3rem 0}
+.rodape ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.6rem}
+.rodape ul a:hover{color:#fff}
+.rodape .fim{margin-top:40px;padding-top:22px;border-top:1px solid rgba(255,255,255,.14);display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;justify-content:space-between;font-size:.85rem}
+.rodape .fim a{text-decoration:underline;text-underline-offset:3px}
+
+.zap-float{position:fixed;right:18px;bottom:18px;z-index:60;width:60px;height:60px;border-radius:50%;background:var(--verde);color:#fff;display:grid;place-items:center;box-shadow:0 14px 30px -10px rgba(31,174,84,.8);transition:transform .18s ease}
+.zap-float:hover{transform:scale(1.07)}
+.zap-float svg{width:30px;height:30px}
+.zap-float:focus-visible{outline:3px solid #fff;outline-offset:3px}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+
+@media(prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none;transition:none}
+  .btn,.card,.cat,.vcard,.prod,.promo,.zap-float,.cart-fab,.drawer,.overlay{transition:none}
+}
+
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="wrap bar">
+    <a class="marca" href="index.html" aria-label="Pet Shop Laikão, início">
+      <span class="stamp" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="9" r="2"/><circle cx="12" cy="6.5" r="2.1"/><circle cx="18" cy="9" r="2"/><path d="M12 11.5c-2.6 0-4.7 2-4.7 4.2 0 1.5 1.2 2.3 2.7 2.3.9 0 1.4-.3 2-.3s1.1.3 2 .3c1.5 0 2.7-.8 2.7-2.3 0-2.2-2.1-4.2-4.7-4.2z"/></svg></span>
+      <span><span class="pet">Pet Shop</span> <span class="lk">Laikão</span></span>
+    </a>
+    <nav class="nav" aria-label="Principal">
+      <a href="index.html">Início</a>
+      <a href="servicos.html">Serviços</a>
+      <a href="produtos.html" class="ativo">Produtos</a>
+      <a href="promocoes.html">Promoções</a>
+      <a href="contato.html">Contato</a>
+    </nav>
+    <div class="topo-dir">
+      <a class="btn btn--rosa topo-cta" href="https://www.petlaikao.com.br/agenda">Agendar</a>
+      <button class="burger" id="burger" aria-label="Abrir menu" aria-expanded="false" aria-controls="menuMob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
+  </div>
+  <div class="menu-mob" id="menuMob">
+    <a href="index.html">Início</a>
+    <a href="servicos.html">Serviços</a>
+    <a href="produtos.html" class="ativo">Produtos</a>
+    <a href="promocoes.html">Promoções</a>
+    <a href="contato.html">Contato</a>
+    <a class="btn btn--rosa" href="https://www.petlaikao.com.br/agenda">Agendar banho e tosa</a>
+  </div>
+</header>
+
+<!-- ===== CABEÇALHO ===== -->
+<section class="pagehead">
+  <div class="wrap inner reveal">
+    <span class="selo"><svg class="paw" viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="9" r="2"/><circle cx="12" cy="6.5" r="2.1"/><circle cx="18" cy="9" r="2"/><path d="M12 11.5c-2.6 0-4.7 2-4.7 4.2 0 1.5 1.2 2.3 2.7 2.3.9 0 1.4-.3 2-.3s1.1.3 2 .3c1.5 0 2.7-.8 2.7-2.3 0-2.2-2.1-4.2-4.7-4.2z"/></svg> Loja Laikão</span>
+    <h1>Tudo que seu pet precisa, <span class="rosa">em um lugar só.</span></h1>
+    <p>Monte seu pedido aqui e finalize no WhatsApp. Você retira na loja ou recebe pelo iFood, com a mesma loja e o mesmo cuidado.</p>
+  </div>
+</section>
+
+<!-- ===== LOJA ===== -->
+<section class="sec" style="padding-top:30px">
+  <div class="wrap">
+    <div class="loja">
+
+      <!-- filtros -->
+      <aside class="filtros reveal" aria-label="Filtros da loja">
+        <div class="grupo">
+          <span class="glabel">Buscar</span>
+          <div class="busca">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+            <input id="buscaInput" type="search" placeholder="Ração, shampoo, coleira..." aria-label="Buscar produto" />
+          </div>
+        </div>
+        <div class="grupo">
+          <span class="glabel">Categorias</span>
+          <div class="catlist" id="catlist"><!-- montado pelo app.js --></div>
+        </div>
+      </aside>
+
+      <!-- vitrine -->
+      <div>
+        <div class="loja-topo">
+          <span class="conta" id="conta"></span>
+          <div class="ordenar">
+            <label for="ordenar">Ordenar por</label>
+            <select id="ordenar" aria-label="Ordenar produtos">
+              <option value="relevancia">Relevância</option>
+              <option value="menor">Menor preço</option>
+              <option value="maior">Maior preço</option>
+              <option value="promo">Em promoção</option>
+            </select>
+          </div>
+        </div>
+        <div class="grade" id="grade"><!-- produtos pelo app.js --></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== RODAPÉ ===== -->
+<footer class="rodape">
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <div class="marca"><span class="pet">Pet Shop</span> <span class="lk">Laikão</span></div>
+        <p>Loja, estética animal, produtos, retirada e atendimento direto pra cuidar melhor do seu pet.</p>
+        <p>Rua Franklin do Amaral, 271<br/>Vila Nova Cachoeirinha, São Paulo SP</p>
+        <p>Seg a sáb, 8h às 19h</p>
+      </div>
+      <div>
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="index.html">Início</a></li>
+          <li><a href="servicos.html">Serviços</a></li>
+          <li><a href="produtos.html">Produtos</a></li>
+          <li><a href="promocoes.html">Promoções</a></li>
+          <li><a href="contato.html">Contato</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Canais</h4>
+        <ul>
+          <li><a href="https://wa.me/5511980512871">WhatsApp</a></li>
+          <li><a href="https://instagram.com/pet_laikao">Instagram</a></li>
+          <li><a href="https://www.ifood.com.br/delivery/sao-paulo-sp/pet-shop-laikao-vila-nova-cachoeirinha/d7c31af8-0c1f-4649-b99b-0aaf09ce7adf?UTM_Medium=share">iFood</a></li>
+          <li><a href="https://www.google.com/maps/search/?api=1&query=Rua+Franklin+do+Amaral+271,+Vila+Nova+Cachoeirinha,+Sao+Paulo,+SP">Localização</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fim">
+      <span>© <span id="ano"></span> Pet Shop Laikão. Feito com carinho.</span>
+      <span><a href="https://www.petlaikao.com.br/privacidade">Privacidade</a> · <a href="https://www.petlaikao.com.br/termos">Termos</a> · <a href="https://www.petlaikao.com.br/trocas-e-devolucoes">Trocas e devoluções</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== CARRINHO ===== -->
+<button class="cart-fab" id="cartFab" aria-label="Abrir carrinho">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.5 12.5a2 2 0 0 0 2 1.5h7.5a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+  Carrinho <span class="badge" style="display:none">0</span>
+</button>
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="Carrinho de compras">
+  <div class="drawer-topo">
+    <h3>Seu pedido</h3>
+    <button class="drawer-fechar" id="drawerFechar" aria-label="Fechar carrinho"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="drawer-itens" id="drawerItens"></div>
+  <div class="drawer-fim" id="drawerFim" style="display:none">
+    <div class="total"><span>Total</span><b class="valor-total">R$ 0,00</b></div>
+    <p class="nota-frete">Combine entrega ou retirada no WhatsApp. A confirmação de estoque e o pagamento são feitos no atendimento.</p>
+    <button class="btn btn--zap btn--bloco" id="finalizar"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2z"/></svg> Finalizar no WhatsApp</button>
+  </div>
+</aside>
+
+<a class="zap-float" href="https://wa.me/5511980512871" aria-label="Falar no WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.8.7.8-2.7-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.8.9-.3.2-.5 0a6.6 6.6 0 0 1-1.9-1.2 7.3 7.3 0 0 1-1.4-1.7c-.1-.2 0-.4.1-.5l.4-.4.2-.4a.4.4 0 0 0 0-.4c0-.1-.5-1.3-.7-1.8s-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11 11 0 0 0 4.3 3.8c.6.2 1 .4 1.4.5a3.3 3.3 0 0 0 1.5.1c.5-.1 1.4-.6 1.6-1.1s.2-1 .1-1.1z"/></svg></a>
+
+<script>
+/* =========================================================
+   Pet Shop Laikão  -  scripts compartilhados
+   ========================================================= */
+(function(){
+  "use strict";
+
+  var WHATS = "5511980512871";
+
+  /* ---------- ano no rodapé ---------- */
+  var ano = document.getElementById("ano");
+  if (ano) ano.textContent = new Date().getFullYear();
+
+  /* ---------- menu mobile ---------- */
+  var burger = document.getElementById("burger");
+  var menu = document.getElementById("menuMob");
+  if (burger && menu){
+    burger.addEventListener("click", function(){
+      var open = menu.classList.toggle("open");
+      burger.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    menu.querySelectorAll("a").forEach(function(a){
+      a.addEventListener("click", function(){
+        menu.classList.remove("open");
+        burger.setAttribute("aria-expanded","false");
+      });
+    });
+  }
+
+  /* ---------- reveal no scroll ---------- */
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function revealAll(){ document.querySelectorAll(".reveal").forEach(function(el){ el.classList.add("in"); }); }
+  if (!reduce && "IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+    }, {threshold:.12, rootMargin:"0px 0px -40px 0px"});
+    document.querySelectorAll(".reveal").forEach(function(el){ io.observe(el); });
+  } else { revealAll(); }
+
+  /* =========================================================
+     LOJA  (só roda se a grade de produtos existir na página)
+     ---------------------------------------------------------
+     OBS p/ Mayra: estes são produtos de exemplo tirados da
+     comunicação da Laikão. Troque por dados reais (e plugue
+     no seu checkout/InfinitePay). Os preços são placeholders.
+     ========================================================= */
+  var grade = document.getElementById("grade");
+  if (!grade) return;
+
+  var PRODUTOS = [
+    {id:"premier-adulto", nome:"Premier Fórmula Cães Adultos", marca:"Premier", cat:"Rações", desc:"Raças médias e grandes. Saco fechado.", preco:199.90, estoque:"ok"},
+    {id:"golden-natural", nome:"Golden Seleção Natural", marca:"Golden", cat:"Rações", desc:"Ração para cães adultos.", preco:159.90, precoAntes:179.90, promo:true, estoque:"ok"},
+    {id:"petisco-bifinho", nome:"Bifinho Petisco", marca:"Dr. Lab", cat:"Petiscos", desc:"Petisco macio para o dia a dia.", preco:18.90, estoque:"ok"},
+    {id:"shampoo-neutro", nome:"Shampoo Neutro 500ml", marca:"Uso veterinário", cat:"Higiene", desc:"Para cães e gatos, todos os tipos de pelo.", preco:32.90, estoque:"ok"},
+    {id:"spray-hidratante", nome:"Spray Hidratante 250ml", marca:"Uso contínuo", cat:"Higiene", desc:"Para cães e gatos.", preco:27.90, estoque:"pouco"},
+    {id:"spray-perfume", nome:"Spray Higiene e Perfume 250ml", marca:"Uso veterinário", cat:"Beleza", desc:"Perfuma e refresca entre os banhos.", preco:29.90, estoque:"ok"},
+    {id:"coleira-patas", nome:"Coleira Patinhas", marca:"Laikão", cat:"Acessórios", desc:"Coleira ajustável estampada.", preco:39.90, estoque:"ok"},
+    {id:"comedouro-roxo", nome:"Comedouro Patinha", marca:"Laikão", cat:"Acessórios", desc:"Comedouro resistente, fácil de limpar.", preco:24.90, promo:true, precoAntes:29.90, estoque:"ok"},
+    {id:"brinquedo-corda", nome:"Brinquedo Bolinha de Corda", marca:"Laikão", cat:"Brinquedos", desc:"Diversão e limpeza dos dentes.", preco:19.90, estoque:"fora"}
+  ];
+
+  var CATS = ["Todos","Rações","Petiscos","Higiene","Beleza","Acessórios","Brinquedos"];
+
+  /* ícones por categoria (fallback do thumb) */
+  function icoCat(cat){
+    var p = {fill:"none",stroke:"currentColor","stroke-width":"1.8","stroke-linecap":"round","stroke-linejoin":"round"};
+    var map = {
+      "Rações":'<path d="M4 13c0-4 4-7 8-7s8 3 8 7-4 5-8 5-8-1-8-5z"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="13" cy="12" r="1" fill="currentColor"/>',
+      "Petiscos":'<path d="M7 5a2 2 0 1 1 3 1c1 0 2 .5 2 2s-1 2-2 2a2 2 0 1 1-3 1"/><path d="M14 17a2 2 0 1 0 3-1c1 0 2-.5 2-2s-1-2-2-2a2 2 0 1 0-3-1"/>',
+      "Higiene":'<path d="M8 3h8v5l-2 2v9a2 2 0 0 1-4 0v-9L8 8z"/>',
+      "Beleza":'<path d="M9 3h4v4l3 3v9a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2v-9l2-3z"/><path d="M16 6h3"/>',
+      "Acessórios":'<path d="M4 9a8 8 0 0 1 16 0v1a8 8 0 0 1-16 0z"/><circle cx="12" cy="14" r="1.6"/>',
+      "Brinquedos":'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>'
+    };
+    var inner = map[cat] || '<circle cx="12" cy="12" r="8"/>';
+    return '<svg viewBox="0 0 24 24" '+Object.keys(p).map(function(k){return k+'="'+p[k]+'"';}).join(" ")+'>'+inner+'</svg>';
+  }
+
+  function brl(v){ return v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
+
+  /* ---------- estado ---------- */
+  var filtroCat = "Todos";
+  var termo = "";
+  var ordem = "relevancia";
+
+  /* ---------- carrinho (persiste no navegador) ---------- */
+  var carrinho = [];
+  try { var s = localStorage.getItem("laikao_cart"); if (s) carrinho = JSON.parse(s) || []; } catch(e){}
+  function salvar(){ try { localStorage.setItem("laikao_cart", JSON.stringify(carrinho)); } catch(e){} }
+
+  function getProduto(id){ return PRODUTOS.filter(function(p){return p.id===id;})[0]; }
+  function qtdNoCarrinho(id){ var i = carrinho.filter(function(c){return c.id===id;})[0]; return i?i.qtd:0; }
+  function totalItens(){ return carrinho.reduce(function(t,c){return t+c.qtd;},0); }
+  function totalValor(){ return carrinho.reduce(function(t,c){ var p=getProduto(c.id); return t + (p?p.preco*c.qtd:0); },0); }
+
+  function addItem(id){
+    var item = carrinho.filter(function(c){return c.id===id;})[0];
+    if (item) item.qtd++; else carrinho.push({id:id, qtd:1});
+    salvar(); renderCarrinho(); pulseFab();
+  }
+  function mudarQtd(id,delta){
+    var item = carrinho.filter(function(c){return c.id===id;})[0];
+    if(!item) return;
+    item.qtd += delta;
+    if(item.qtd<=0) carrinho = carrinho.filter(function(c){return c.id!==id;});
+    salvar(); renderCarrinho();
+  }
+  function removerItem(id){ carrinho = carrinho.filter(function(c){return c.id!==id;}); salvar(); renderCarrinho(); }
+
+  /* ---------- montar filtros de categoria ---------- */
+  var catlist = document.getElementById("catlist");
+  function renderCats(){
+    catlist.innerHTML = CATS.map(function(c){
+      var n = c==="Todos" ? PRODUTOS.length : PRODUTOS.filter(function(p){return p.cat===c;}).length;
+      return '<button class="catbtn'+(c===filtroCat?" ativo":"")+'" data-cat="'+c+'">'+
+               '<span>'+c+'</span><span class="qt">'+n+'</span></button>';
+    }).join("");
+    catlist.querySelectorAll(".catbtn").forEach(function(b){
+      b.addEventListener("click", function(){ filtroCat = b.getAttribute("data-cat"); renderCats(); renderGrade(); });
+    });
+  }
+
+  /* ---------- montar grade ---------- */
+  function listaFiltrada(){
+    var arr = PRODUTOS.slice();
+    if (filtroCat!=="Todos") arr = arr.filter(function(p){return p.cat===filtroCat;});
+    if (termo){
+      var t = termo.toLowerCase();
+      arr = arr.filter(function(p){ return (p.nome+" "+p.marca+" "+p.desc+" "+p.cat).toLowerCase().indexOf(t)>=0; });
+    }
+    if (ordem==="menor") arr.sort(function(a,b){return a.preco-b.preco;});
+    else if (ordem==="maior") arr.sort(function(a,b){return b.preco-a.preco;});
+    else if (ordem==="promo") arr.sort(function(a,b){return (b.promo?1:0)-(a.promo?1:0);});
+    return arr;
+  }
+
+  function seloEstoque(p){
+    if (p.estoque==="fora") return '<span class="tag-promo" style="background:#9a8aa3">Indisponível</span>';
+    if (p.estoque==="pouco") return '<span class="tag-promo" style="background:var(--roxo)">Últimas unidades</span>';
+    if (p.promo) return '<span class="tag-promo">Oferta</span>';
+    return "";
+  }
+
+  function renderGrade(){
+    var arr = listaFiltrada();
+    var conta = document.getElementById("conta");
+    if (conta) conta.innerHTML = "<b>"+arr.length+"</b> "+(arr.length===1?"produto":"produtos");
+
+    if (arr.length===0){
+      grade.innerHTML =
+        '<div class="vazio">'+
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>'+
+          '<h3>Nenhum produto encontrado</h3>'+
+          '<p>Tente outra categoria ou limpe a busca.</p>'+
+          '<button class="btn btn--linha" id="limpar">Limpar filtros</button>'+
+        '</div>';
+      var lp = document.getElementById("limpar");
+      if(lp) lp.addEventListener("click", function(){ filtroCat="Todos"; termo=""; var bi=document.getElementById("buscaInput"); if(bi) bi.value=""; renderCats(); renderGrade(); });
+      return;
+    }
+
+    grade.innerHTML = arr.map(function(p){
+      var fora = p.estoque==="fora";
+      var preco = '<div class="preco"><span class="agora">'+brl(p.preco)+'</span>'+
+                  (p.precoAntes?'<span class="antes">'+brl(p.precoAntes)+'</span>':'')+'</div>';
+      var botao = fora
+        ? '<button class="btn" disabled>Indisponível</button>'
+        : '<button class="btn btn--rosa" data-add="'+p.id+'">Adicionar</button>';
+      return '<article class="prod'+(fora?' indisp':'')+'">'+
+        '<div class="thumb">'+
+          '<span class="tag-cat">'+p.cat+'</span>'+ seloEstoque(p) +
+          icoCat(p.cat)+
+        '</div>'+
+        '<div class="corpo">'+
+          '<span class="marca-prod">'+p.marca+'</span>'+
+          '<h3>'+p.nome+'</h3>'+
+          '<p class="desc">'+p.desc+'</p>'+
+          preco+
+          '<div class="add">'+botao+'</div>'+
+        '</div>'+
+      '</article>';
+    }).join("");
+
+    grade.querySelectorAll("[data-add]").forEach(function(b){
+      b.addEventListener("click", function(){ addItem(b.getAttribute("data-add")); });
+    });
+  }
+
+  /* ---------- drawer do carrinho ---------- */
+  var fab = document.getElementById("cartFab");
+  var overlay = document.getElementById("overlay");
+  var drawer = document.getElementById("drawer");
+  var itensEl = document.getElementById("drawerItens");
+  var fimEl = document.getElementById("drawerFim");
+
+  function abrirCarrinho(){ overlay.classList.add("aberto"); drawer.classList.add("aberto"); }
+  function fecharCarrinho(){ overlay.classList.remove("aberto"); drawer.classList.remove("aberto"); }
+
+  function pulseFab(){
+    if(!fab) return;
+    fab.animate([{transform:"translateY(0) scale(1)"},{transform:"translateY(-3px) scale(1.06)"},{transform:"translateY(0) scale(1)"}],{duration:280});
+  }
+
+  function renderCarrinho(){
+    if (fab){
+      var n = totalItens();
+      var badge = fab.querySelector(".badge");
+      badge.textContent = n;
+      badge.style.display = n>0 ? "grid" : "none";
+    }
+    if (!itensEl) return;
+
+    if (carrinho.length===0){
+      itensEl.innerHTML =
+        '<div class="cart-vazio">'+
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.5 12.5a2 2 0 0 0 2 1.5h7.5a2 2 0 0 0 2-1.6L21 7H6"/></svg>'+
+          '<p>Seu carrinho está vazio.<br>Adicione produtos pra montar seu pedido.</p>'+
+        '</div>';
+      fimEl.style.display = "none";
+      return;
+    }
+
+    itensEl.innerHTML = carrinho.map(function(c){
+      var p = getProduto(c.id); if(!p) return "";
+      return '<div class="ci-item">'+
+        '<div class="ci-thumb">'+icoCat(p.cat)+'</div>'+
+        '<div class="ci-info"><b>'+p.nome+'</b><span>'+brl(p.preco)+'</span></div>'+
+        '<div class="qtd">'+
+          '<button data-menos="'+p.id+'" aria-label="Diminuir">−</button>'+
+          '<span>'+c.qtd+'</span>'+
+          '<button data-mais="'+p.id+'" aria-label="Aumentar">+</button>'+
+        '</div>'+
+        '<button class="ci-rem" data-rem="'+p.id+'" aria-label="Remover">'+
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>'+
+        '</button>'+
+      '</div>';
+    }).join("");
+
+    fimEl.style.display = "block";
+    fimEl.querySelector(".valor-total").textContent = brl(totalValor());
+
+    itensEl.querySelectorAll("[data-mais]").forEach(function(b){ b.addEventListener("click",function(){mudarQtd(b.getAttribute("data-mais"),1);});});
+    itensEl.querySelectorAll("[data-menos]").forEach(function(b){ b.addEventListener("click",function(){mudarQtd(b.getAttribute("data-menos"),-1);});});
+    itensEl.querySelectorAll("[data-rem]").forEach(function(b){ b.addEventListener("click",function(){removerItem(b.getAttribute("data-rem"));});});
+  }
+
+  function finalizarWhats(){
+    if (carrinho.length===0) return;
+    var linhas = carrinho.map(function(c){ var p=getProduto(c.id); return "• "+c.qtd+"x "+p.nome+" ("+brl(p.preco)+")"; });
+    var msg = "Olá! Quero fazer um pedido na Pet Shop Laikão:%0A%0A"+
+              linhas.join("%0A")+"%0A%0A"+
+              "Total: "+brl(totalValor())+"%0A%0A"+
+              "Pode confirmar disponibilidade e a entrega/retirada?";
+    window.open("https://wa.me/"+WHATS+"?text="+msg, "_blank");
+  }
+
+  if (fab) fab.addEventListener("click", abrirCarrinho);
+  if (overlay) overlay.addEventListener("click", fecharCarrinho);
+  var fechar = document.getElementById("drawerFechar");
+  if (fechar) fechar.addEventListener("click", fecharCarrinho);
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape") fecharCarrinho(); });
+  var btnFinal = document.getElementById("finalizar");
+  if (btnFinal) btnFinal.addEventListener("click", finalizarWhats);
+
+  /* ---------- busca e ordenação ---------- */
+  var buscaInput = document.getElementById("buscaInput");
+  if (buscaInput) buscaInput.addEventListener("input", function(){ termo = buscaInput.value.trim(); renderGrade(); });
+  var ordenarSel = document.getElementById("ordenar");
+  if (ordenarSel) ordenarSel.addEventListener("change", function(){ ordem = ordenarSel.value; renderGrade(); });
+
+  /* ---------- start ---------- */
+  renderCats();
+  renderGrade();
+  renderCarrinho();
+})();
+
+</script>
+</body>
+</html>

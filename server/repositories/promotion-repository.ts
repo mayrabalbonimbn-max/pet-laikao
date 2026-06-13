@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 
 import { db } from "@/server/db/client";
 import { ensurePromotionSeedData } from "@/server/services/promotion-seed-service";
+import { LEGACY_DEMO_PROMOTION_IDS } from "@/server/services/demo-data-hygiene-service";
 
 function nextId(prefix: string) {
   return `${prefix}-${randomUUID()}`;
@@ -10,6 +11,9 @@ function nextId(prefix: string) {
 export async function listPromotionRecords() {
   await ensurePromotionSeedData();
   return db.promotion.findMany({
+    where: {
+      id: { notIn: LEGACY_DEMO_PROMOTION_IDS }
+    },
     include: {
       items: {
         orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }]
@@ -23,6 +27,10 @@ export async function listPromotionRecords() {
 }
 
 export async function getPromotionRecordById(id: string) {
+  if (LEGACY_DEMO_PROMOTION_IDS.includes(id)) {
+    return null;
+  }
+
   await ensurePromotionSeedData();
   return db.promotion.findUnique({
     where: { id },
@@ -67,6 +75,14 @@ export async function upsertPromotionRecord(input: {
     title: string;
     subtitle?: string;
     imageUrl?: string;
+    imagePath?: string;
+    imageThumbUrl?: string;
+    imageThumbPath?: string;
+    imageAlt?: string;
+    imageMimeType?: string;
+    imageSizeBytes?: number;
+    imageWidth?: number;
+    imageHeight?: number;
     mobileImageUrl?: string;
     ctaLabel?: string;
     ctaLink?: string;
@@ -165,6 +181,14 @@ export async function upsertPromotionRecord(input: {
           title: banner.title,
           subtitle: banner.subtitle ?? null,
           imageUrl: banner.imageUrl ?? null,
+          imagePath: banner.imagePath ?? null,
+          imageThumbUrl: banner.imageThumbUrl ?? null,
+          imageThumbPath: banner.imageThumbPath ?? null,
+          imageAlt: banner.imageAlt ?? null,
+          imageMimeType: banner.imageMimeType ?? null,
+          imageSizeBytes: banner.imageSizeBytes ?? null,
+          imageWidth: banner.imageWidth ?? null,
+          imageHeight: banner.imageHeight ?? null,
           mobileImageUrl: banner.mobileImageUrl ?? null,
           ctaLabel: banner.ctaLabel ?? null,
           ctaLink: banner.ctaLink ?? null,
@@ -180,6 +204,14 @@ export async function upsertPromotionRecord(input: {
           title: banner.title,
           subtitle: banner.subtitle ?? null,
           imageUrl: banner.imageUrl ?? null,
+          imagePath: banner.imagePath ?? null,
+          imageThumbUrl: banner.imageThumbUrl ?? null,
+          imageThumbPath: banner.imageThumbPath ?? null,
+          imageAlt: banner.imageAlt ?? null,
+          imageMimeType: banner.imageMimeType ?? null,
+          imageSizeBytes: banner.imageSizeBytes ?? null,
+          imageWidth: banner.imageWidth ?? null,
+          imageHeight: banner.imageHeight ?? null,
           mobileImageUrl: banner.mobileImageUrl ?? null,
           ctaLabel: banner.ctaLabel ?? null,
           ctaLink: banner.ctaLink ?? null,

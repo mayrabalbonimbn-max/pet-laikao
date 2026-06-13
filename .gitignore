@@ -25,6 +25,10 @@ prisma/dev.db-journal
 # vercel / deployment leftovers
 .vercel
 
+# deployment staging / artifacts
+deploy-stage
+*.zip
+
 # pm2 logs
 pids
 *.pid

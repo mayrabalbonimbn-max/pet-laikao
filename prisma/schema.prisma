@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -15,10 +15,14 @@ model AppointmentService {
   durationMinutes Int
   priceCents      Int
   active          Boolean            @default(true)
+  displayOrder    Int                @default(0)
+  petSpecies      String?
+  petSize         String?
   appointments    Appointment[]
   holds           AppointmentHold[]
   availability    AvailabilityRule[]
   calendarBlocks  CalendarBlock[]
+  adminEvents     AdminCalendarEvent[]
   promotionItems  PromotionItem[]
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
@@ -230,6 +234,7 @@ model Product {
   active          Boolean             @default(true)
   category        Category?           @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   variants        ProductVariant[]
+  images          ProductImage[]
   cartItems       CartItem[]
   orderItems      OrderItem[]
   inventoryMoves  InventoryMovement[]
@@ -241,18 +246,44 @@ model Product {
   @@index([status, featured])
 }
 
+model ProductImage {
+  id             String   @id
+  productId      String
+  imageUrl       String
+  imagePath      String
+  imageThumbUrl  String
+  imageThumbPath String
+  alt            String
+  mimeType       String
+  sizeBytes      Int
+  width          Int
+  height         Int
+  displayOrder   Int      @default(0)
+  isPrimary      Boolean  @default(false)
+  product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([productId, displayOrder])
+  @@index([productId, isPrimary])
+}
+
 model ProductVariant {
   id                String              @id
   productId         String
+  supplierId        String?
   slug              String              @unique
   title             String
   sku               String              @unique
   priceCents        Int
   compareAtCents    Int?
+  costCents         Int                 @default(0)
   stockQuantity     Int                 @default(0)
   reservedQuantity  Int                 @default(0)
+  minimumStock      Int                 @default(0)
   active            Boolean             @default(true)
   product           Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
+  supplier          Supplier?           @relation(fields: [supplierId], references: [id], onDelete: SetNull)
   cartItems         CartItem[]
   orderItems        OrderItem[]
   inventoryMoves    InventoryMovement[]
@@ -261,6 +292,7 @@ model ProductVariant {
 
   @@index([productId, active])
   @@index([stockQuantity, reservedQuantity])
+  @@index([supplierId])
 }
 
 model Coupon {
@@ -396,6 +428,10 @@ model InventoryMovement {
   reason        String
   referenceType String
   referenceId   String
+  unitCostCents Int?
+  totalCostCents Int?
+  notes         String?
+  resultingStockQuantity Int?
   product       Product        @relation(fields: [productId], references: [id], onDelete: Restrict)
   variant       ProductVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
   createdAt     DateTime       @default(now())
@@ -403,6 +439,85 @@ model InventoryMovement {
   @@index([variantId, createdAt])
   @@index([referenceType, referenceId, createdAt])
   @@index([movementType, createdAt])
+}
+
+model Supplier {
+  id          String           @id
+  name        String
+  contactName String?
+  phone       String?
+  email       String?
+  notes       String?
+  active      Boolean          @default(true)
+  variants    ProductVariant[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([active, name])
+}
+
+model FinancialCategory {
+  id          String           @id
+  name        String
+  slug        String           @unique
+  direction   String
+  description String?
+  active      Boolean          @default(true)
+  entries     FinancialEntry[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([direction, active])
+}
+
+model FinancialEntry {
+  id                String            @id
+  categoryId        String
+  direction         String
+  entryType         String
+  description       String
+  notes             String?
+  occurredOn        DateTime
+  amountCents       Int
+  paymentMethod     String
+  status            String
+  isRecurringFixed  Boolean           @default(false)
+  referenceType     String?
+  referenceId       String?
+  category          FinancialCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@index([occurredOn, direction])
+  @@index([categoryId, occurredOn])
+  @@index([entryType, status])
+}
+
+model AdminCalendarEvent {
+  id                 String              @id
+  serviceId          String?
+  title              String
+  category           String
+  colorToken         String
+  customerName       String?
+  petName            String?
+  notes              String?
+  startsAt           DateTime
+  endsAt             DateTime
+  impactAvailability Boolean             @default(false)
+  isAllDay           Boolean             @default(false)
+  sourceType         String
+  status             String              @default("active")
+  referenceType      String?
+  referenceId        String?
+  service            AppointmentService? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  @@index([startsAt, endsAt])
+  @@index([category, startsAt])
+  @@index([impactAvailability, startsAt, endsAt])
+  @@index([serviceId, startsAt])
 }
 
 model AdminUser {
@@ -488,6 +603,14 @@ model PromotionBanner {
   title              String
   subtitle           String?
   imageUrl           String?
+  imagePath          String?
+  imageThumbUrl      String?
+  imageThumbPath     String?
+  imageAlt           String?
+  imageMimeType      String?
+  imageSizeBytes     Int?
+  imageWidth         Int?
+  imageHeight        Int?
   mobileImageUrl     String?
   ctaLabel           String?
   ctaLink            String?

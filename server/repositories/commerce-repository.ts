@@ -8,6 +8,7 @@ import {
   CategoryRecord,
   CouponRecord,
   InventoryMovementRecord,
+  ProductImageRecord,
   ProductRecord,
   ProductVariantRecord
 } from "@/domains/catalog/types";
@@ -21,6 +22,13 @@ import {
 } from "@/domains/orders/types";
 import { ensureCommerceSeedData } from "@/server/services/commerce-seed-service";
 import { formatCurrency } from "@/lib/formatters";
+import {
+  LEGACY_DEMO_CART_KEYS,
+  LEGACY_DEMO_INVENTORY_MOVEMENT_IDS,
+  LEGACY_DEMO_ORDER_IDS,
+  LEGACY_DEMO_ORDER_NUMBERS,
+  LEGACY_DEMO_PRODUCT_IDS
+} from "@/server/services/demo-data-hygiene-service";
 
 async function ensureInfrastructure() {
   await ensureCommerceSeedData();
@@ -33,6 +41,9 @@ function nextId(prefix: string) {
 const productInclude = Prisma.validator<Prisma.ProductDefaultArgs>()({
   include: {
     category: true,
+    images: {
+      orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }]
+    },
     variants: {
       orderBy: {
         createdAt: "asc"
@@ -100,25 +111,49 @@ function computeStockStatus(stockQuantity: number, reservedQuantity: number) {
   return "in_stock" as const;
 }
 
-function mapVariantRecord(variant: ProductWithRelations["variants"][number]): ProductVariantRecord {
+function mapVariantRecord(variant: any): ProductVariantRecord {
   const availableQuantity = Math.max(variant.stockQuantity - variant.reservedQuantity, 0);
 
   return {
     id: variant.id,
     productId: variant.productId,
+    supplierId: variant.supplierId ?? undefined,
     slug: variant.slug,
     title: variant.title,
     sku: variant.sku,
     priceCents: variant.priceCents,
     compareAtCents: variant.compareAtCents ?? undefined,
+    costCents: variant.costCents,
     stockQuantity: variant.stockQuantity,
     reservedQuantity: variant.reservedQuantity,
     availableQuantity,
+    minimumStock: variant.minimumStock,
     active: variant.active
   };
 }
 
+function mapProductImageRecord(image: ProductWithRelations["images"][number]): ProductImageRecord {
+  return {
+    id: image.id,
+    productId: image.productId,
+    imageUrl: image.imageUrl,
+    imagePath: image.imagePath,
+    imageThumbUrl: image.imageThumbUrl,
+    imageThumbPath: image.imageThumbPath,
+    alt: image.alt,
+    mimeType: image.mimeType,
+    sizeBytes: image.sizeBytes,
+    width: image.width,
+    height: image.height,
+    displayOrder: image.displayOrder,
+    isPrimary: image.isPrimary
+  };
+}
+
 function mapProductRecord(product: ProductWithRelations): ProductRecord {
+  const images = product.images.map(mapProductImageRecord);
+  const primaryImageUrl = images.find((image) => image.isPrimary)?.imageUrl ?? images[0]?.imageUrl ?? product.mainImageUrl ?? undefined;
+
   return {
     id: product.id,
     categoryId: product.categoryId ?? undefined,
@@ -129,8 +164,9 @@ function mapProductRecord(product: ProductWithRelations): ProductRecord {
     status: product.status as ProductRecord["status"],
     featured: product.featured,
     imageLabel: product.imageLabel,
-    mainImageUrl: product.mainImageUrl ?? undefined,
+    mainImageUrl: primaryImageUrl,
     active: product.active,
+    images,
     variants: product.variants.map(mapVariantRecord),
     createdAt: product.createdAt.toISOString(),
     updatedAt: product.updatedAt.toISOString()
@@ -234,14 +270,203 @@ export async function listCategoryRecords() {
   }));
 }
 
+export async function listCategoryRecordsWithCounts() {
+  await ensureInfrastructure();
+  const categories = await db.category.findMany({
+    orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }],
+    include: {
+      _count: {
+        select: {
+          products: {
+            where: {
+              active: true
+            }
+          }
+        }
+      }
+    }
+  });
+
+  return categories.map((category) => ({
+    id: category.id,
+    name: category.name,
+    slug: category.slug,
+    description: category.description ?? undefined,
+    parentId: category.parentId ?? undefined,
+    active: category.active,
+    displayOrder: category.displayOrder,
+    productCount: category._count.products
+  }));
+}
+
 export async function listProductRecords() {
   await ensureInfrastructure();
   const products = await db.product.findMany({
+    where: { id: { notIn: LEGACY_DEMO_PRODUCT_IDS } },
     orderBy: [{ featured: "desc" }, { createdAt: "asc" }],
     ...productInclude
   });
 
   return products.map(mapProductRecord);
+}
+
+export async function upsertCategoryRecord(input: {
+  id?: string;
+  name: string;
+  slug: string;
+  description?: string;
+  active: boolean;
+  displayOrder: number;
+}) {
+  await ensureInfrastructure();
+  const id = input.id ?? nextId("cat");
+
+  await db.category.upsert({
+    where: { id },
+    update: {
+      name: input.name,
+      slug: input.slug,
+      description: input.description ?? null,
+      active: input.active,
+      displayOrder: input.displayOrder,
+      updatedAt: new Date()
+    },
+    create: {
+      id,
+      name: input.name,
+      slug: input.slug,
+      description: input.description ?? null,
+      active: input.active,
+      displayOrder: input.displayOrder
+    }
+  });
+}
+
+export async function updateProductAdminRecord(input: {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  categoryId?: string;
+  status: ProductRecord["status"];
+  featured: boolean;
+  active: boolean;
+  imageLabel: string;
+  mainImageUrl?: string;
+  images?: Array<{
+    id?: string;
+    imageUrl: string;
+    imagePath: string;
+    imageThumbUrl: string;
+    imageThumbPath: string;
+    alt: string;
+    mimeType: string;
+    sizeBytes: number;
+    width: number;
+    height: number;
+    displayOrder: number;
+    isPrimary: boolean;
+  }>;
+  variantPriceCents: number;
+  variantStockQuantity: number;
+}) {
+  await ensureInfrastructure();
+  const product = await db.product.findUnique({
+    where: { id: input.id },
+    include: { variants: { orderBy: { createdAt: "asc" } } }
+  });
+  if (!product) {
+    throw new Error("Produto nao encontrado.");
+  }
+
+  await db.$transaction(async (tx) => {
+    const normalizedImages = input.images?.map((image, index) => ({
+      ...image,
+      id: image.id ?? nextId("pimg"),
+      displayOrder: Number.isFinite(image.displayOrder) ? image.displayOrder : index,
+      isPrimary: image.isPrimary
+    })) ?? [];
+    const hasPrimary = normalizedImages.some((image) => image.isPrimary);
+    const images = normalizedImages.map((image, index) => ({
+      ...image,
+      isPrimary: hasPrimary ? image.isPrimary : index === 0
+    }));
+    const mainImageUrl = images.find((image) => image.isPrimary)?.imageUrl ?? images[0]?.imageUrl ?? input.mainImageUrl ?? null;
+
+    await tx.product.update({
+      where: { id: input.id },
+      data: {
+        name: input.name,
+        slug: input.slug,
+        description: input.description,
+        categoryId: input.categoryId ?? null,
+        status: input.status,
+        featured: input.featured,
+        active: input.active,
+        imageLabel: input.imageLabel,
+        mainImageUrl,
+        updatedAt: new Date()
+      }
+    });
+
+    if (input.images) {
+      await tx.productImage.deleteMany({
+        where: {
+          productId: input.id,
+          id: {
+            notIn: images.map((image) => image.id)
+          }
+        }
+      });
+
+      for (const image of images) {
+        await tx.productImage.upsert({
+          where: { id: image.id },
+          update: {
+            imageUrl: image.imageUrl,
+            imagePath: image.imagePath,
+            imageThumbUrl: image.imageThumbUrl,
+            imageThumbPath: image.imageThumbPath,
+            alt: image.alt,
+            mimeType: image.mimeType,
+            sizeBytes: image.sizeBytes,
+            width: image.width,
+            height: image.height,
+            displayOrder: image.displayOrder,
+            isPrimary: image.isPrimary,
+            updatedAt: new Date()
+          },
+          create: {
+            id: image.id,
+            productId: input.id,
+            imageUrl: image.imageUrl,
+            imagePath: image.imagePath,
+            imageThumbUrl: image.imageThumbUrl,
+            imageThumbPath: image.imageThumbPath,
+            alt: image.alt,
+            mimeType: image.mimeType,
+            sizeBytes: image.sizeBytes,
+            width: image.width,
+            height: image.height,
+            displayOrder: image.displayOrder,
+            isPrimary: image.isPrimary
+          }
+        });
+      }
+    }
+
+    const firstVariant = product.variants[0];
+    if (firstVariant) {
+      await tx.productVariant.update({
+        where: { id: firstVariant.id },
+        data: {
+          priceCents: input.variantPriceCents,
+          stockQuantity: input.variantStockQuantity,
+          updatedAt: new Date()
+        }
+      });
+    }
+  });
 }
 
 export async function getProductRecordBySlug(slug: string) {
@@ -251,7 +476,7 @@ export async function getProductRecordBySlug(slug: string) {
     ...productInclude
   });
 
-  return product ? mapProductRecord(product) : null;
+  return product && !LEGACY_DEMO_PRODUCT_IDS.includes(product.id) ? mapProductRecord(product) : null;
 }
 
 export async function listAdminProductRows(): Promise<AdminProductRow[]> {
@@ -354,6 +579,10 @@ export async function getOrCreateCartRecord(cartKey: string) {
 }
 
 export async function getCartRecordByKey(cartKey: string) {
+  if (LEGACY_DEMO_CART_KEYS.includes(cartKey)) {
+    return null;
+  }
+
   await ensureInfrastructure();
   const cart = await getCartWithRelationsByKey(cartKey);
   return cart ? mapCartRecord(cart) : null;
@@ -506,6 +735,10 @@ export async function updateCartItemQuantityRecord({
 export async function listOrderRecords() {
   await ensureInfrastructure();
   const orders = await db.order.findMany({
+    where: {
+      id: { notIn: LEGACY_DEMO_ORDER_IDS },
+      orderNumber: { notIn: LEGACY_DEMO_ORDER_NUMBERS }
+    },
     orderBy: {
       createdAt: "desc"
     },
@@ -537,6 +770,10 @@ export async function listAdminOrderRows(): Promise<OrderAdminRow[]> {
 }
 
 export async function getOrderDetailById(id: string): Promise<OrderDetailView | null> {
+  if (LEGACY_DEMO_ORDER_IDS.includes(id)) {
+    return null;
+  }
+
   await ensureInfrastructure();
   const order = await db.order.findUnique({
     where: { id },
@@ -557,13 +794,18 @@ export async function getOrderDetailById(id: string): Promise<OrderDetailView | 
 
 export async function listInventoryMovementRecords() {
   await ensureInfrastructure();
-  const movements = await db.inventoryMovement.findMany({
+  const movements = await (db as any).inventoryMovement.findMany({
+    where: {
+      id: { notIn: LEGACY_DEMO_INVENTORY_MOVEMENT_IDS },
+      productId: { notIn: LEGACY_DEMO_PRODUCT_IDS },
+      referenceId: { notIn: LEGACY_DEMO_ORDER_IDS }
+    },
     orderBy: {
       createdAt: "desc"
     }
   });
 
-  return movements.map<InventoryMovementRecord>((movement) => ({
+  return movements.map((movement: any) => ({
     id: movement.id,
     productId: movement.productId,
     variantId: movement.variantId,
@@ -572,6 +814,10 @@ export async function listInventoryMovementRecords() {
     reason: movement.reason,
     referenceType: movement.referenceType,
     referenceId: movement.referenceId,
+    unitCostCents: movement.unitCostCents ?? undefined,
+    totalCostCents: movement.totalCostCents ?? undefined,
+    notes: movement.notes ?? undefined,
+    resultingStockQuantity: movement.resultingStockQuantity ?? undefined,
     createdAt: movement.createdAt.toISOString()
   }));
 }

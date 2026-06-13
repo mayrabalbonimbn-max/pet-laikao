@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { CreditCard, ReceiptText, UserRound } from "lucide-react";
 
 import { CheckoutPageClient } from "@/components/commerce/checkout-page-client";
+import { FormPrivacyNotice } from "@/components/legal/form-privacy-notice";
 
 const checkoutSections = [
   {
@@ -64,6 +65,10 @@ export default function CheckoutPage() {
           </article>
         </div>
       </section>
+
+      <div className="mt-6">
+        <FormPrivacyNotice />
+      </div>
 
       <Suspense
         fallback={

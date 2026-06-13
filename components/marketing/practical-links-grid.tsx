@@ -56,26 +56,7 @@ export function PracticalLinksGrid({
         const isPlaceholder = item.status === "placeholder";
 
         if (isPlaceholder) {
-          return (
-            <article
-              key={key}
-              className={cn(
-                "rounded-[var(--radius-lg)] border px-4 py-4 shadow-[var(--shadow-soft)] transition-all",
-                shortcutMeta[key].card
-              )}
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className={cn("flex h-11 w-11 items-center justify-center rounded-[16px] border", shortcutMeta[key].accent)}>
-                  <Icon className="h-5 w-5" />
-                </div>
-                <span className={cn("rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em]", shortcutMeta[key].badge)}>
-                  Em breve
-                </span>
-              </div>
-              <p className="mt-4 text-sm font-semibold text-ink-900">{item.label}</p>
-              <p className="mt-1 text-sm leading-6 text-stone-500">{item.description}</p>
-            </article>
-          );
+          return null;
         }
 
         const content = (

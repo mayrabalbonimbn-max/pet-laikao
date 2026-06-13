@@ -15,6 +15,7 @@ import { CalendarViewSwitcher } from "@/components/calendar/calendar-view-switch
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ErrorState } from "@/components/feedback/error-state";
 import { InlineNotice } from "@/components/feedback/inline-notice";
+import { FormPrivacyNotice } from "@/components/legal/form-privacy-notice";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { toast } from "@/components/ui/toast";
@@ -513,6 +514,7 @@ export function AgendaBookingFlow({
               }}
               onFormChange={(field, value) => setProfileForm((current) => ({ ...current, [field]: value }))}
             />
+            <FormPrivacyNotice compact />
           </section>
 
           <section className="space-y-4">

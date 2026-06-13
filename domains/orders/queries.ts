@@ -61,8 +61,8 @@ export async function getCommerceInventorySnapshot() {
 
   const pendingOrders = orders.filter((order) => order.paymentStatus === "pending").length;
   const reservedUnits = movements
-    .filter((movement) => movement.movementType === "reserve")
-    .reduce((total, movement) => total + movement.quantity, 0);
+    .filter((movement: (typeof movements)[number]) => movement.movementType === "reserve")
+    .reduce((total: number, movement: (typeof movements)[number]) => total + movement.quantity, 0);
 
   return {
     pendingOrders,

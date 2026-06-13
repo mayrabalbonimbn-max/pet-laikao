@@ -29,6 +29,7 @@ export function ProductPurchasePanel({ product }: { product: ProductRecord }) {
   const selectedVariant = activeVariants.find((variant) => variant.id === selectedVariantId) ?? null;
   const stockStatus = selectedVariant ? getVariantStockStatus(selectedVariant.availableQuantity) : "out_of_stock";
   const priceLabel = selectedVariant ? formatCurrency(selectedVariant.priceCents / 100) : "Consultar";
+  const hasDiscount = Boolean(selectedVariant?.compareAtCents && selectedVariant.compareAtCents > selectedVariant.priceCents);
 
   const handleAddToCart = () => {
     setMessage(null);
@@ -60,32 +61,38 @@ export function ProductPurchasePanel({ product }: { product: ProductRecord }) {
   };
 
   return (
-    <div className="surface-default border border-brand-100/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(245,233,255,0.55))] p-6 shadow-[var(--shadow-soft)]">
-      <div className="space-y-3">
-        <p className="eyebrow">Produto individual</p>
-        <h2 className="page-title">{product.name}</h2>
-        <div className="flex flex-wrap items-center gap-3">
-          <StockStatusBadge status={stockStatus} />
-          <span className="inline-flex rounded-full bg-[var(--magenta-100)] px-2.5 py-1 text-xs font-semibold text-[var(--magenta-600)]">
-            {activeVariants.length} {activeVariants.length === 1 ? "versao disponivel" : "variantes disponiveis"}
-          </span>
-          <span className="inline-flex rounded-full bg-[var(--sun-100)] px-2.5 py-1 text-xs font-semibold text-ink-900">Entrega ou retirada</span>
+    <div className="rounded-[24px] bg-white p-5 shadow-[var(--shadow-soft)] ring-1 ring-brand-100">
+      <div className="flex flex-wrap items-center gap-2">
+        <StockStatusBadge status={stockStatus} />
+        <span className="inline-flex rounded-full bg-[var(--sun-100)] px-2.5 py-1 text-xs font-extrabold text-brand-950">Entrega ou retirada</span>
+      </div>
+
+      <div className="mt-5 rounded-[20px] bg-brand-50 p-4">
+        <div className={activeVariants.length === 1 ? "grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center" : ""}>
+          <div>
+            <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-brand-700">Comprar este produto</p>
+            {hasDiscount ? <p className="mt-2 text-sm font-semibold text-stone-500 line-through">{formatCurrency((selectedVariant?.compareAtCents ?? 0) / 100)}</p> : null}
+            <p className="mt-1 font-heading text-4xl font-extrabold text-[var(--magenta-600)]">{priceLabel}</p>
+            <p className="mt-2 text-sm font-semibold leading-6 text-stone-600">
+              {selectedVariant && selectedVariant.availableQuantity > 0 ? `${selectedVariant.availableQuantity} unidade(s) disponiveis.` : "Indisponivel para compra online agora."}
+            </p>
+            {activeVariants.length === 1 && selectedVariant ? <p className="mt-1 text-xs font-semibold text-stone-500">SKU {selectedVariant.sku}</p> : null}
+          </div>
+          {activeVariants.length === 1 ? (
+            <Button className="sm:min-w-40" size="lg" fullWidth onClick={handleAddToCart} disabled={isPending || !selectedVariant || selectedVariant.availableQuantity <= 0}>
+              <ShoppingCart className="h-4 w-4" />
+              {isPending ? "Adicionando..." : "Comprar"}
+            </Button>
+          ) : null}
         </div>
       </div>
 
-      <div className="mt-6 rounded-[var(--radius-lg)] border border-brand-100/70 bg-white/80 p-5">
-        <p className="text-sm text-stone-500">Preco</p>
-        <p className="mt-2 font-heading text-4xl font-semibold text-brand-700">{priceLabel}</p>
-        <p className="mt-2 text-sm leading-6 text-stone-500">
-          Estoque, compra rápida e apoio no WhatsApp aparecem com mais força para fechar a venda.
-        </p>
-      </div>
-
-      <div className="mt-6 space-y-2">
-        <p className="text-sm font-semibold text-ink-900">Escolha a versao ideal</p>
+      {activeVariants.length > 1 ? <div className="mt-6 space-y-2">
+        <p className="text-sm font-extrabold text-brand-900">Escolha a versao</p>
         <div className="grid gap-2">
           {activeVariants.map((variant) => {
             const selected = variant.id === selectedVariantId;
+            const variantHasDiscount = Boolean(variant.compareAtCents && variant.compareAtCents > variant.priceCents);
             return (
               <button
                 key={variant.id}
@@ -98,11 +105,12 @@ export function ProductPurchasePanel({ product }: { product: ProductRecord }) {
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <p className="font-semibold text-ink-900">{variant.title}</p>
+                    <p className="font-extrabold text-brand-900">{variant.title}</p>
                     <p className="mt-1 text-sm text-stone-500">SKU {variant.sku}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-brand-700">{formatCurrency(variant.priceCents / 100)}</p>
+                    {variantHasDiscount ? <p className="text-xs font-semibold text-stone-500 line-through">{formatCurrency((variant.compareAtCents ?? 0) / 100)}</p> : null}
+                    <p className="font-extrabold text-[var(--magenta-600)]">{formatCurrency(variant.priceCents / 100)}</p>
                     <p className="mt-1 text-xs text-stone-500">
                       {variant.availableQuantity > 0 ? `${variant.availableQuantity} em estoque` : "Sem estoque no momento"}
                     </p>
@@ -115,7 +123,7 @@ export function ProductPurchasePanel({ product }: { product: ProductRecord }) {
             );
           })}
         </div>
-      </div>
+      </div> : null}
 
       {message ? (
         <div
@@ -132,19 +140,21 @@ export function ProductPurchasePanel({ product }: { product: ProductRecord }) {
       ) : null}
 
       <div className="mt-6 grid gap-3">
-        <Button size="lg" fullWidth onClick={handleAddToCart} disabled={isPending || !selectedVariant || selectedVariant.availableQuantity <= 0}>
-          <ShoppingCart className="h-4 w-4" />
-          {isPending ? "Adicionando..." : "Adicionar ao carrinho"}
-        </Button>
+        {activeVariants.length > 1 ? (
+          <Button size="lg" fullWidth onClick={handleAddToCart} disabled={isPending || !selectedVariant || selectedVariant.availableQuantity <= 0}>
+            <ShoppingCart className="h-4 w-4" />
+            {isPending ? "Adicionando..." : "Comprar"}
+          </Button>
+        ) : null}
         <Link href={publicRoutes.cart}>
           <Button variant="secondary" size="lg" fullWidth>
             Ver carrinho
           </Button>
         </Link>
         <a href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer">
-          <Button variant="success" size="lg" fullWidth>
+          <Button variant="ghost" size="lg" fullWidth>
             <MessageCircle className="h-4 w-4" />
-            Tirar duvidas no WhatsApp
+            Tirar duvidas
           </Button>
         </a>
       </div>

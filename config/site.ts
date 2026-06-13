@@ -9,6 +9,28 @@ export const siteConfig = {
   whatsappNumber: "+55 11 98051-2871",
   phoneNumber: "+55 11 98051-2871",
   email: "contato@petlaikao.com.br",
+  channels: {
+    contact: {
+      label: "Contato",
+      email: "contato@petlaikao.com.br",
+      description: "Atendimento geral, duvidas e informacoes."
+    },
+    support: {
+      label: "Suporte",
+      email: "suporte@petlaikao.com.br",
+      description: "Ajuda com pedidos, agenda e uso do site."
+    },
+    billing: {
+      label: "Cobranca",
+      email: "cobranca@petlaikao.com.br",
+      description: "Pagamentos, comprovantes, reembolsos e financeiro."
+    },
+    privacy: {
+      label: "Privacidade",
+      email: "privacidade@petlaikao.com.br",
+      description: "Pedidos sobre dados pessoais e LGPD."
+    }
+  },
   instagramHandle: "@pet_laikao",
   instagramUrl: "https://instagram.com/pet_laikao",
   whatsappUrl: "https://wa.me/5511980512871",
@@ -46,9 +68,9 @@ export const siteConfig = {
     },
     ifood: {
       label: "iFood",
-      href: "#ifood-em-breve",
-      description: "Placeholder elegante pronto para o link final.",
-      status: "placeholder" as ShortcutStatus
+      href: "https://www.ifood.com.br/delivery/sao-paulo-sp/pet-shop-laikao-vila-nova-cachoeirinha/d7c31af8-0c1f-4649-b99b-0aaf09ce7adf?UTM_Medium=share",
+      description: "Pedir no iFood com entrega rapida.",
+      status: "active" as ShortcutStatus
     }
   }
 } as const;

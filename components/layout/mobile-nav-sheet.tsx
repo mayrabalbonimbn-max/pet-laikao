@@ -44,12 +44,12 @@ export function MobileNavSheet() {
           <Menu className="h-4 w-4" />
         </Button>
       </DrawerTrigger>
-      <DrawerContent side="right" className="bg-white p-0 text-ink-900">
+      <DrawerContent side="right" className="bg-[#fff9f2] p-0 text-ink-900">
         <div className="flex h-full flex-col">
-          <div className="border-b border-brand-100 bg-brand-50 px-6 py-6">
-            <p className="eyebrow">Laikao</p>
-            <h2 className="mt-2 font-heading text-2xl font-semibold text-ink-900">Atalhos praticos e navegacao principal</h2>
-            <p className="mt-2 text-sm leading-6 text-stone-500">{siteConfig.addressLine}</p>
+          <div className="border-b-4 border-[var(--magenta-500)] bg-brand-900 px-6 py-6">
+            <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-[var(--sun-300)]">Laikao</p>
+            <h2 className="mt-2 font-heading text-3xl font-extrabold leading-tight text-white">Aqui tem tudo para o seu pet</h2>
+            <p className="mt-2 text-sm leading-6 text-white/85">{siteConfig.addressLine}</p>
           </div>
 
           <div className="space-y-8 px-6 py-6">
@@ -58,7 +58,7 @@ export function MobileNavSheet() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded-[var(--radius-md)] border border-stone-100 bg-white px-4 py-3 text-base font-medium text-ink-900 hover:border-brand-200 hover:bg-brand-50"
+                  className="rounded-[18px] border-2 border-brand-100 bg-white px-4 py-3 text-base font-extrabold text-brand-900 hover:border-brand-900 hover:bg-brand-50"
                 >
                   {item.label}
                 </Link>
@@ -77,7 +77,7 @@ export function MobileNavSheet() {
                       href={item.href}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center gap-3 rounded-[var(--radius-md)] border border-stone-100 bg-white px-4 py-3 text-sm font-semibold text-ink-900 hover:border-brand-200 hover:bg-brand-50"
+                      className="flex items-center gap-3 rounded-[18px] border-2 border-brand-100 bg-white px-4 py-3 text-sm font-extrabold text-brand-900 hover:border-brand-900 hover:bg-brand-50"
                     >
                       <span className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-brand-100 text-brand-700">
                         <Icon className="h-4 w-4" />
@@ -94,15 +94,15 @@ export function MobileNavSheet() {
             <div className="grid gap-3">
               <Link
                 href={siteConfig.quickLinks.schedule.href}
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-[var(--radius-md)] bg-brand-500 px-5 text-base font-semibold text-white"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-full border-2 border-brand-900 bg-[var(--magenta-600)] px-5 text-base font-extrabold text-white"
               >
                 <CalendarDays className="h-4 w-4" />
                 Agendar agora
               </Link>
-              <div className="inline-flex h-12 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-dashed border-brand-200 bg-brand-50 px-5 text-base font-semibold text-brand-700">
+              <a href={siteConfig.quickLinks.ifood.href} target="_blank" rel="noreferrer" className="inline-flex h-12 items-center justify-center gap-2 rounded-full border-2 border-brand-900 bg-[var(--sun-300)] px-5 text-base font-extrabold text-brand-950">
                 <ShoppingBag className="h-4 w-4" />
-                iFood em breve
-              </div>
+                Pedir no iFood
+              </a>
             </div>
           </div>
         </div>

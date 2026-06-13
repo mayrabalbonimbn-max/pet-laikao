@@ -1,72 +1,49 @@
-import { Instagram, MapPin, MessageCircle, ShoppingBag, Truck } from "lucide-react";
+import { Instagram, MapPin, MessageCircle, ShoppingBag } from "lucide-react";
 
-import { PracticalLinksGrid } from "@/components/marketing/practical-links-grid";
 import { siteConfig } from "@/config/site";
+
+const channels = [
+  { label: "WhatsApp", value: siteConfig.whatsappNumber, href: siteConfig.whatsappUrl, icon: MessageCircle },
+  { label: "Instagram", value: siteConfig.instagramHandle, href: siteConfig.instagramUrl, icon: Instagram },
+  { label: "Localizacao", value: siteConfig.addressLine, href: siteConfig.mapUrl, icon: MapPin },
+  { label: "iFood", value: "Pedir agora", href: siteConfig.quickLinks.ifood.href, icon: ShoppingBag }
+] as const;
 
 export function ContactBlock() {
   return (
     <section className="content-container pb-16">
-      <div className="surface-default overflow-hidden border-brand-100/70 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(245,233,255,0.72),rgba(255,241,168,0.22))]">
-        <div className="grid gap-8 p-6 lg:grid-cols-[0.95fr_1.05fr] lg:p-8">
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <p className="eyebrow">Contato e localização</p>
-              <h2 className="section-title">WhatsApp, endereço, Instagram, retirada e entrega com leitura fácil e presença comercial forte.</h2>
-            </div>
-            <p className="max-w-xl text-sm leading-7 text-stone-500">
-              O bloco agora puxa a linguagem real da marca: contato rápido, compra prática, retirada no local e entrega com comunicação simples.
+      <div className="rounded-[34px] bg-[#fff9f2] p-6 shadow-[0_18px_46px_rgba(43,14,70,0.12)] sm:p-8">
+        <div className="grid gap-7 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
+          <div>
+            <p className="promo-badge">Contato</p>
+            <h2 className="mt-4 font-heading text-4xl font-extrabold leading-tight text-brand-900">
+              Fale com o Laikao sem complicar.
+            </h2>
+            <p className="mt-3 text-sm font-semibold leading-7 text-stone-600">
+              WhatsApp, endereco, Instagram e iFood em um bloco limpo, forte e sem duplicacao.
             </p>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-[var(--radius-md)] border border-success-500/15 bg-white/80 p-4">
-                <MessageCircle className="h-5 w-5 text-success-500" />
-                <p className="mt-3 text-sm font-semibold text-ink-900">WhatsApp</p>
-                <p className="mt-1 text-sm leading-6 text-stone-500">{siteConfig.whatsappNumber}</p>
-              </div>
-              <div className="rounded-[var(--radius-md)] border border-[var(--magenta-300)]/70 bg-white/80 p-4">
-                <Instagram className="h-5 w-5 text-[var(--magenta-600)]" />
-                <p className="mt-3 text-sm font-semibold text-ink-900">Instagram</p>
-                <p className="mt-1 text-sm leading-6 text-stone-500">{siteConfig.instagramHandle}</p>
-              </div>
-              <div className="rounded-[var(--radius-md)] border border-brand-100/70 bg-white/80 p-4 sm:col-span-2">
-                <MapPin className="h-5 w-5 text-brand-600" />
-                <p className="mt-3 text-sm font-semibold text-ink-900">Endereço</p>
-                <p className="mt-1 text-sm leading-6 text-stone-500">{siteConfig.address}</p>
-              </div>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-[var(--radius-md)] border border-[var(--sun-300)] bg-[var(--sun-100)]/65 px-4 py-4">
-                <div className="flex items-start gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-white text-ink-900 shadow-[var(--shadow-soft)]">
-                    <ShoppingBag className="h-4 w-4" />
-                  </span>
-                  <div>
-                    <p className="text-sm font-semibold text-ink-900">iFood em destaque</p>
-                    <p className="mt-1 text-sm leading-6 text-stone-500">O espaço já está pronto para o link real sem quebrar o layout.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="rounded-[var(--radius-md)] border border-brand-100/70 bg-white/80 px-4 py-4">
-                <div className="flex items-start gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-brand-100 text-brand-700 shadow-[var(--shadow-soft)]">
-                    <Truck className="h-4 w-4" />
-                  </span>
-                  <div>
-                    <p className="text-sm font-semibold text-ink-900">Entrega ou retirada</p>
-                    <p className="mt-1 text-sm leading-6 text-stone-500">Compre no site, receba em casa ou retire aqui com facilidade.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <p className="mt-4 text-sm font-extrabold text-[var(--magenta-600)]">{siteConfig.hoursLabel}</p>
           </div>
 
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <p className="text-sm font-semibold text-ink-900">Atalhos promocionais</p>
-              <p className="text-sm text-stone-500">Blocos rápidos para conversão, visita à loja e campanhas de entrada.</p>
-            </div>
-            <PracticalLinksGrid compact />
+          <div className="grid gap-3 sm:grid-cols-2">
+            {channels.map((item) => {
+              const Icon = item.icon;
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-[22px] bg-white p-4 shadow-[inset_0_0_0_2px_rgba(104,23,181,0.1)] transition-transform hover:-translate-y-0.5"
+                >
+                  <div className="grid h-11 w-11 place-items-center rounded-full bg-brand-900 text-white">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <p className="mt-3 text-sm font-extrabold uppercase text-brand-900">{item.label}</p>
+                  <p className="mt-1 text-sm font-semibold text-stone-600">{item.value}</p>
+                </a>
+              );
+            })}
           </div>
         </div>
       </div>

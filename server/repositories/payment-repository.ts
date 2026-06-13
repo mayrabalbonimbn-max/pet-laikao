@@ -5,6 +5,10 @@ import { Prisma } from "@prisma/client";
 import { db } from "@/server/db/client";
 import { ensureAppointmentSeedData } from "@/server/services/appointment-seed-service";
 import {
+  LEGACY_DEMO_APPOINTMENT_IDS,
+  LEGACY_DEMO_ORDER_IDS
+} from "@/server/services/demo-data-hygiene-service";
+import {
   IntegrationLogRecord,
   PaymentMethod,
   PaymentProvider,
@@ -260,6 +264,11 @@ export async function listPaymentsByOrderId(orderId: string) {
 export async function listPayments() {
   await ensureInfrastructure();
   const payments = await db.payment.findMany({
+    where: {
+      appointmentId: { notIn: LEGACY_DEMO_APPOINTMENT_IDS },
+      orderId: { notIn: LEGACY_DEMO_ORDER_IDS },
+      referenceId: { notIn: [...LEGACY_DEMO_APPOINTMENT_IDS, ...LEGACY_DEMO_ORDER_IDS] }
+    },
     orderBy: {
       createdAt: "desc"
     },

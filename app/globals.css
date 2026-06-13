@@ -56,6 +56,7 @@
     @apply bg-sand-50 text-ink-900 antialiased;
     font-family: var(--font-body);
     min-height: 100vh;
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   h1,
@@ -65,7 +66,7 @@
   h5,
   h6 {
     font-family: var(--font-heading);
-    letter-spacing: -0.03em;
+    letter-spacing: 0;
     color: var(--ink-900);
   }
 
@@ -83,7 +84,8 @@
 
 @layer components {
   .page-shell {
-    @apply min-h-screen bg-[linear-gradient(180deg,var(--brand-50)_0%,#ffffff_20%,var(--sand-50)_100%)] text-ink-900;
+    @apply min-h-screen bg-[linear-gradient(180deg,#3d0f67_0%,#6817b5_15%,#fcf7ff_38%,#fffdfb_100%)] text-ink-900;
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   .content-container {
@@ -116,5 +118,41 @@
 
   .section-title {
     @apply font-heading text-2xl leading-tight font-semibold sm:text-3xl;
+  }
+
+  .promo-frame {
+    @apply rounded-[30px] border-[3px] border-brand-900 bg-brand-900 p-1.5 shadow-[0_18px_44px_rgba(43,14,70,0.16)];
+  }
+
+  .promo-panel {
+    @apply rounded-[24px] bg-[#fff9f2] p-5 shadow-[inset_0_0_0_1px_rgba(104,23,181,0.1)] sm:p-7;
+  }
+
+  .promo-panel-white {
+    @apply rounded-[24px] bg-white p-5 shadow-[inset_0_0_0_1px_rgba(104,23,181,0.1)] sm:p-6;
+  }
+
+  .promo-badge {
+    @apply inline-flex items-center gap-1.5 rounded-full border-2 border-brand-800 bg-white px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] text-brand-900 shadow-[0_4px_0_rgba(104,23,181,0.18)];
+  }
+
+  .promo-badge-hot {
+    @apply inline-flex items-center gap-1.5 rounded-full border-2 border-brand-900 bg-[var(--sun-300)] px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] text-brand-950 shadow-[0_4px_0_rgba(104,23,181,0.2)];
+  }
+
+  .promo-card {
+    @apply rounded-[22px] bg-white p-4 shadow-[inset_0_0_0_2px_rgba(104,23,181,0.1),0_10px_24px_rgba(43,14,70,0.08)] transition-transform hover:-translate-y-0.5;
+  }
+
+  .promo-title {
+    @apply font-heading text-4xl font-extrabold leading-[0.98] text-brand-900 sm:text-5xl;
+  }
+
+  .promo-word {
+    @apply text-[var(--magenta-600)];
+  }
+
+  .promo-icon {
+    @apply grid h-12 w-12 place-items-center rounded-full border-2 border-brand-900 bg-brand-900 text-white shadow-[0_4px_0_rgba(239,79,179,0.28)];
   }
 }

@@ -9,6 +9,7 @@ import { CartSummary } from "@/components/commerce/cart-summary";
 import { ErrorState } from "@/components/feedback/error-state";
 import { InlineNotice } from "@/components/feedback/inline-notice";
 import { SuccessBanner } from "@/components/feedback/success-banner";
+import { FormPrivacyNotice } from "@/components/legal/form-privacy-notice";
 import { PracticalLinksGrid } from "@/components/marketing/practical-links-grid";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -489,6 +490,9 @@ export function CheckoutPageClient() {
               <span className="text-sm font-semibold text-ink-900">E-mail</span>
               <Input value={form.customerEmail} onChange={(event) => setForm((current) => ({ ...current, customerEmail: event.target.value }))} placeholder="E-mail" />
             </label>
+          </div>
+          <div className="mt-4">
+            <FormPrivacyNotice compact />
           </div>
 
           {sectionError ? (

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Manrope, Sora } from "next/font/google";
 
 import "@/app/globals.css";
@@ -21,7 +21,26 @@ export const metadata: Metadata = {
     default: siteConfig.name,
     template: `%s | ${siteConfig.name}`
   },
-  description: siteConfig.description
+  description: siteConfig.description,
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: siteConfig.name
+  },
+  icons: {
+    icon: [
+      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512x512.png", sizes: "512x512", type: "image/png" }
+    ],
+    apple: "/icons/apple-touch-icon.png",
+    shortcut: "/icons/icon-192x192.png"
+  }
+};
+
+export const viewport: Viewport = {
+  themeColor: "#9f2bb8",
+  viewportFit: "cover"
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

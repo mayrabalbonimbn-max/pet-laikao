@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: laikao-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: laikao
+      POSTGRES_USER: laikao
+      POSTGRES_PASSWORD: trocar_senha
+    ports:
+      - "5432:5432"
+    volumes:
+      - laikao_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U laikao -d laikao"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  laikao_postgres_data:
+

@@ -41,6 +41,9 @@ export type AppointmentService = {
   durationMinutes: number;
   priceCents: number;
   active: boolean;
+  displayOrder: number;
+  petSpecies?: PetSpecies | "all";
+  petSize?: PetSize | "all";
 };
 
 export type CustomerProfile = {

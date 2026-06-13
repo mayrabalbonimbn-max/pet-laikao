@@ -14,6 +14,12 @@ import {
 } from "@/domains/appointments/types";
 import { ensureAppointmentHoldWorker } from "@/server/services/appointment-hold-expiration-service";
 import { ensureAppointmentSeedData } from "@/server/services/appointment-seed-service";
+import {
+  LEGACY_DEMO_APPOINTMENT_IDS,
+  LEGACY_DEMO_CALENDAR_BLOCK_IDS,
+  LEGACY_DEMO_CUSTOMER_IDS,
+  LEGACY_DEMO_PET_IDS
+} from "@/server/services/demo-data-hygiene-service";
 
 function nextId(prefix: string) {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -120,7 +126,7 @@ export async function listServices() {
   await ensureInfrastructure();
   const services = await db.appointmentService.findMany({
     where: { active: true },
-    orderBy: { priceCents: "asc" }
+    orderBy: [{ displayOrder: "asc" }, { priceCents: "asc" }]
   });
 
   return services.map<AppointmentService>((service) => ({
@@ -130,16 +136,110 @@ export async function listServices() {
     description: service.description,
     durationMinutes: service.durationMinutes,
     priceCents: service.priceCents,
-    active: service.active
+    active: service.active,
+    displayOrder: service.displayOrder,
+    petSpecies: (service.petSpecies as AppointmentService["petSpecies"]) ?? "all",
+    petSize: (service.petSize as AppointmentService["petSize"]) ?? "all"
   }));
+}
+
+export async function listServicesForAdmin() {
+  await ensureInfrastructure();
+  const services = await db.appointmentService.findMany({
+    orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }]
+  });
+
+  return services.map<AppointmentService>((service) => ({
+    id: service.id,
+    slug: service.slug,
+    name: service.name,
+    description: service.description,
+    durationMinutes: service.durationMinutes,
+    priceCents: service.priceCents,
+    active: service.active,
+    displayOrder: service.displayOrder,
+    petSpecies: (service.petSpecies as AppointmentService["petSpecies"]) ?? "all",
+    petSize: (service.petSize as AppointmentService["petSize"]) ?? "all"
+  }));
+}
+
+export async function getServiceBySlug(slug: string) {
+  await ensureInfrastructure();
+  const service = await db.appointmentService.findUnique({ where: { slug } });
+  if (!service || !service.active) {
+    return null;
+  }
+
+  return {
+    id: service.id,
+    slug: service.slug,
+    name: service.name,
+    description: service.description,
+    durationMinutes: service.durationMinutes,
+    priceCents: service.priceCents,
+    active: service.active,
+    displayOrder: service.displayOrder,
+    petSpecies: (service.petSpecies as AppointmentService["petSpecies"]) ?? "all",
+    petSize: (service.petSize as AppointmentService["petSize"]) ?? "all"
+  } satisfies AppointmentService;
+}
+
+export async function upsertServiceRecord(input: {
+  id?: string;
+  slug: string;
+  name: string;
+  description: string;
+  durationMinutes: number;
+  priceCents: number;
+  active: boolean;
+  displayOrder: number;
+  petSpecies?: string | null;
+  petSize?: string | null;
+}) {
+  await ensureInfrastructure();
+
+  const id = input.id ?? nextId("svc");
+  await db.appointmentService.upsert({
+    where: { id },
+    update: {
+      slug: input.slug,
+      name: input.name,
+      description: input.description,
+      durationMinutes: input.durationMinutes,
+      priceCents: input.priceCents,
+      active: input.active,
+      displayOrder: input.displayOrder,
+      petSpecies: input.petSpecies ?? null,
+      petSize: input.petSize ?? null,
+      updatedAt: new Date()
+    },
+    create: {
+      id,
+      slug: input.slug,
+      name: input.name,
+      description: input.description,
+      durationMinutes: input.durationMinutes,
+      priceCents: input.priceCents,
+      active: input.active,
+      displayOrder: input.displayOrder,
+      petSpecies: input.petSpecies ?? null,
+      petSize: input.petSize ?? null
+    }
+  });
 }
 
 export async function listCustomers() {
   await ensureInfrastructure();
 
   const [customers, pets] = await Promise.all([
-    db.customer.findMany({ orderBy: { fullName: "asc" } }),
-    db.pet.findMany({ orderBy: { name: "asc" } })
+    db.customer.findMany({
+      where: { id: { notIn: LEGACY_DEMO_CUSTOMER_IDS } },
+      orderBy: { fullName: "asc" }
+    }),
+    db.pet.findMany({
+      where: { id: { notIn: LEGACY_DEMO_PET_IDS } },
+      orderBy: { name: "asc" }
+    })
   ]);
 
   return {
@@ -182,18 +282,21 @@ export async function listCalendarBlocks() {
   await ensureInfrastructure();
   const blocks = await db.calendarBlock.findMany();
 
-  return blocks.map<CalendarBlock>((block) => ({
-    id: block.id,
-    serviceId: block.serviceId ?? undefined,
-    startsAt: block.startsAt.toISOString(),
-    endsAt: block.endsAt.toISOString(),
-    reason: block.reason
-  }));
+  return blocks
+    .filter((block) => !LEGACY_DEMO_CALENDAR_BLOCK_IDS.includes(block.id))
+    .map<CalendarBlock>((block) => ({
+      id: block.id,
+      serviceId: block.serviceId ?? undefined,
+      startsAt: block.startsAt.toISOString(),
+      endsAt: block.endsAt.toISOString(),
+      reason: block.reason
+    }));
 }
 
 export async function listAppointments() {
   await ensureInfrastructure();
   const appointments = await db.appointment.findMany({
+    where: { id: { notIn: LEGACY_DEMO_APPOINTMENT_IDS } },
     ...appointmentWithRelations,
     orderBy: {
       scheduledStartAt: "asc"
@@ -204,6 +307,10 @@ export async function listAppointments() {
 }
 
 export async function getAppointmentById(id: string) {
+  if (LEGACY_DEMO_APPOINTMENT_IDS.includes(id)) {
+    return null;
+  }
+
   await ensureInfrastructure();
   const appointment = await getAppointmentWithRelations({ id });
   return appointment ? mapAppointmentRecord(appointment) : null;

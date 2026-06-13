@@ -1,96 +1,149 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BadgePercent, CheckCircle2, Clock3, Instagram, MapPinned, MessageCircle, ShieldCheck, ShoppingBag, Truck } from "lucide-react";
+import { BadgePercent, HeartHandshake, PackageCheck, ShieldCheck, Sparkles, Truck } from "lucide-react";
 
+import { ProductCard } from "@/components/catalog/product-card";
+import { ProductGallery } from "@/components/catalog/product-gallery";
 import { ProductPurchasePanel } from "@/components/catalog/product-purchase-panel";
-import { PracticalLinksGrid } from "@/components/marketing/practical-links-grid";
+import { StockStatusBadge } from "@/components/catalog/stock-status-badge";
 import { Button } from "@/components/ui/button";
-import { siteConfig } from "@/config/site";
-import { getCatalogProductDetail } from "@/domains/catalog/queries";
+import { getCatalogProductDetail, listCatalogProducts } from "@/domains/catalog/queries";
 
 export const dynamic = "force-dynamic";
 
+function getVariantStockStatus(availableQuantity: number) {
+  if (availableQuantity <= 0) return "out_of_stock" as const;
+  if (availableQuantity <= 3) return "low_stock" as const;
+  return "in_stock" as const;
+}
+
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = await getCatalogProductDetail(slug);
+  const [product, allProducts] = await Promise.all([getCatalogProductDetail(slug), listCatalogProducts()]);
 
   if (!product) {
     notFound();
   }
 
+  const activeVariants = product.variants.filter((variant) => variant.active);
+  const primaryVariant = activeVariants[0];
+  const stockStatus = primaryVariant ? getVariantStockStatus(primaryVariant.availableQuantity) : "out_of_stock";
+  const hasDiscount = Boolean(primaryVariant?.compareAtCents && primaryVariant.compareAtCents > primaryVariant.priceCents);
+  const relatedProducts = allProducts
+    .filter((item) => item.slug !== product.slug && item.category === (product.categoryName ?? ""))
+    .slice(0, 3);
+  const fallbackProducts = allProducts.filter((item) => item.slug !== product.slug).slice(0, 3);
+  const suggestions = relatedProducts.length > 0 ? relatedProducts : fallbackProducts;
+
   return (
-    <div className="content-container py-10 sm:py-14">
-      <div className="grid gap-8 xl:grid-cols-[1fr_0.86fr]">
-        <section className="space-y-6">
-          <div className="rounded-[32px] border border-brand-100 bg-linear-to-br from-brand-100/70 via-white to-[#fff5fb] p-6 shadow-[var(--shadow-soft)] sm:p-8">
-            <div className="flex flex-wrap gap-2">
-              <span className="rounded-full bg-brand-100 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-700">{product.categoryName ?? "Catalogo"}</span>
-              <span className="rounded-full bg-[var(--sun-100)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-900">Produto da loja</span>
-            </div>
-            <h1 className="mt-4 font-heading text-3xl font-semibold text-ink-900 sm:text-4xl">{product.name}</h1>
-            <p className="mt-3 max-w-3xl text-base leading-7 text-stone-600">{product.description}</p>
-
-            <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_0.34fr]">
-              <div className="flex min-h-[18rem] items-center justify-center rounded-[24px] border border-white/80 bg-white p-6 text-center shadow-[var(--shadow-soft)]"><p className="text-lg font-semibold text-ink-900">{product.imageLabel}</p></div>
-              <div className="grid gap-3">{[1, 2, 3].map((item) => <div key={item} className="flex min-h-[5.2rem] items-center justify-center rounded-[18px] border border-brand-100 bg-brand-50/60 text-sm font-semibold text-stone-600">Miniatura {item}</div>)}</div>
-            </div>
-          </div>
-
-          <div className="grid gap-4 lg:grid-cols-[1fr_0.94fr]">
-            <article className="surface-default border border-brand-100 bg-white p-6 shadow-[var(--shadow-soft)]">
-              <h2 className="font-heading text-2xl font-semibold text-ink-900">Variantes, estoque e disponibilidade</h2>
-              <div className="mt-4 grid gap-3">
-                {product.variants.map((variant) => (
-                  <div key={variant.id} className="rounded-[18px] border border-stone-100 p-4">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <p className="font-semibold text-ink-900">{variant.title}</p>
-                      <p className="font-semibold text-brand-700">R$ {(variant.priceCents / 100).toFixed(2).replace(".", ",")}</p>
-                    </div>
-                    <p className="mt-1 text-sm text-stone-600">SKU {variant.sku}</p>
-                    <p className="mt-1 text-sm text-stone-600">{variant.availableQuantity > 0 ? `${variant.availableQuantity} unidade(s) disponiveis` : "Sem estoque no momento"}</p>
-                  </div>
-                ))}
-              </div>
-            </article>
-
-            <article className="surface-default border border-brand-100 bg-white p-6 shadow-[var(--shadow-soft)]">
-              <h2 className="font-heading text-xl font-semibold text-ink-900">Compra com confianca</h2>
-              <div className="mt-4 grid gap-3">
-                <div className="rounded-[16px] border border-stone-100 p-3"><p className="inline-flex items-center gap-2 text-sm font-semibold text-ink-900"><ShieldCheck className="h-4 w-4 text-brand-700" />Estoque real do backend</p></div>
-                <div className="rounded-[16px] border border-stone-100 p-3"><p className="inline-flex items-center gap-2 text-sm font-semibold text-ink-900"><Truck className="h-4 w-4 text-brand-700" />Entrega e retirada</p></div>
-                <div className="rounded-[16px] border border-[var(--sun-300)] bg-[var(--sun-100)]/75 p-3"><p className="inline-flex items-center gap-2 text-sm font-semibold text-brand-900"><BadgePercent className="h-4 w-4 text-[var(--magenta-600)]" />Campanhas e ofertas organizadas</p></div>
-              </div>
-
-              <div className="mt-5 grid gap-2">
-                <a href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer"><Button variant="success" size="lg" fullWidth><MessageCircle className="h-4 w-4" />Tirar duvidas no WhatsApp</Button></a>
-                <a href={siteConfig.instagramUrl} target="_blank" rel="noreferrer"><Button variant="secondary" size="lg" fullWidth><Instagram className="h-4 w-4" />Ver Instagram</Button></a>
-              </div>
-            </article>
-          </div>
-
-          <article className="surface-default border border-brand-100 bg-white p-5 shadow-[var(--shadow-soft)]">
-            <h2 className="font-heading text-xl font-semibold text-ink-900">Atendimento e retirada</h2>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="rounded-[14px] border border-stone-100 p-3"><p className="inline-flex items-center gap-2 text-sm font-semibold text-ink-900"><Clock3 className="h-4 w-4 text-brand-700" />{siteConfig.hoursLabel}</p></div>
-              <div className="rounded-[14px] border border-stone-100 p-3"><p className="inline-flex items-center gap-2 text-sm font-semibold text-ink-900"><MapPinned className="h-4 w-4 text-brand-700" />{siteConfig.addressLine}</p></div>
-              <div className="rounded-[14px] border border-stone-100 p-3"><p className="inline-flex items-center gap-2 text-sm font-semibold text-ink-900"><ShoppingBag className="h-4 w-4 text-brand-700" />iFood em breve</p></div>
-              <div className="rounded-[14px] border border-stone-100 p-3"><p className="inline-flex items-center gap-2 text-sm font-semibold text-ink-900"><CheckCircle2 className="h-4 w-4 text-success-500" />Compra assistida</p></div>
-            </div>
-          </article>
-        </section>
-
-        <aside className="space-y-6">
-          <ProductPurchasePanel product={product} />
-          <article className="surface-default border border-brand-100 bg-white p-6 shadow-[var(--shadow-soft)]">
-            <h2 className="font-heading text-xl font-semibold text-ink-900">Atalhos praticos</h2>
-            <div className="mt-4 grid gap-3">
-              <a href={siteConfig.mapUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-brand-100 bg-brand-50/70 px-4 py-3 text-sm font-semibold text-ink-900"><MapPinned className="h-4 w-4 text-brand-600" />Ver localizacao</a>
-              <a href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-stone-100 bg-white px-4 py-3 text-sm font-semibold text-ink-900"><MessageCircle className="h-4 w-4 text-success-500" />WhatsApp direto</a>
-            </div>
-          </article>
-        </aside>
+    <div className="content-container py-8 sm:py-12">
+      <div className="mb-5 flex flex-wrap items-center gap-2 text-sm font-extrabold text-brand-900">
+        <Link href="/produtos" className="rounded-full bg-white px-4 py-2 shadow-[var(--shadow-soft)] ring-1 ring-brand-100 transition-colors hover:bg-brand-50">
+          Loja
+        </Link>
+        <span className="text-brand-300">/</span>
+        <Link href={`/produtos?q=${encodeURIComponent(product.categoryName ?? "")}`} className="rounded-full bg-brand-50 px-4 py-2 text-brand-900 transition-colors hover:bg-brand-100">
+          {product.categoryName ?? "Produto"}
+        </Link>
       </div>
 
-      <section className="mt-10"><PracticalLinksGrid /></section>
+      <section className="rounded-[34px] bg-[linear-gradient(135deg,#6817b5_0%,#9f38f6_54%,#ef4fb3_100%)] p-1.5 shadow-[0_22px_60px_rgba(43,14,70,0.2)]">
+        <div className="grid gap-6 rounded-[28px] bg-[#fff9f2] p-5 sm:p-7 xl:grid-cols-[1.04fr_0.96fr] xl:items-start">
+          <ProductGallery
+            images={product.images}
+            fallbackLabel={product.imageLabel}
+            categoryName={product.categoryName}
+            productName={product.name}
+            fallbackImageUrl={product.mainImageUrl}
+            featured={product.featured}
+            hasDiscount={hasDiscount}
+          />
+
+          <div className="space-y-5">
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="promo-badge-hot">{product.categoryName ?? "Produto"}</span>
+                <StockStatusBadge status={stockStatus} />
+              </div>
+              <h1 className="mt-4 font-heading text-4xl font-extrabold leading-tight text-brand-900 sm:text-5xl">
+                {product.name}
+              </h1>
+              <p className="mt-3 max-w-2xl text-base font-semibold leading-7 text-brand-950/75">
+                {product.description}
+              </p>
+            </div>
+
+            <ProductPurchasePanel product={product} />
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-7 grid gap-4 lg:grid-cols-4">
+        {[
+          { icon: ShieldCheck, title: "Compra segura", text: "Produto conectado ao estoque real da loja." },
+          { icon: Truck, title: "Entrega ou retirada", text: "Fluxo preparado para retirada na loja e entrega." },
+          { icon: PackageCheck, title: "Estoque claro", text: "Disponibilidade visivel antes da compra." },
+          { icon: HeartHandshake, title: "Atendimento Laikao", text: "Suporte proximo para escolher o item certo." }
+        ].map((item) => (
+          <article key={item.title} className="rounded-[22px] bg-white p-5 shadow-[var(--shadow-soft)] ring-1 ring-brand-100">
+            <item.icon className="h-5 w-5 text-[var(--magenta-600)]" />
+            <h2 className="mt-3 font-heading text-lg font-extrabold text-brand-900">{item.title}</h2>
+            <p className="mt-1 text-sm font-semibold leading-6 text-stone-600">{item.text}</p>
+          </article>
+        ))}
+      </section>
+
+      <section className="mt-7 rounded-[28px] bg-brand-900 p-5 text-white shadow-[0_18px_44px_rgba(43,14,70,0.16)] sm:p-6">
+        <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <div>
+            <p className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.14em] text-[var(--sun-300)]">
+              <Sparkles className="h-4 w-4" />
+              Informacoes do produto
+            </p>
+            <h2 className="mt-2 font-heading text-2xl font-extrabold text-white">Detalhes para comprar sem duvida.</h2>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-[18px] bg-white/10 p-4">
+              <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--sun-300)]">Categoria</p>
+              <p className="mt-1 font-semibold">{product.categoryName ?? "Catalogo"}</p>
+            </div>
+            <div className="rounded-[18px] bg-white/10 p-4">
+              <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--sun-300)]">Versoes</p>
+              <p className="mt-1 font-semibold">{activeVariants.length || 0} disponivel(is)</p>
+            </div>
+            <div className="rounded-[18px] bg-white/10 p-4">
+              <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-[var(--sun-300)]">Promocao</p>
+              <p className="mt-1 font-semibold">{hasDiscount ? "Com preco comparativo" : "Preco regular"}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {suggestions.length > 0 ? (
+        <section className="mt-8">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.14em] text-[var(--magenta-600)]">
+                <BadgePercent className="h-4 w-4" />
+                Sugestoes da loja
+              </p>
+              <h2 className="mt-2 font-heading text-3xl font-extrabold text-brand-900">Produtos que combinam</h2>
+            </div>
+            <Link href="/produtos">
+              <Button variant="secondary">Ver vitrine completa</Button>
+            </Link>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            {suggestions.map((item) => <ProductCard key={item.id} product={item} />)}
+          </div>
+        </section>
+      ) : null}
+
+      <div className="mt-8 flex">
+        <Link href="/produtos" className="text-sm font-extrabold text-brand-700 hover:text-brand-900">
+          Voltar para todos os produtos
+        </Link>
+      </div>
     </div>
   );
 }

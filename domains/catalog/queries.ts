@@ -2,6 +2,7 @@ import { formatCurrency } from "@/lib/formatters";
 import {
   getProductRecordBySlug,
   listAdminProductRows,
+  listCategoryRecordsWithCounts,
   listCategoryRecords,
   listProductRecords
 } from "@/server/repositories/commerce-repository";
@@ -29,9 +30,14 @@ function computeProductPreview(product: Awaited<ReturnType<typeof listProductRec
     name: product.name,
     category: product.categoryName ?? "Sem categoria",
     priceLabel: formatCurrency((firstVariant?.priceCents ?? 0) / 100),
+    priceCents: firstVariant?.priceCents ?? 0,
+    compareAtCents: firstVariant?.compareAtCents,
+    availableQuantity: available,
     stockStatus,
     imageLabel: product.imageLabel,
-    featured: product.featured
+    mainImageUrl: product.mainImageUrl,
+    featured: product.featured,
+    onPromotion: product.featured || Boolean(firstVariant?.compareAtCents && firstVariant.compareAtCents > firstVariant.priceCents)
   };
 }
 
@@ -46,6 +52,20 @@ export async function getCatalogProductDetail(slug: string) {
 
 export async function listCatalogCategories() {
   return listCategoryRecords();
+}
+
+export async function listCatalogCategoriesWithCounts() {
+  return listCategoryRecordsWithCounts();
+}
+
+export async function listPublicCatalogCategories() {
+  const categories = await listCategoryRecordsWithCounts();
+  return categories.filter((category) => category.active && category.productCount > 0);
+}
+
+export async function listUpcomingCatalogCategories() {
+  const categories = await listCategoryRecordsWithCounts();
+  return categories.filter((category) => category.active && category.productCount === 0);
 }
 
 export async function listCatalogAdminProducts() {

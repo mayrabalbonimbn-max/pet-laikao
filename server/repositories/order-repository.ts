@@ -5,6 +5,7 @@ import { PaymentMethod, PaymentPurpose } from "@/domains/payments/types";
 import { ensureCommerceSeedData } from "@/server/services/commerce-seed-service";
 import { OrderDetailView, OrderPaymentListItem, OrderRecord, OrderTimelineEntry } from "@/domains/orders/types";
 import { formatCurrency } from "@/lib/formatters";
+import { LEGACY_DEMO_ORDER_IDS } from "@/server/services/demo-data-hygiene-service";
 
 function nextId(prefix: string) {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -90,12 +91,20 @@ async function getOrderWithRelations(id: string, tx: Prisma.TransactionClient | 
 }
 
 export async function getOrderById(id: string, tx: Prisma.TransactionClient | typeof db = db) {
+  if (LEGACY_DEMO_ORDER_IDS.includes(id)) {
+    return null;
+  }
+
   await ensureInfrastructure();
   const order = await getOrderWithRelations(id, tx);
   return order ? mapOrderRecord(order) : null;
 }
 
 export async function getOrderDetailByIdWithRelations(id: string): Promise<OrderDetailView | null> {
+  if (LEGACY_DEMO_ORDER_IDS.includes(id)) {
+    return null;
+  }
+
   await ensureInfrastructure();
   const order = await getOrderWithRelations(id);
   if (!order) {
@@ -165,6 +174,9 @@ export async function addOrderTimeline(
 export async function listOrdersForLifecycle() {
   await ensureInfrastructure();
   const orders = await db.order.findMany({
+    where: {
+      id: { notIn: LEGACY_DEMO_ORDER_IDS }
+    },
     orderBy: {
       createdAt: "desc"
     },

@@ -1,4 +1,5 @@
 import {
+  getServiceBySlug,
   getAppointmentById,
   getHoldDurationSeconds,
   listActiveAppointmentHolds,
@@ -6,7 +7,8 @@ import {
   listAvailabilityRules,
   listCalendarBlocks,
   listCustomers,
-  listServices
+  listServices,
+  listServicesForAdmin
 } from "@/server/repositories/appointment-repository";
 import {
   AgendaAvailabilityResponse,
@@ -21,6 +23,7 @@ import { appointmentOccupiesSlot } from "@/domains/appointments/policies";
 import { mapAppointmentToAdminDetail, mapAppointmentToAdminRow, mapCustomersWithPets } from "@/domains/appointments/mappers";
 import { addMinutes, formatDateLabel, formatSlotLabel, makeUtcDate, rangesOverlap, toDateKey } from "@/domains/appointments/utils";
 import { listAppointmentPaymentItems } from "@/domains/payments/queries";
+import { listAdminCalendarEvents } from "@/server/repositories/admin-calendar-repository";
 
 function startOfWeek(date: Date) {
   const clone = new Date(date);
@@ -68,6 +71,18 @@ export async function getAgendaBootstrapData(): Promise<AgendaBootstrapData> {
   };
 }
 
+export async function listPublicServices() {
+  return listServices();
+}
+
+export async function listAdminServices() {
+  return listServicesForAdmin();
+}
+
+export async function getPublicServiceDetail(slug: string) {
+  return getServiceBySlug(slug);
+}
+
 export async function getAvailabilityData({
   serviceId,
   selectedDate,
@@ -90,6 +105,7 @@ export async function getAvailabilityData({
   const blocks = await listCalendarBlocks();
   const appointments = await listAppointments();
   const activeHolds = await listActiveAppointmentHolds();
+  const adminEvents = await listAdminCalendarEvents();
 
   function getApplicableRule(weekday: number) {
     return (
@@ -120,12 +136,28 @@ export async function getAvailabilityData({
   }
 
   function isBlocked(startAt: Date, endAt: Date) {
-    return blocks.some((block) => {
+    const blockedByCalendarBlock = blocks.some((block) => {
       if (block.serviceId && block.serviceId !== selectedService.id) {
         return false;
       }
 
       return rangesOverlap(startAt, endAt, new Date(block.startsAt), new Date(block.endsAt));
+    });
+
+    if (blockedByCalendarBlock) {
+      return true;
+    }
+
+    return adminEvents.some((event: Awaited<ReturnType<typeof listAdminCalendarEvents>>[number]) => {
+      if (!event.impactAvailability || event.status !== "active") {
+        return false;
+      }
+
+      if (event.serviceId && event.serviceId !== selectedService.id) {
+        return false;
+      }
+
+      return rangesOverlap(startAt, endAt, new Date(event.startsAt), new Date(event.endsAt));
     });
   }
 

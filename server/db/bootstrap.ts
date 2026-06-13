@@ -12,7 +12,7 @@ function resolveSqliteDatabasePath() {
   const databaseUrl = process.env.DATABASE_URL ?? "file:./dev.db";
 
   if (!databaseUrl.startsWith("file:")) {
-    throw new Error("Only SQLite file URLs are supported for the local persistence bootstrap.");
+    return null;
   }
 
   const filePath = databaseUrl.replace("file:", "");
@@ -34,6 +34,9 @@ const tableStatements = [
     "durationMinutes" INTEGER NOT NULL,
     "priceCents" INTEGER NOT NULL,
     "active" BOOLEAN NOT NULL DEFAULT 1,
+    "displayOrder" INTEGER NOT NULL DEFAULT 0,
+    "petSpecies" TEXT,
+    "petSize" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
   );`,
@@ -155,14 +158,36 @@ const tableStatements = [
   `CREATE TABLE IF NOT EXISTS "ProductVariant" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "productId" TEXT NOT NULL,
+    "supplierId" TEXT,
     "slug" TEXT NOT NULL UNIQUE,
     "title" TEXT NOT NULL,
     "sku" TEXT NOT NULL UNIQUE,
     "priceCents" INTEGER NOT NULL,
     "compareAtCents" INTEGER,
+    "costCents" INTEGER NOT NULL DEFAULT 0,
     "stockQuantity" INTEGER NOT NULL DEFAULT 0,
     "reservedQuantity" INTEGER NOT NULL DEFAULT 0,
+    "minimumStock" INTEGER NOT NULL DEFAULT 0,
     "active" BOOLEAN NOT NULL DEFAULT 1,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    FOREIGN KEY ("productId") REFERENCES "Product" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY ("supplierId") REFERENCES "Supplier" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+  );`,
+  `CREATE TABLE IF NOT EXISTS "ProductImage" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "productId" TEXT NOT NULL,
+    "imageUrl" TEXT NOT NULL,
+    "imagePath" TEXT NOT NULL,
+    "imageThumbUrl" TEXT NOT NULL,
+    "imageThumbPath" TEXT NOT NULL,
+    "alt" TEXT NOT NULL,
+    "mimeType" TEXT NOT NULL,
+    "sizeBytes" INTEGER NOT NULL,
+    "width" INTEGER NOT NULL,
+    "height" INTEGER NOT NULL,
+    "displayOrder" INTEGER NOT NULL DEFAULT 0,
+    "isPrimary" BOOLEAN NOT NULL DEFAULT 0,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
     FOREIGN KEY ("productId") REFERENCES "Product" ("id") ON DELETE CASCADE ON UPDATE CASCADE
@@ -267,9 +292,73 @@ const tableStatements = [
     "reason" TEXT NOT NULL,
     "referenceType" TEXT NOT NULL,
     "referenceId" TEXT NOT NULL,
+    "unitCostCents" INTEGER,
+    "totalCostCents" INTEGER,
+    "notes" TEXT,
+    "resultingStockQuantity" INTEGER,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY ("productId") REFERENCES "Product" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY ("variantId") REFERENCES "ProductVariant" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+  );`,
+  `CREATE TABLE IF NOT EXISTS "Supplier" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "contactName" TEXT,
+    "phone" TEXT,
+    "email" TEXT,
+    "notes" TEXT,
+    "active" BOOLEAN NOT NULL DEFAULT 1,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+  );`,
+  `CREATE TABLE IF NOT EXISTS "FinancialCategory" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "slug" TEXT NOT NULL UNIQUE,
+    "direction" TEXT NOT NULL,
+    "description" TEXT,
+    "active" BOOLEAN NOT NULL DEFAULT 1,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+  );`,
+  `CREATE TABLE IF NOT EXISTS "FinancialEntry" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "categoryId" TEXT NOT NULL,
+    "direction" TEXT NOT NULL,
+    "entryType" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "notes" TEXT,
+    "occurredOn" DATETIME NOT NULL,
+    "amountCents" INTEGER NOT NULL,
+    "paymentMethod" TEXT NOT NULL,
+    "status" TEXT NOT NULL,
+    "isRecurringFixed" BOOLEAN NOT NULL DEFAULT 0,
+    "referenceType" TEXT,
+    "referenceId" TEXT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    FOREIGN KEY ("categoryId") REFERENCES "FinancialCategory" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+  );`,
+  `CREATE TABLE IF NOT EXISTS "AdminCalendarEvent" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "serviceId" TEXT,
+    "title" TEXT NOT NULL,
+    "category" TEXT NOT NULL,
+    "colorToken" TEXT NOT NULL,
+    "customerName" TEXT,
+    "petName" TEXT,
+    "notes" TEXT,
+    "startsAt" DATETIME NOT NULL,
+    "endsAt" DATETIME NOT NULL,
+    "impactAvailability" BOOLEAN NOT NULL DEFAULT 0,
+    "isAllDay" BOOLEAN NOT NULL DEFAULT 0,
+    "sourceType" TEXT NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'active',
+    "referenceType" TEXT,
+    "referenceId" TEXT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    FOREIGN KEY ("serviceId") REFERENCES "AppointmentService" ("id") ON DELETE SET NULL ON UPDATE CASCADE
   );`,
   `CREATE TABLE IF NOT EXISTS "Payment" (
     "id" TEXT NOT NULL PRIMARY KEY,
@@ -410,6 +499,7 @@ const indexStatements = [
   `CREATE INDEX IF NOT EXISTS "Product_status_featured_idx" ON "Product"("status", "featured");`,
   `CREATE INDEX IF NOT EXISTS "ProductVariant_productId_active_idx" ON "ProductVariant"("productId", "active");`,
   `CREATE INDEX IF NOT EXISTS "ProductVariant_stockQuantity_reservedQuantity_idx" ON "ProductVariant"("stockQuantity", "reservedQuantity");`,
+  `CREATE INDEX IF NOT EXISTS "ProductVariant_supplierId_idx" ON "ProductVariant"("supplierId");`,
   `CREATE INDEX IF NOT EXISTS "Coupon_active_startsAt_endsAt_idx" ON "Coupon"("active", "startsAt", "endsAt");`,
   `CREATE INDEX IF NOT EXISTS "Cart_customerId_status_idx" ON "Cart"("customerId", "status");`,
   `CREATE INDEX IF NOT EXISTS "Cart_couponId_idx" ON "Cart"("couponId");`,
@@ -427,6 +517,15 @@ const indexStatements = [
   `CREATE INDEX IF NOT EXISTS "InventoryMovement_variantId_createdAt_idx" ON "InventoryMovement"("variantId", "createdAt");`,
   `CREATE INDEX IF NOT EXISTS "InventoryMovement_referenceType_referenceId_createdAt_idx" ON "InventoryMovement"("referenceType", "referenceId", "createdAt");`,
   `CREATE INDEX IF NOT EXISTS "InventoryMovement_movementType_createdAt_idx" ON "InventoryMovement"("movementType", "createdAt");`,
+  `CREATE INDEX IF NOT EXISTS "Supplier_active_name_idx" ON "Supplier"("active", "name");`,
+  `CREATE INDEX IF NOT EXISTS "FinancialCategory_direction_active_idx" ON "FinancialCategory"("direction", "active");`,
+  `CREATE INDEX IF NOT EXISTS "FinancialEntry_occurredOn_direction_idx" ON "FinancialEntry"("occurredOn", "direction");`,
+  `CREATE INDEX IF NOT EXISTS "FinancialEntry_categoryId_occurredOn_idx" ON "FinancialEntry"("categoryId", "occurredOn");`,
+  `CREATE INDEX IF NOT EXISTS "FinancialEntry_entryType_status_idx" ON "FinancialEntry"("entryType", "status");`,
+  `CREATE INDEX IF NOT EXISTS "AdminCalendarEvent_startsAt_endsAt_idx" ON "AdminCalendarEvent"("startsAt", "endsAt");`,
+  `CREATE INDEX IF NOT EXISTS "AdminCalendarEvent_category_startsAt_idx" ON "AdminCalendarEvent"("category", "startsAt");`,
+  `CREATE INDEX IF NOT EXISTS "AdminCalendarEvent_impactAvailability_startsAt_endsAt_idx" ON "AdminCalendarEvent"("impactAvailability", "startsAt", "endsAt");`,
+  `CREATE INDEX IF NOT EXISTS "AdminCalendarEvent_serviceId_startsAt_idx" ON "AdminCalendarEvent"("serviceId", "startsAt");`,
   `CREATE UNIQUE INDEX IF NOT EXISTS "Payment_providerPaymentId_key" ON "Payment"("providerPaymentId");`,
   `CREATE INDEX IF NOT EXISTS "Payment_appointmentId_createdAt_idx" ON "Payment"("appointmentId", "createdAt");`,
   `CREATE INDEX IF NOT EXISTS "Payment_orderId_createdAt_idx" ON "Payment"("orderId", "createdAt");`,
@@ -444,7 +543,9 @@ const indexStatements = [
   `CREATE INDEX IF NOT EXISTS "PromotionItem_productId_idx" ON "PromotionItem"("productId");`,
   `CREATE INDEX IF NOT EXISTS "PromotionItem_serviceId_idx" ON "PromotionItem"("serviceId");`,
   `CREATE INDEX IF NOT EXISTS "PromotionBanner_promotionId_placement_displayOrder_active_idx" ON "PromotionBanner"("promotionId", "placement", "displayOrder", "active");`,
-  `CREATE INDEX IF NOT EXISTS "PromotionBanner_placement_active_startsAt_endsAt_idx" ON "PromotionBanner"("placement", "active", "startsAt", "endsAt");`
+  `CREATE INDEX IF NOT EXISTS "PromotionBanner_placement_active_startsAt_endsAt_idx" ON "PromotionBanner"("placement", "active", "startsAt", "endsAt");`,
+  `CREATE INDEX IF NOT EXISTS "ProductImage_productId_displayOrder_idx" ON "ProductImage"("productId", "displayOrder");`,
+  `CREATE INDEX IF NOT EXISTS "ProductImage_productId_isPrimary_idx" ON "ProductImage"("productId", "isPrimary");`
 ];
 
 function addColumnIfMissing(sqlite: Database.Database, table: string, column: string, definition: string) {
@@ -460,6 +561,10 @@ export async function ensureSqliteDatabaseSchema() {
   }
 
   const databasePath = resolveSqliteDatabasePath();
+  if (!databasePath) {
+    global.__laikaoDbBootstrapped = true;
+    return;
+  }
   fs.mkdirSync(path.dirname(databasePath), { recursive: true });
 
   const sqlite = new Database(databasePath);
@@ -470,6 +575,24 @@ export async function ensureSqliteDatabaseSchema() {
       sqlite.exec(statement);
     }
     addColumnIfMissing(sqlite, "Payment", "orderId", "TEXT");
+    addColumnIfMissing(sqlite, "AppointmentService", "displayOrder", "INTEGER NOT NULL DEFAULT 0");
+    addColumnIfMissing(sqlite, "AppointmentService", "petSpecies", "TEXT");
+    addColumnIfMissing(sqlite, "AppointmentService", "petSize", "TEXT");
+    addColumnIfMissing(sqlite, "ProductVariant", "supplierId", "TEXT");
+    addColumnIfMissing(sqlite, "ProductVariant", "costCents", "INTEGER NOT NULL DEFAULT 0");
+    addColumnIfMissing(sqlite, "ProductVariant", "minimumStock", "INTEGER NOT NULL DEFAULT 0");
+    addColumnIfMissing(sqlite, "InventoryMovement", "unitCostCents", "INTEGER");
+    addColumnIfMissing(sqlite, "InventoryMovement", "totalCostCents", "INTEGER");
+    addColumnIfMissing(sqlite, "InventoryMovement", "notes", "TEXT");
+    addColumnIfMissing(sqlite, "InventoryMovement", "resultingStockQuantity", "INTEGER");
+    addColumnIfMissing(sqlite, "PromotionBanner", "imagePath", "TEXT");
+    addColumnIfMissing(sqlite, "PromotionBanner", "imageThumbUrl", "TEXT");
+    addColumnIfMissing(sqlite, "PromotionBanner", "imageThumbPath", "TEXT");
+    addColumnIfMissing(sqlite, "PromotionBanner", "imageAlt", "TEXT");
+    addColumnIfMissing(sqlite, "PromotionBanner", "imageMimeType", "TEXT");
+    addColumnIfMissing(sqlite, "PromotionBanner", "imageSizeBytes", "INTEGER");
+    addColumnIfMissing(sqlite, "PromotionBanner", "imageWidth", "INTEGER");
+    addColumnIfMissing(sqlite, "PromotionBanner", "imageHeight", "INTEGER");
     for (const statement of indexStatements) {
       sqlite.exec(statement);
     }
