@@ -5,10 +5,10 @@ import { siteConfig } from "@/config/site";
 import { publicRoutes } from "@/lib/routes";
 
 const navigationLinks = [
-  { label: "Inicio", href: publicRoutes.home },
-  { label: "Servicos", href: publicRoutes.services },
+  { label: "Início", href: publicRoutes.home },
+  { label: "Serviços", href: publicRoutes.services },
   { label: "Produtos", href: publicRoutes.products },
-  { label: "Promocoes", href: publicRoutes.promotions },
+  { label: "Promoções", href: publicRoutes.promotions },
   { label: "Contato", href: publicRoutes.contact }
 ];
 
