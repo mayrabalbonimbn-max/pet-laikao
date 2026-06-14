@@ -15,7 +15,7 @@ const navigationLinks = [
 const legalLinks = [
   { label: "Privacidade", href: publicRoutes.privacy },
   { label: "Termos", href: publicRoutes.terms },
-  { label: "Trocas e devolucoes", href: publicRoutes.exchangesReturns }
+  { label: "Trocas e devoluções", href: publicRoutes.exchangesReturns }
 ];
 
 export function PublicFooter() {
@@ -25,9 +25,9 @@ export function PublicFooter() {
         <div className="grid">
           <div>
             <div className="marca">
-              <span className="pet">Pet Shop</span> <span className="lk">Laikao</span>
+              <span className="pet">Pet Shop</span> <span className="lk">Laikão</span>
             </div>
-            <p>Loja, estetica animal, produtos, retirada e atendimento direto pra cuidar melhor do seu pet.</p>
+            <p>Loja, estética animal, produtos, retirada e atendimento direto pra cuidar melhor do seu pet.</p>
             <p>
               {siteConfig.addressLine}
               <br />
@@ -37,7 +37,7 @@ export function PublicFooter() {
           </div>
 
           <div>
-            <h4>Navegacao</h4>
+            <h4>Navegação</h4>
             <ul>
               {navigationLinks.map((item) => (
                 <li key={item.href}>
@@ -67,7 +67,7 @@ export function PublicFooter() {
               </li>
               <li>
                 <a href={siteConfig.mapUrl} target="_blank" rel="noreferrer">
-                  Localizacao
+                  Localização
                 </a>
               </li>
             </ul>
@@ -75,7 +75,7 @@ export function PublicFooter() {
         </div>
 
         <div className="fim">
-          <span>&copy; {new Date().getFullYear()} Pet Shop Laikao. Feito com carinho.</span>
+          <span>&copy; {new Date().getFullYear()} Pet Shop Laikão. Feito com carinho.</span>
           <span>
             {legalLinks.map((item, index) => (
               <span key={item.href}>

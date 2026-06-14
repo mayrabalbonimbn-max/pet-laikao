@@ -90,7 +90,7 @@ export function PwaEnhancements() {
             </button>
           ) : (
             <p className="rounded-[12px] border border-brand-100 bg-brand-50 px-3 py-2 text-xs leading-5 text-brand-900">
-              No iPhone: toque em compartilhar e depois em <strong>Adicionar a Tela de Inicio</strong>.
+              No iPhone: toque em compartilhar e depois em <strong>Adicionar à Tela de Início</strong>.
             </p>
           )}
         </div>

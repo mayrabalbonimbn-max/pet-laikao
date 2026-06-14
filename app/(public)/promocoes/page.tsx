@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { PageHead } from "@/components/marketing/page-head";
 import { siteConfig } from "@/config/site";
 import { listActivePromotions } from "@/domains/promotions/queries";
@@ -26,70 +24,20 @@ export default async function PromotionsPage() {
       <PageHead
         eyebrow={
           <>
-            <Paw className="paw" /> Promocoes
+            <Paw className="paw" /> Promoções
           </>
         }
         title={
           <>
-            Ofertas e <span className="rosa">vantagens</span> da Laikao.
+            Ofertas e <span className="rosa">vantagens</span> da Laikão.
           </>
         }
-        description="O que esta valendo agora, mais o jeito mais facil de receber tudo: entrega ou retirada, e iFood ate meia-noite."
+        description="O que está valendo agora na Laikão. Acompanhe as ofertas e novidades da loja."
       />
 
       <section className="sec" style={{ paddingTop: 24 }}>
         <div className="lk-wrap">
-          <div className="promo-destaque">
-            <div>
-              <span className="selo">
-                <Paw className="paw" /> Sempre disponivel
-              </span>
-              <h2>Agora tambem no iFood, ate meia-noite.</h2>
-              <p>
-                Esqueceu a racao ou o petisco acabou tarde da noite? A Laikao entrega pelo iFood ate meia-noite. E se preferir,
-                voce compra e retira na loja.
-              </p>
-              <div className="acoes">
-                <a className="btn btn--rosa" href={siteConfig.quickLinks.ifood.href} target="_blank" rel="noreferrer">
-                  Pedir no iFood
-                </a>
-                <Link className="btn btn--linha" href={publicRoutes.products}>
-                  Ver a loja
-                </Link>
-              </div>
-            </div>
-            <div className="photo-frame photo-frame--quadro" aria-hidden="true" style={{ boxShadow: "none", outlineColor: "rgba(255,255,255,.5)" }}>
-              <div className="ph-fallback">
-                <svg className="big-paw" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M3 7h13v8H3z" />
-                  <path d="M16 10h3l2 3v2h-5z" />
-                  <circle cx="7" cy="17" r="1.8" />
-                  <circle cx="17" cy="17" r="1.8" />
-                </svg>
-                <span>Entrega ou retirada, do seu jeito</span>
-              </div>
-            </div>
-          </div>
-
           <div className="promo-grid">
-            <article className="promo">
-              <span className="faixinha">Vantagem fixa</span>
-              <h3>Retire na loja sem frete</h3>
-              <p>Compre pelo site ou WhatsApp e retire na Laikao, na Vila Nova Cachoeirinha, sem pagar entrega.</p>
-              <Link className="btn btn--rosa promo-cta" href={publicRoutes.products}>
-                Montar pedido
-              </Link>
-            </article>
-
-            <article className="promo">
-              <span className="faixinha">Vantagem fixa</span>
-              <h3>Atendimento ate meia-noite</h3>
-              <p>Pedidos pelo iFood com a loja aberta ate tarde, pros perrengues de ultima hora.</p>
-              <a className="btn btn--rosa promo-cta" href={siteConfig.quickLinks.ifood.href} target="_blank" rel="noreferrer">
-                Pedir no iFood
-              </a>
-            </article>
-
             {promotions.map((promotion) => (
               <article key={promotion.id} className="promo">
                 <span className="faixinha">{promotion.type ?? "Campanha"}</span>
@@ -107,8 +55,8 @@ export default async function PromotionsPage() {
                   <path d="M12 8v8M8 12h8" />
                   <circle cx="12" cy="12" r="9" />
                 </svg>
-                <b>Novas campanhas em breve</b>
-                <p style={{ margin: ".3rem 0 0" }}>Siga o @pet_laikao pra ser a primeira a saber.</p>
+                <b>No momento sem promoções ativas</b>
+                <p style={{ margin: ".3rem 0 0" }}>Acompanhe o @pet_laikao pra ser a primeira a saber das novidades.</p>
               </article>
             ) : null}
           </div>
@@ -118,7 +66,7 @@ export default async function PromotionsPage() {
       <section className="sec" style={{ paddingTop: 0 }}>
         <div className="lk-wrap">
           <div className="cta-band">
-            <h2>Nao quer perder nenhuma oferta?</h2>
+            <h2>Não quer perder nenhuma oferta?</h2>
             <p>Acompanha a gente no Instagram e fala no WhatsApp pra saber das novidades primeiro.</p>
             <div className="acoes">
               <a className="btn btn--linha" href={siteConfig.instagramUrl} target="_blank" rel="noreferrer">

@@ -55,7 +55,7 @@ export function CheckoutPageClient() {
       const nextPreview = await fetchCheckoutPreview(key);
       setPreview(nextPreview);
     } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : "Nao foi possivel carregar o checkout.");
+      setError(nextError instanceof Error ? nextError.message : "Não foi possível carregar o checkout.");
     } finally {
       setIsLoading(false);
     }
@@ -81,7 +81,7 @@ export function CheckoutPageClient() {
       setPaymentStatusView(nextPaymentStatus);
       setCreatedOrder(nextPaymentStatus.order ? { id: nextPaymentStatus.order.id, orderNumber: nextPaymentStatus.order.orderNumber } : null);
     } catch (nextError) {
-      setPaymentLoadError(nextError instanceof Error ? nextError.message : "Nao foi possivel consultar o status do pagamento.");
+      setPaymentLoadError(nextError instanceof Error ? nextError.message : "Não foi possível consultar o status do pagamento.");
     } finally {
       setIsLoadingPaymentStatus(false);
     }
@@ -108,7 +108,7 @@ export function CheckoutPageClient() {
       return;
     }
 
-    setError("Nao foi possivel iniciar o checkout neste dispositivo.");
+    setError("Não foi possível iniciar o checkout neste dispositivo.");
     setIsLoading(false);
   }, [paymentIntentId, providerCheckoutId, providerPaymentId]);
 
@@ -140,7 +140,7 @@ export function CheckoutPageClient() {
 
   const handleCreateOrder = () => {
     if (!cartKey) {
-      setSubmitError("Carrinho indisponivel para finalizar o pedido.");
+      setSubmitError("Carrinho indisponível para finalizar o pedido.");
       return;
     }
 
@@ -181,13 +181,13 @@ export function CheckoutPageClient() {
           setPendingOrderWithoutCheckout({
             id: result.orderId,
             orderNumber: result.orderNumber,
-            reason: paymentError instanceof Error ? paymentError.message : "Nao foi possivel preparar a cobranca do pedido."
+            reason: paymentError instanceof Error ? paymentError.message : "Não foi possível preparar a cobrança do pedido."
           });
         }
 
         await loadPreview(cartKey);
       } catch (nextError) {
-        setSubmitError(nextError instanceof Error ? nextError.message : "Nao foi possivel criar o pedido.");
+        setSubmitError(nextError instanceof Error ? nextError.message : "Não foi possível criar o pedido.");
       }
     });
   };
@@ -208,7 +208,7 @@ export function CheckoutPageClient() {
   if (error) {
     return (
       <div className="mt-8">
-        <ErrorState title="Nao foi possivel carregar o checkout" description={error} />
+        <ErrorState title="Não foi possível carregar o checkout" description={error} />
       </div>
     );
   }
@@ -243,7 +243,7 @@ export function CheckoutPageClient() {
 
             {paymentLoadError ? (
               <div className="mt-5">
-                <ErrorState title="Nao foi possivel consultar o pagamento" description={paymentLoadError} />
+                <ErrorState title="Não foi possível consultar o pagamento" description={paymentLoadError} />
               </div>
             ) : null}
 
@@ -252,7 +252,7 @@ export function CheckoutPageClient() {
                 {publicStatus === "paid" ? (
                   <SuccessBanner
                     title="Pagamento aprovado"
-                    description={`O pedido ${paymentStatusView.order?.orderNumber ?? ""} foi confirmado e o financeiro ja refletiu isso no admin.`}
+                    description={`O pedido ${paymentStatusView.order?.orderNumber ?? ""} foi confirmado e o financeiro já refletiu isso no admin.`}
                   />
                 ) : (
                   <InlineNotice
@@ -260,12 +260,12 @@ export function CheckoutPageClient() {
                     title={`Pagamento ${paymentStatusLabels[paymentStatusView.payment.status].toLowerCase()}`}
                     description={
                       publicStatus === "pending"
-                        ? "A cobranca ainda esta aguardando confirmacao. Voce pode reabrir o pagamento ou atualizar o status."
+                        ? "A cobrança ainda está aguardando confirmação. Você pode reabrir o pagamento ou atualizar o status."
                         : publicStatus === "failed"
-                          ? "A tentativa falhou. O pedido continua registrado e voce pode gerar uma nova cobranca."
+                          ? "A tentativa falhou. O pedido continua registrado e você pode gerar uma nova cobrança."
                           : publicStatus === "expired"
-                            ? "A cobranca expirou antes da confirmacao. O pedido segue salvo e uma nova cobranca pode ser criada."
-                            : "O pedido foi criado, mas a cobranca ainda exige verificacao."
+                            ? "A cobrança expirou antes da confirmação. O pedido segue salvo e uma nova cobrança pode ser criada."
+                            : "O pedido foi criado, mas a cobrança ainda exige verificação."
                     }
                   />
                 )}
@@ -289,7 +289,7 @@ export function CheckoutPageClient() {
                   {paymentStatusView.payment.checkoutUrl ? (
                     <a href={paymentStatusView.payment.checkoutUrl} target="_blank" rel="noreferrer">
                       <Button>
-                        Abrir cobranca
+                        Abrir cobrança
                         <ExternalLink className="h-4 w-4" />
                       </Button>
                     </a>
@@ -323,15 +323,15 @@ export function CheckoutPageClient() {
                               return;
                             }
 
-                            setPaymentLoadError("Uma nova cobranca foi criada, mas a URL do checkout nao ficou disponivel.");
+                            setPaymentLoadError("Uma nova cobrança foi criada, mas a URL do checkout não ficou disponível.");
                           } catch (nextError) {
-                            setPaymentLoadError(nextError instanceof Error ? nextError.message : "Nao foi possivel recriar a cobranca.");
+                            setPaymentLoadError(nextError instanceof Error ? nextError.message : "Não foi possível recriar a cobrança.");
                           }
                         });
                       }}
                       disabled={isSubmitting}
                     >
-                      {isSubmitting ? "Gerando..." : "Gerar nova cobranca"}
+                      {isSubmitting ? "Gerando..." : "Gerar nova cobrança"}
                     </Button>
                   ) : null}
                 </div>
@@ -359,7 +359,7 @@ export function CheckoutPageClient() {
               title: paymentStatusView?.payment.status === "paid" ? "Pedido confirmado" : "Acompanhamento do pagamento",
               description:
                 paymentStatusView?.payment.status === "paid"
-                  ? "O pedido ja esta confirmado e refletido no financeiro."
+                  ? "O pedido já está confirmado e refletido no financeiro."
                   : "Se o pagamento ainda estiver processando, este bloco continua sendo atualizado pelo sistema."
             }}
           />
@@ -371,7 +371,7 @@ export function CheckoutPageClient() {
   if (!preview || preview.cart.items.length === 0) {
     return (
       <div className="mt-8 space-y-5">
-        <ErrorState title="Checkout bloqueado" description="O carrinho esta vazio ou invalido. Adicione produtos antes de tentar criar um pedido." />
+        <ErrorState title="Checkout bloqueado" description="O carrinho está vazio ou inválido. Adicione produtos antes de tentar criar um pedido." />
         <Link href={publicRoutes.products}>
           <Button variant="secondary">Voltar para produtos</Button>
         </Link>
@@ -384,10 +384,10 @@ export function CheckoutPageClient() {
     return (
       <div className="mt-8 space-y-5">
         <SuccessBanner
-          title="Pedido criado, mas a cobranca nao ficou disponivel"
-          description={`O pedido ${pendingOrderWithoutCheckout.orderNumber} foi criado e continua salvo, mas a cobranca online nao ficou disponivel nesta tentativa.`}
+          title="Pedido criado, mas a cobrança não ficou disponível"
+          description={`O pedido ${pendingOrderWithoutCheckout.orderNumber} foi criado e continua salvo, mas a cobrança online não ficou disponível nesta tentativa.`}
         />
-        <InlineNotice tone="warning" title="Pagamento indisponivel agora" description={pendingOrderWithoutCheckout.reason} />
+        <InlineNotice tone="warning" title="Pagamento indisponível agora" description={pendingOrderWithoutCheckout.reason} />
         <div className="grid gap-4 sm:grid-cols-2">
           <Link href={publicRoutes.contact}>
             <Button variant="secondary" fullWidth>
@@ -409,18 +409,18 @@ export function CheckoutPageClient() {
                     return;
                   }
 
-                  setSubmitError("A cobranca online ainda nao retornou um link para este pedido.");
+                  setSubmitError("A cobrança online ainda não retornou um link para este pedido.");
                 } catch (nextError) {
-                  setSubmitError(nextError instanceof Error ? nextError.message : "Nao foi possivel preparar a cobranca.");
+                  setSubmitError(nextError instanceof Error ? nextError.message : "Não foi possível preparar a cobrança.");
                 }
               });
             }}
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Tentando novamente..." : "Tentar gerar cobranca"}
+            {isSubmitting ? "Tentando novamente..." : "Tentar gerar cobrança"}
           </Button>
         </div>
-        {submitError ? <InlineNotice tone="danger" title="Cobranca ainda indisponivel" description={submitError} /> : null}
+        {submitError ? <InlineNotice tone="danger" title="Cobrança ainda indisponível" description={submitError} /> : null}
       </div>
     );
   }
@@ -430,7 +430,7 @@ export function CheckoutPageClient() {
       <div className="mt-8 space-y-5">
         <SuccessBanner
           title="Pedido criado com sucesso"
-          description={`O pedido ${createdOrder.orderNumber} foi criado e reservou o estoque. Agora estamos preparando ou acompanhando a cobranca real.`}
+          description={`O pedido ${createdOrder.orderNumber} foi criado e reservou o estoque. Agora estamos preparando ou acompanhando a cobrança real.`}
         />
         <div className="grid gap-4 sm:grid-cols-2">
           <Link href={publicRoutes.products}>
@@ -455,7 +455,7 @@ export function CheckoutPageClient() {
             title={preview.readiness.canCheckout ? "Checkout pronto para criar pedido" : "Checkout bloqueado ate resolver os avisos"}
             description={
               preview.readiness.canCheckout
-                ? "A camada real do carrinho ja validou estoque, subtotal e consistencia antes de virar pedido e abrir a cobranca."
+                ? "A camada real do carrinho já validou estoque, subtotal e consistência antes de virar pedido e abrir a cobrança."
                 : "Os avisos abaixo vem do backend e impedem a criacao de pedido incoerente."
             }
           />
@@ -522,8 +522,8 @@ export function CheckoutPageClient() {
               <Select value={deliveryMode} onValueChange={setDeliveryMode} options={[{ label: "Retirada na loja", value: "pickup" }, { label: "Entrega local", value: "delivery" }]} />
             </label>
             <label className="space-y-2">
-              <span className="text-sm font-semibold text-ink-900">Faixa de horario</span>
-              <Select value={timeWindow} onValueChange={setTimeWindow} options={[{ label: "Manha", value: "morning" }, { label: "Tarde", value: "afternoon" }]} />
+              <span className="text-sm font-semibold text-ink-900">Faixa de horário</span>
+              <Select value={timeWindow} onValueChange={setTimeWindow} options={[{ label: "Manhã", value: "morning" }, { label: "Tarde", value: "afternoon" }]} />
             </label>
           </div>
         </article>
@@ -579,7 +579,7 @@ export function CheckoutPageClient() {
           <InlineNotice key={issue} tone="warning" title="Checkout bloqueado" description={issue} />
         )) : null}
 
-        {submitError ? <InlineNotice tone="danger" title="Nao foi possivel criar o pedido" description={submitError} /> : null}
+        {submitError ? <InlineNotice tone="danger" title="Não foi possível criar o pedido" description={submitError} /> : null}
       </section>
 
       <CartSummary
@@ -595,9 +595,9 @@ export function CheckoutPageClient() {
           totalLabel: preview.cart.totalLabel
         }}
         notice={{
-          title: preview.readiness.canCheckout ? "Resumo pronto para pedido + cobranca" : "Pedido bloqueado por validacao do backend",
+          title: preview.readiness.canCheckout ? "Resumo pronto para pedido + cobrança" : "Pedido bloqueado por validação do backend",
           description: preview.readiness.canCheckout
-            ? "Ao confirmar, o sistema cria o pedido, reserva o estoque e prepara a cobranca real sem duplicar checkouts desnecessariamente."
+            ? "Ao confirmar, o sistema cria o pedido, reserva o estoque e prepara a cobrança real sem duplicar checkouts desnecessariamente."
             : "Resolva os avisos do carrinho antes de transformar esse checkout em pedido."
         }}
       />

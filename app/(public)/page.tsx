@@ -32,8 +32,8 @@ const linkCards = [
   {
     href: publicRoutes.services,
     title: "Banho e tosa",
-    text: "Estetica animal com hora marcada: banho, tosa, hidratacao e mais.",
-    cta: "Ver servicos",
+    text: "Estética animal com hora marcada: banho, tosa, hidratação e mais.",
+    cta: "Ver serviços",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M12 2v20M5 8c0-3 3-5 7-5M19 8c0-3-3-5-7-5" />
@@ -44,7 +44,7 @@ const linkCards = [
   {
     href: publicRoutes.products,
     title: "Loja completa",
-    text: "Racao, petisco, higiene, beleza, acessorio e brinquedo. Compre e retire.",
+    text: "Ração, petisco, higiene, beleza, acessório e brinquedo. Compre e retire.",
     cta: "Ver produtos",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -55,9 +55,9 @@ const linkCards = [
   },
   {
     href: publicRoutes.promotions,
-    title: "Promocoes e iFood",
-    text: "Ofertas da loja e delivery ate meia-noite, com entrega ou retirada.",
-    cta: "Ver promocoes",
+    title: "Promoções",
+    text: "Ofertas e novidades da loja, com entrega ou retirada.",
+    cta: "Ver promoções",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M3 12l9-9 9 9-9 9z" />
@@ -109,10 +109,10 @@ export default function HomePage() {
         <div className="lk-wrap">
           <div>
             <span className="selo sec-eyebrow">
-              <Paw className="paw" /> Por onde comecar
+              <Paw className="paw" /> Por onde começar
             </span>
-            <h2>Tudo pro seu pet, em um lugar so.</h2>
-            <p className="sec-lead">Escolha o que voce precisa hoje. A gente cuida do resto com o carinho de sempre.</p>
+            <h2>Tudo pro seu pet, em um lugar só.</h2>
+            <p className="sec-lead">Escolha o que você precisa hoje. A gente cuida do resto com o carinho de sempre.</p>
           </div>
           <div className="cards">
             {linkCards.map((card) => (
@@ -131,7 +131,7 @@ export default function HomePage() {
 
       <section className="sec sec--lav">
         <div className="lk-wrap sobre-grid">
-          <div className="photo-frame photo-frame--quadro" aria-label="Foto da loja Laikao">
+          <div className="photo-frame photo-frame--quadro" aria-label="Foto da loja Laikão">
             <Image
               src="/images/fachada-loja.jpg"
               alt="Fachada da Pet Shop Laikão, na Vila Nova Cachoeirinha"
@@ -140,17 +140,17 @@ export default function HomePage() {
             />
           </div>
           <div className="txt">
-            <span className="selo sec-eyebrow">Quem e a Laikao</span>
+            <span className="selo sec-eyebrow">Quem é a Laikão</span>
             <h2>Um pet shop de bairro, com cuidado de gente que ama bicho.</h2>
             <p>
-              Na Pet Shop Laikao, da Cris, cada pet e tratado como se fosse da casa. Aqui na Vila Nova Cachoeirinha a gente
+              Na Pet Shop Laikão, da Cris, cada pet é tratado como se fosse da casa. Aqui na Vila Nova Cachoeirinha a gente
               conhece o seu cachorro e o seu gato pelo nome, sabe do jeitinho de cada um e cuida com calma, do banho ao petisco.
             </p>
-            <p className="promessa">Paixao que une, amor que cuida.</p>
+            <p className="promessa">Paixão que une, amor que cuida.</p>
             <div className="selos-conf">
-              <span className="s">{Check} Atendimento de confianca</span>
-              <span className="s">{Check} Caes e gatos</span>
-              <span className="s">{Check} Loja, estetica e delivery</span>
+              <span className="s">{Check} Atendimento de confiança</span>
+              <span className="s">{Check} Cães e gatos</span>
+              <span className="s">{Check} Loja, estética e delivery</span>
             </div>
           </div>
         </div>
@@ -160,13 +160,16 @@ export default function HomePage() {
         <div className="lk-wrap">
           <div className="cta-band">
             <h2>Bora deixar seu pet lindo e cheiroso?</h2>
-            <p>Agende o banho e a tosa em poucos toques, ou chame a Cris no WhatsApp pra tirar qualquer duvida.</p>
+            <p>Agende o banho e a tosa em poucos toques, ou chame a Cris no WhatsApp pra tirar qualquer dúvida.</p>
             <div className="acoes">
               <Link className="btn btn--linha" href={publicRoutes.schedule}>
                 Agendar agora
               </Link>
               <a className="btn btn--claro" href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer">
                 Falar no WhatsApp
+              </a>
+              <a className="btn btn--claro" href={siteConfig.quickLinks.ifood.href} target="_blank" rel="noreferrer">
+                Pedir no iFood
               </a>
             </div>
           </div>

@@ -7,10 +7,10 @@ import { useState } from "react";
 import { publicRoutes } from "@/lib/routes";
 
 const navItems = [
-  { label: "Inicio", href: publicRoutes.home },
-  { label: "Servicos", href: publicRoutes.services },
+  { label: "Início", href: publicRoutes.home },
+  { label: "Serviços", href: publicRoutes.services },
   { label: "Produtos", href: publicRoutes.products },
-  { label: "Promocoes", href: publicRoutes.promotions },
+  { label: "Promoções", href: publicRoutes.promotions },
   { label: "Contato", href: publicRoutes.contact }
 ];
 
@@ -34,12 +34,12 @@ export function PublicHeader() {
   return (
     <header className="topo">
       <div className="lk-wrap bar">
-        <Link className="marca" href={publicRoutes.home} aria-label="Pet Shop Laikao, inicio">
+        <Link className="marca" href={publicRoutes.home} aria-label="Pet Shop Laikão, início">
           <span className="stamp" aria-hidden="true">
             <Paw />
           </span>
           <span>
-            <span className="pet">Pet Shop</span> <span className="lk">Laikao</span>
+            <span className="pet">Pet Shop</span> <span className="lk">Laikão</span>
           </span>
         </Link>
 

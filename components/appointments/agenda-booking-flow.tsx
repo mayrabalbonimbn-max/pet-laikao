@@ -167,7 +167,7 @@ export function AgendaBookingFlow({
         );
 
         if (!response.ok) {
-          throw new Error("Nao foi possivel carregar a disponibilidade.");
+          throw new Error("Não foi possível carregar a disponibilidade.");
         }
 
         const data = (await response.json()) as AgendaAvailabilityResponse;
@@ -290,7 +290,7 @@ export function AgendaBookingFlow({
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Nao foi possivel gerar a cobranca.");
+        throw new Error(data.message ?? "Não foi possível gerar a cobrança.");
       }
 
       if (data.appointment) {
@@ -326,11 +326,11 @@ export function AgendaBookingFlow({
 
       toast.success(
         kind === "initial"
-          ? "Cobranca criada para o agendamento."
-          : "Cobranca do saldo gerada com sucesso."
+          ? "Cobrança criada para o agendamento."
+          : "Cobrança do saldo gerada com sucesso."
       );
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Falha ao gerar cobranca.";
+      const message = error instanceof Error ? error.message : "Falha ao gerar cobrança.";
       setPaymentError(message);
       toast.error(message);
     } finally {
@@ -362,7 +362,7 @@ export function AgendaBookingFlow({
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Nao foi possivel atualizar o status do pagamento.");
+        throw new Error(data.message ?? "Não foi possível atualizar o status do pagamento.");
       }
 
       const nextStatusView = data as PaymentStatusView;
@@ -377,9 +377,9 @@ export function AgendaBookingFlow({
       if (nextStatusView.payment.status === "paid") {
         toast.success("Pagamento conciliado com sucesso.");
       } else if (nextStatusView.payment.status === "failed") {
-        toast.error("O gateway retornou falha para esta cobranca.");
+        toast.error("O gateway retornou falha para esta cobrança.");
       } else if (nextStatusView.payment.status === "expired") {
-        toast.error("A cobranca expirou antes da confirmacao.");
+        toast.error("A cobrança expirou antes da confirmação.");
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : "Falha ao consultar o status.";
@@ -392,7 +392,7 @@ export function AgendaBookingFlow({
 
   async function createHold() {
     if (!selectedService || !selectedStartAt) {
-      toast.error("Selecione servico, tutor, pet, data e horario antes de continuar.");
+      toast.error("Selecione serviço, tutor, pet, data e horário antes de continuar.");
       return;
     }
 
@@ -446,7 +446,7 @@ export function AgendaBookingFlow({
     const data = await response.json();
 
     if (!response.ok) {
-      toast.error(data.message ?? "Nao foi possivel preparar a reserva.");
+      toast.error(data.message ?? "Não foi possível preparar a reserva.");
       return;
     }
 
@@ -454,7 +454,7 @@ export function AgendaBookingFlow({
     setPaymentStatusView(null);
     setPaymentError(null);
     await refreshAvailability();
-    toast.success("Hold do slot criado. Agora o fluxo esta aguardando pagamento.");
+    toast.success("Hold do slot criado. Agora o fluxo está aguardando pagamento.");
     await createPaymentIntentForAppointment({
       appointmentId: data.id,
       kind: "initial"
@@ -470,7 +470,7 @@ export function AgendaBookingFlow({
 
   function openCheckout() {
     if (!currentPaymentIntent?.checkoutUrl) {
-      toast.error("A cobranca ainda nao retornou um checkout utilizavel.");
+      toast.error("A cobrança ainda não retornou um checkout utilizável.");
       return;
     }
 
@@ -526,7 +526,7 @@ export function AgendaBookingFlow({
             </div>
 
             {loadError ? (
-              <ErrorState title="Disponibilidade indisponivel" description={loadError} />
+              <ErrorState title="Disponibilidade indisponível" description={loadError} />
             ) : (
               <>
                 <AvailabilityCalendar
@@ -544,7 +544,7 @@ export function AgendaBookingFlow({
                 ) : (
                   <EmptyState
                     title="Sem disponibilidade para esse dia"
-                    description="Nenhum slot livre para o recorte selecionado. Escolha outra data ou altere a visao do calendario."
+                    description="Nenhum slot livre para o recorte selecionado. Escolha outra data ou altere a visão do calendário."
                   />
                 )}
               </>
@@ -592,7 +592,7 @@ export function AgendaBookingFlow({
 
           {!appointmentHold ? (
             <Button fullWidth size="lg" onClick={() => void createHold()} disabled={isPending || !selectedStartAt}>
-              Preparar reserva e gerar cobranca
+              Preparar reserva e gerar cobrança
             </Button>
           ) : (
             <AppointmentConfirmationPanel

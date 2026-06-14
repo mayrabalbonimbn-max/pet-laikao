@@ -78,7 +78,7 @@ export default function AdminPromotionsPage() {
     const data = await response.json();
     setLoading(false);
     if (!response.ok) {
-      setMessage(data.message ?? "Falha ao carregar promocoes.");
+      setMessage(data.message ?? "Falha ao carregar promoções.");
       return;
     }
     setRows(data);
@@ -149,7 +149,7 @@ export default function AdminPromotionsPage() {
       return;
     }
 
-    setMessage("Promocao salva com sucesso.");
+    setMessage("Promoção salva com sucesso.");
     setForm(emptyForm);
     await loadRows();
   }
@@ -352,7 +352,7 @@ export default function AdminPromotionsPage() {
           </div>
 
           <label className="flex items-center gap-2 text-sm font-medium text-ink-900"><input type="checkbox" checked={form.highlightedOnHome} onChange={(e) => setForm((f) => ({ ...f, highlightedOnHome: e.target.checked }))} /> Destacar na home</label>
-          <label className="flex items-center gap-2 text-sm font-medium text-ink-900"><input type="checkbox" checked={form.active} onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))} /> Promocao ativa</label>
+          <label className="flex items-center gap-2 text-sm font-medium text-ink-900"><input type="checkbox" checked={form.active} onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))} /> Promoção ativa</label>
 
           {message ? <p className="text-sm text-brand-700">{message}</p> : null}
           <button disabled={saving || uploading} className="w-full rounded-xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white">{saving ? "Salvando..." : "Salvar promoção"}</button>

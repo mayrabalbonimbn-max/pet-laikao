@@ -3,7 +3,7 @@ import { BadgePercent, HeartHandshake, ShoppingBag, Truck } from "lucide-react";
 const items = [
   {
     title: "Atendimento com carinho",
-    description: "Atendimento com carinho e atencao de verdade.",
+    description: "Atendimento com carinho e atenção de verdade.",
     icon: HeartHandshake,
     accent: "bg-brand-100 text-brand-700 border-brand-200"
   },
@@ -20,8 +20,8 @@ const items = [
     accent: "bg-[var(--magenta-100)] text-[var(--magenta-600)] border-[var(--magenta-300)]"
   },
   {
-    title: "Cuidado e confianca",
-    description: "Cuidado, confianca e carinho em cada atendimento.",
+    title: "Cuidado e confiança",
+    description: "Cuidado, confiança e carinho em cada atendimento.",
     icon: BadgePercent,
     accent: "bg-white text-brand-700 border-brand-200"
   }
@@ -33,7 +33,7 @@ export function TrustBlock() {
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-2">
           <p className="promo-badge">Diferenciais</p>
-          <h2 className="section-title text-brand-900">Por que escolher o Laikao?</h2>
+          <h2 className="section-title text-brand-900">Por que escolher o Laikão?</h2>
         </div>
       </div>
       <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">

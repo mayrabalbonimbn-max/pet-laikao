@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     await upsertAdminServiceAction(body);
     return NextResponse.json({ ok: true });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Falha ao salvar servico.";
+    const message = error instanceof Error ? error.message : "Falha ao salvar serviço.";
     return NextResponse.json({ message }, { status: 400 });
   }
 }

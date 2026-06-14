@@ -70,7 +70,7 @@ export default async function AdminAgendaPage({
     {
       label: "Itens na janela",
       value: String(items.length),
-      helper: "Agendamentos publicos, eventos manuais e bloqueios.",
+      helper: "Agendamentos públicos, eventos manuais e bloqueios.",
       tone: "neutral" as const
     },
     {
@@ -82,7 +82,7 @@ export default async function AdminAgendaPage({
     {
       label: "Compromissos pessoais",
       value: String(items.filter((item: UnifiedCalendarItem) => item.category === "personal").length),
-      helper: "Visiveis junto da operacao para evitar conflito real.",
+      helper: "Visíveis junto da operação para evitar conflito real.",
       tone: "neutral" as const
     }
   ];

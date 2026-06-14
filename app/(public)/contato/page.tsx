@@ -38,7 +38,7 @@ export default function ContactPage() {
         }
         title={
           <>
-            Vem falar com a <span className="rosa">Laikao.</span>
+            Vem falar com a <span className="rosa">Laikão.</span>
           </>
         }
         description="Estamos pertinho, na Vila Nova Cachoeirinha. Chame no WhatsApp, abra a rota ou siga a gente no Instagram."
@@ -48,7 +48,7 @@ export default function ContactPage() {
               {Zap} Falar no WhatsApp
             </a>
             <Link className="btn btn--rosa" href={publicRoutes.schedule}>
-              Agendar horario
+              Agendar horário
             </Link>
           </>
         }
@@ -64,7 +64,7 @@ export default function ContactPage() {
                 </svg>
               </div>
               <h3>WhatsApp</h3>
-              <p>Resposta rapida pra agendar ou tirar duvida.</p>
+              <p>Resposta rápida pra agendar ou tirar dúvida.</p>
               <a className="link" href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer">
                 {siteConfig.whatsappNumber} {Arrow}
               </a>
@@ -79,7 +79,7 @@ export default function ContactPage() {
                 </svg>
               </div>
               <h3>Instagram</h3>
-              <p>Novidades, promocoes e os pets mais fofos do dia.</p>
+              <p>Novidades, promoções e os pets mais fofos do dia.</p>
               <a className="link" href={siteConfig.instagramUrl} target="_blank" rel="noreferrer">
                 {siteConfig.instagramHandle} {Arrow}
               </a>
@@ -92,7 +92,7 @@ export default function ContactPage() {
                   <circle cx="12" cy="10" r="2.5" />
                 </svg>
               </div>
-              <h3>Endereco</h3>
+              <h3>Endereço</h3>
               <p>{siteConfig.addressLine}, {siteConfig.addressNeighborhood}.</p>
               <a className="link" href={siteConfig.mapUrl} target="_blank" rel="noreferrer">
                 Abrir no mapa {Arrow}
@@ -106,8 +106,8 @@ export default function ContactPage() {
                   <path d="M12 7v5l3 2" />
                 </svg>
               </div>
-              <h3>Horario</h3>
-              <p>Segunda a sabado, das 8h as 19h. iFood ate meia-noite.</p>
+              <h3>Horário</h3>
+              <p>Segunda a sábado, das 8h às 19h. iFood até meia-noite.</p>
               <a className="link" href={siteConfig.quickLinks.ifood.href} target="_blank" rel="noreferrer">
                 Pedir no iFood {Arrow}
               </a>
@@ -116,7 +116,7 @@ export default function ContactPage() {
 
           <div className="mapa">
             <iframe
-              title="Mapa da Pet Shop Laikao"
+              title="Mapa da Pet Shop Laikão"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               src="https://www.google.com/maps?q=Rua+Franklin+do+Amaral+271,+Vila+Nova+Cachoeirinha,+Sao+Paulo,+SP&output=embed"
@@ -124,8 +124,8 @@ export default function ContactPage() {
           </div>
 
           <p className="lgpd">
-            Ao falar com a gente, voce concorda com o tratamento das informacoes para atendimento, agendamento, compra e
-            suporte, conforme nossa <Link href={publicRoutes.privacy}>Politica de Privacidade</Link>.
+            Ao falar com a gente, você concorda com o tratamento das informações para atendimento, agendamento, compra e
+            suporte, conforme nossa <Link href={publicRoutes.privacy}>Política de Privacidade</Link>.
           </p>
         </div>
       </section>
