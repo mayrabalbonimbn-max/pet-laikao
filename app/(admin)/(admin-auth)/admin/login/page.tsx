@@ -29,7 +29,7 @@ export default function AdminLoginPage() {
     setLoading(false);
 
     if (!response.ok) {
-      setError("Nao foi possivel entrar. Verifique e-mail e senha e tente novamente.");
+      setError("Não foi possível entrar. Verifique e-mail e senha e tente novamente.");
       return;
     }
 
@@ -53,7 +53,7 @@ export default function AdminLoginPage() {
           <div className="relative flex items-center gap-4">
             <Image
               src="/brand/logo-laikao-white.jpeg"
-              alt="Pet Shop Laikao"
+              alt="Pet Shop Laikão"
               width={64}
               height={64}
               className="h-16 w-16 rounded-2xl object-cover ring-1 ring-white/20"
@@ -61,7 +61,7 @@ export default function AdminLoginPage() {
             />
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-200">
-                Pet Shop Laikao
+                Pet Shop Laikão
               </p>
               <h1 className="mt-1 font-heading text-2xl font-semibold text-white">
                 Admin comercial
@@ -72,16 +72,16 @@ export default function AdminLoginPage() {
           <div className="relative max-w-2xl space-y-7">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.14] bg-white/[0.08] px-4 py-2 text-sm font-semibold text-brand-100">
               <ShieldCheck className="h-4 w-4" />
-              Acesso protegido para a operacao
+              Acesso protegido para a operação
             </div>
 
             <div className="space-y-4">
               <p className="font-heading text-5xl font-semibold leading-tight text-white">
-                Painel sobrio para controlar agenda, loja e pagamentos.
+                Painel sóbrio para controlar agenda, loja e pagamentos.
               </p>
               <p className="max-w-xl text-base leading-7 text-white/[0.68]">
-                Uma entrada separada do dashboard, feita para transmitir confianca antes de abrir a
-                rotina de agendamentos, pedidos, estoque, promocoes e financeiro.
+                Uma entrada separada do dashboard, feita para transmitir confiança antes de abrir a
+                rotina de agendamentos, pedidos, estoque, promoções e financeiro.
               </p>
             </div>
 
@@ -92,7 +92,7 @@ export default function AdminLoginPage() {
                   className="rounded-2xl border border-white/[0.12] bg-white/[0.08] p-4"
                 >
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/[0.44]">
-                    Modulo
+                    Módulo
                   </p>
                   <p className="mt-2 text-sm font-semibold text-white">{item}</p>
                 </div>
@@ -102,7 +102,7 @@ export default function AdminLoginPage() {
 
           <div className="relative flex items-center gap-3 text-sm text-white/[0.56]">
             <Sparkles className="h-4 w-4 text-brand-200" />
-            Estrutura preparada para evoluir para API propria sem trocar a experiencia da gestao.
+            Estrutura preparada para evoluir para API própria sem trocar a experiência da gestão.
           </div>
         </section>
 
@@ -111,7 +111,7 @@ export default function AdminLoginPage() {
             <div className="mb-8 flex items-center gap-4 lg:hidden">
               <Image
                 src="/brand/logo-laikao-white.jpeg"
-                alt="Pet Shop Laikao"
+                alt="Pet Shop Laikão"
                 width={56}
                 height={56}
                 className="h-14 w-14 rounded-2xl object-cover ring-1 ring-white/20"
@@ -119,7 +119,7 @@ export default function AdminLoginPage() {
               />
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-200">
-                  Pet Shop Laikao
+                  Pet Shop Laikão
                 </p>
                 <h1 className="font-heading text-xl font-semibold text-white">
                   Admin comercial
@@ -143,7 +143,7 @@ export default function AdminLoginPage() {
                     Entrar no painel
                   </h2>
                   <p className="mt-2 text-sm leading-6 text-stone-500">
-                    Use seu e-mail de gestao para abrir o ambiente operacional do Laikao.
+                    Use seu e-mail de gestão para abrir o ambiente operacional do Laikão.
                   </p>
                 </div>
               </div>
@@ -196,7 +196,7 @@ export default function AdminLoginPage() {
               </Button>
 
               <div className="mt-6 rounded-2xl bg-[#f7f5fb] p-4 text-xs leading-5 text-stone-500">
-                Sessao protegida por cookie httpOnly, expiracao controlada e bloqueio temporario apos tentativas
+                Sessão protegida por cookie httpOnly, expiração controlada e bloqueio temporário após tentativas
                 repetidas.
               </div>
             </form>

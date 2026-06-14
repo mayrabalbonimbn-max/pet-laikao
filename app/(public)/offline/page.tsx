@@ -11,13 +11,13 @@ export default function OfflinePage() {
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand-100 text-brand-700">
           <WifiOff className="h-7 w-7" />
         </div>
-        <h1 className="mt-5 font-heading text-3xl font-semibold text-ink-900">Voce esta offline</h1>
+        <h1 className="mt-5 font-heading text-3xl font-semibold text-ink-900">Você está offline</h1>
         <p className="mt-3 text-sm leading-6 text-stone-600">
-          Algumas paginas publicas ficam disponiveis em cache, mas agenda, carrinho, checkout e areas de conta precisam de internet.
+          Algumas páginas públicas ficam disponíveis em cache, mas agenda, carrinho, checkout e áreas de conta precisam de internet.
         </p>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Link href={publicRoutes.home}>
-            <Button size="lg">Voltar para inicio</Button>
+            <Button size="lg">Voltar para início</Button>
           </Link>
           <a href={publicRoutes.offline} className="inline-flex h-11 items-center justify-center rounded-[var(--radius-md)] border border-brand-200 px-5 text-sm font-semibold text-ink-900 hover:bg-brand-50">
             Tentar novamente

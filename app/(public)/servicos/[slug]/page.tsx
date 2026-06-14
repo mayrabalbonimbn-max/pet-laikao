@@ -46,7 +46,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
     notFound();
   }
 
-  const especies = (service.petSpecies ?? "all") === "all" ? "Caes e gatos" : service.petSpecies;
+  const especies = (service.petSpecies ?? "all") === "all" ? "Cães e gatos" : service.petSpecies;
   const meta = getServiceMeta(service.slug);
   const isBanho = service.slug === BATH_SERVICE_SLUG;
   const isComercial = service.slug === COMMERCIAL_TOSA_SLUG;
@@ -56,7 +56,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
       <PageHead
         eyebrow={
           <>
-            <Paw className="paw" /> Estetica animal
+            <Paw className="paw" /> Estética animal
           </>
         }
         title={service.name}
@@ -64,10 +64,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         actions={
           <>
             <Link className="btn btn--rosa" href={publicRoutes.schedule}>
-              Agendar este servico
+              Agendar este serviço
             </Link>
             <a className="btn btn--zap" href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer">
-              {Zap} Tirar duvidas
+              {Zap} Tirar dúvidas
             </a>
           </>
         }
@@ -76,7 +76,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
       <section className="sec" style={{ paddingTop: 24 }}>
         <div className="lk-wrap">
           <article className="lk-card" style={{ maxWidth: 720 }}>
-            <h3>O que voce reserva</h3>
+            <h3>O que você reserva</h3>
             <p>Banho, tosa e o acabamento certinho pro seu pet sair lindo, cheiroso e bem cuidado.</p>
             <div className="meta">
               <div>
@@ -85,7 +85,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               </div>
               <div>
                 <span className="v">{formatServiceDuration(service.durationMinutes)}</span>
-                <span className="k">Duracao</span>
+                <span className="k">Duração</span>
               </div>
               <div>
                 <span className="v">{especies}</span>
@@ -102,7 +102,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                 Agendar agora
               </Link>
               <Link className="btn btn--linha" href={publicRoutes.services}>
-                Ver outros servicos
+                Ver outros serviços
               </Link>
             </div>
           </article>
@@ -115,7 +115,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
             <article className="lk-card" style={{ maxWidth: 720 }}>
               <h3>Valor do banho por porte</h3>
               <p>
-                Estes sao valores de referencia, a partir de. O preco final depende do porte, da raca e da pelagem do seu pet,
+                Estes são valores de referência, a partir de. O preço final depende do porte, da raça e da pelagem do seu pet,
                 e a gente confirma certinho no agendamento.
               </p>
               <div className="tabela-precos" style={{ marginTop: 16 }}>
@@ -138,8 +138,8 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         <section className="sec" style={{ paddingTop: 8 }}>
           <div className="lk-wrap">
             <article className="lk-card" style={{ maxWidth: 720 }}>
-              <h3>Niveis da tosa comercial</h3>
-              <p>Escolha a altura da pelagem. Cada nivel tem um valor a partir de:</p>
+              <h3>Níveis da tosa comercial</h3>
+              <p>Escolha a altura da pelagem. Cada nível tem um valor a partir de:</p>
               <div className="tabela-precos" style={{ marginTop: 16 }}>
                 {commercialTosaTiers.map((tier) => (
                   <div className="tabela-linha" key={tier.nome}>
@@ -168,7 +168,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               <h3>Antes de trazer seu pet</h3>
               <p>
                 Pet que chega com <b>pulga ou carrapato</b> precisa ser medicado na hora, pra proteger o ambiente e os outros
-                clientes. Qualquer duvida, chame a Cris no WhatsApp.
+                clientes. Qualquer dúvida, chame a Cris no WhatsApp.
               </p>
             </div>
           </div>

@@ -25,15 +25,15 @@ export default async function SchedulePage() {
           <article className="lk-card" style={{ maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
             <h2>Agendamento online chegando</h2>
             <p>
-              Estamos finalizando os horarios de banho e tosa por aqui. Por enquanto, fale com a gente no WhatsApp pra
-              marcar o horario do seu pet. E rapidinho.
+              Estamos finalizando os horários de banho e tosa por aqui. Por enquanto, fale com a gente no WhatsApp pra
+              marcar o horário do seu pet. É rapidinho.
             </p>
             <div className="card-acoes" style={{ marginTop: 22, justifyContent: "center" }}>
               <a className="btn btn--zap" href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer">
                 Agendar pelo WhatsApp
               </a>
               <Link className="btn btn--linha" href={publicRoutes.services}>
-                Ver os servicos
+                Ver os serviços
               </Link>
             </div>
           </article>

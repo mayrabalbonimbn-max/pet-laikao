@@ -2,9 +2,21 @@ import Link from "next/link";
 import type { Route } from "next";
 
 import { ProductCard } from "@/components/catalog/product-card";
+import { siteConfig } from "@/config/site";
 import { listCatalogProducts, listPublicCatalogCategories } from "@/domains/catalog/queries";
 
 export const dynamic = "force-dynamic";
+
+function Paw({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <circle cx="6" cy="9" r="2" />
+      <circle cx="12" cy="6.5" r="2.1" />
+      <circle cx="18" cy="9" r="2" />
+      <path d="M12 11.5c-2.6 0-4.7 2-4.7 4.2 0 1.5 1.2 2.3 2.7 2.3.9 0 1.4-.3 2-.3s1.1.3 2 .3c1.5 0 2.7-.8 2.7-2.3 0-2.2-2.1-4.2-4.7-4.2z" />
+    </svg>
+  );
+}
 
 type ProductSearchParams = {
   q?: string;
@@ -13,10 +25,10 @@ type ProductSearchParams = {
 };
 
 const sortOptions = [
-  { label: "Relevancia", value: "relevancia" },
-  { label: "Menor preco", value: "menor-preco" },
-  { label: "Maior preco", value: "maior-preco" },
-  { label: "Em promocao", value: "promocoes" }
+  { label: "Relevância", value: "relevancia" },
+  { label: "Menor preço", value: "menor-preco" },
+  { label: "Maior preço", value: "maior-preco" },
+  { label: "Em promoção", value: "promocoes" }
 ];
 
 function buildHref(next: ProductSearchParams): Route {
@@ -59,14 +71,15 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Pr
   const isFiltering = query.length > 0 || categorySlug.length > 0;
 
   return (
+    <>
     <section className="sec" style={{ paddingTop: 40 }}>
       <div className="lk-wrap">
         <div style={{ maxWidth: 760 }}>
-          <span className="selo sec-eyebrow">Loja Laikao</span>
+          <span className="selo sec-eyebrow">Loja Laikão</span>
           <h1 style={{ fontSize: "clamp(2rem,5.5vw,3rem)", fontWeight: 800 }}>
-            Tudo que seu pet precisa, <span style={{ color: "var(--rosa)" }}>em um lugar so.</span>
+            Tudo que seu pet precisa, <span style={{ color: "var(--rosa)" }}>em um lugar só.</span>
           </h1>
-          <p className="sec-lead">Racao, petisco, higiene, beleza, acessorio e brinquedo. Compre e retire na loja ou peca pelo iFood.</p>
+          <p className="sec-lead">Ração, petisco, higiene, beleza, acessório e brinquedo. Compre e retire na loja ou peça pelo iFood.</p>
         </div>
 
         <div className="loja" style={{ marginTop: 30 }}>
@@ -150,5 +163,62 @@ export default async function ProductsPage({ searchParams }: { searchParams?: Pr
         </div>
       </div>
     </section>
+
+    <section className="sec" style={{ paddingTop: 0 }}>
+      <div className="lk-wrap">
+        <div className="promo-destaque">
+          <div>
+            <span className="selo">
+              <Paw className="paw" /> Também no iFood
+            </span>
+            <h2>Receba em casa, no iFood até meia-noite.</h2>
+            <p>
+              Esqueceu a ração ou o petisco acabou tarde da noite? A Laikão entrega pelo iFood até meia-noite. E se preferir,
+              você compra e retira na loja, sem frete.
+            </p>
+            <div className="acoes">
+              <a className="btn btn--rosa" href={siteConfig.quickLinks.ifood.href} target="_blank" rel="noreferrer">
+                Pedir no iFood
+              </a>
+              <a className="btn btn--linha" href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer">
+                Falar no WhatsApp
+              </a>
+            </div>
+          </div>
+          <div className="photo-frame photo-frame--quadro" aria-hidden="true" style={{ boxShadow: "none", outlineColor: "rgba(255,255,255,.5)" }}>
+            <div className="ph-fallback">
+              <svg className="big-paw" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 7h13v8H3z" />
+                <path d="M16 10h3l2 3v2h-5z" />
+                <circle cx="7" cy="17" r="1.8" />
+                <circle cx="17" cy="17" r="1.8" />
+              </svg>
+              <span>Entrega ou retirada, do seu jeito</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="promo-grid">
+          <article className="promo">
+            <span className="faixinha">Vantagem fixa</span>
+            <h3>Retire na loja sem frete</h3>
+            <p>Compre pelo site ou WhatsApp e retire na Laikão, na Vila Nova Cachoeirinha, sem pagar entrega.</p>
+            <a className="btn btn--rosa promo-cta" href={siteConfig.whatsappUrl} target="_blank" rel="noreferrer">
+              Falar no WhatsApp
+            </a>
+          </article>
+
+          <article className="promo">
+            <span className="faixinha">Vantagem fixa</span>
+            <h3>Atendimento até meia-noite</h3>
+            <p>Pedidos pelo iFood com a loja aberta até tarde, pros perrengues de última hora.</p>
+            <a className="btn btn--rosa promo-cta" href={siteConfig.quickLinks.ifood.href} target="_blank" rel="noreferrer">
+              Pedir no iFood
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+    </>
   );
 }

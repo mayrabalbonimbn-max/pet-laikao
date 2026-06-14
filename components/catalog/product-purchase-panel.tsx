@@ -43,7 +43,7 @@ export function ProductPurchasePanel({ product }: { product: ProductRecord }) {
     startTransition(async () => {
       try {
         const cartKey = ensureStoredCartKey();
-        if (!cartKey) throw new Error("Nao foi possivel iniciar o carrinho neste dispositivo.");
+        if (!cartKey) throw new Error("Não foi possível iniciar o carrinho neste dispositivo.");
 
         await addCartItem({
           cartKey,
@@ -55,7 +55,7 @@ export function ProductPurchasePanel({ product }: { product: ProductRecord }) {
         setMessage("Produto adicionado ao carrinho com sucesso.");
       } catch (error) {
         setMessageTone("error");
-        setMessage(error instanceof Error ? error.message : "Nao foi possivel adicionar o produto ao carrinho.");
+        setMessage(error instanceof Error ? error.message : "Não foi possível adicionar o produto ao carrinho.");
       }
     });
   };
@@ -74,7 +74,7 @@ export function ProductPurchasePanel({ product }: { product: ProductRecord }) {
             {hasDiscount ? <p className="mt-2 text-sm font-semibold text-stone-500 line-through">{formatCurrency((selectedVariant?.compareAtCents ?? 0) / 100)}</p> : null}
             <p className="mt-1 font-heading text-4xl font-extrabold text-[var(--magenta-600)]">{priceLabel}</p>
             <p className="mt-2 text-sm font-semibold leading-6 text-stone-600">
-              {selectedVariant && selectedVariant.availableQuantity > 0 ? `${selectedVariant.availableQuantity} unidade(s) disponiveis.` : "Indisponivel para compra online agora."}
+              {selectedVariant && selectedVariant.availableQuantity > 0 ? `${selectedVariant.availableQuantity} unidade(s) disponíveis.` : "Indisponível para compra online agora."}
             </p>
             {activeVariants.length === 1 && selectedVariant ? <p className="mt-1 text-xs font-semibold text-stone-500">SKU {selectedVariant.sku}</p> : null}
           </div>

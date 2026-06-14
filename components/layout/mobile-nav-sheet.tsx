@@ -10,10 +10,10 @@ import { publicRoutes } from "@/lib/routes";
 
 const items = [
   { label: "Home", href: publicRoutes.home },
-  { label: "Servicos", href: publicRoutes.services },
+  { label: "Serviços", href: publicRoutes.services },
   { label: "Agenda", href: publicRoutes.schedule },
   { label: "Produtos", href: publicRoutes.products },
-  { label: "Promocoes", href: publicRoutes.promotions },
+  { label: "Promoções", href: publicRoutes.promotions },
   { label: "Contato", href: publicRoutes.contact },
   { label: "Carrinho", href: publicRoutes.cart }
 ];
@@ -47,7 +47,7 @@ export function MobileNavSheet() {
       <DrawerContent side="right" className="bg-[#fff9f2] p-0 text-ink-900">
         <div className="flex h-full flex-col">
           <div className="border-b-4 border-[var(--magenta-500)] bg-brand-900 px-6 py-6">
-            <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-[var(--sun-300)]">Laikao</p>
+            <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-[var(--sun-300)]">Laikão</p>
             <h2 className="mt-2 font-heading text-3xl font-extrabold leading-tight text-white">Aqui tem tudo para o seu pet</h2>
             <p className="mt-2 text-sm leading-6 text-white/85">{siteConfig.addressLine}</p>
           </div>

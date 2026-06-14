@@ -5,7 +5,7 @@ import { siteConfig } from "@/config/site";
 const channels = [
   { label: "WhatsApp", value: siteConfig.whatsappNumber, href: siteConfig.whatsappUrl, icon: MessageCircle },
   { label: "Instagram", value: siteConfig.instagramHandle, href: siteConfig.instagramUrl, icon: Instagram },
-  { label: "Localizacao", value: siteConfig.addressLine, href: siteConfig.mapUrl, icon: MapPin },
+  { label: "Localização", value: siteConfig.addressLine, href: siteConfig.mapUrl, icon: MapPin },
   { label: "iFood", value: "Pedir agora", href: siteConfig.quickLinks.ifood.href, icon: ShoppingBag }
 ] as const;
 
@@ -17,10 +17,10 @@ export function ContactBlock() {
           <div>
             <p className="promo-badge">Contato</p>
             <h2 className="mt-4 font-heading text-4xl font-extrabold leading-tight text-brand-900">
-              Fale com o Laikao sem complicar.
+              Fale com o Laikão sem complicar.
             </h2>
             <p className="mt-3 text-sm font-semibold leading-7 text-stone-600">
-              WhatsApp, endereco, Instagram e iFood em um bloco limpo, forte e sem duplicacao.
+              WhatsApp, endereço, Instagram e iFood em um bloco limpo, forte e sem duplicação.
             </p>
             <p className="mt-4 text-sm font-extrabold text-[var(--magenta-600)]">{siteConfig.hoursLabel}</p>
           </div>

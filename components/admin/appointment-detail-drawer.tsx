@@ -65,7 +65,7 @@ export function AppointmentDetailDrawer({ appointment }: { appointment: Appointm
             </div>
             <div className="rounded-[var(--radius-md)] border border-stone-100 p-4 text-sm">
               <div className="flex justify-between gap-3">
-                <span className="text-stone-500">Pago ate agora</span>
+                <span className="text-stone-500">Pago até agora</span>
                 <span className="font-semibold text-ink-900">{formatCurrency(appointment.amountPaidCents / 100)}</span>
               </div>
               <div className="mt-3 flex justify-between gap-3">

@@ -71,7 +71,7 @@ export function CookiePreferencesPanel({
         <p className="eyebrow">Preferencias</p>
         <h2 className="font-heading text-2xl font-semibold text-ink-900">Controle seus cookies</h2>
         <p className="text-sm leading-6 text-stone-600">
-          Necessarios ficam sempre ativos. Analiticos e marketing permanecem desativados ate voce permitir.
+          Necessários ficam sempre ativos. Analíticos e marketing permanecem desativados até você permitir.
         </p>
       </div>
 
@@ -114,7 +114,7 @@ export function CookiePreferencesPanel({
         <p className="text-sm text-stone-500">
           {enabledOptionalCount === 0 ? "Nenhum cookie opcional ativo." : `${enabledOptionalCount} categoria(s) opcional(is) ativa(s).`}
         </p>
-        <Button onClick={save}>Salvar preferencias</Button>
+        <Button onClick={save}>Salvar preferências</Button>
       </div>
 
       {saved ? <p className="rounded-[14px] border border-success-500/20 bg-success-500/10 px-4 py-3 text-sm font-medium text-success-500">Preferencias salvas neste navegador.</p> : null}
@@ -154,11 +154,11 @@ export function CookieBanner() {
               <div>
                 <p className="font-heading text-lg font-semibold text-white">Cookies no Laikao</p>
                 <p className="mt-1 text-sm leading-6 text-white/86">
-                  Usamos cookies necessarios para o funcionamento do site e, com sua autorizacao, cookies analiticos e de terceiros para melhorar sua experiencia.
+                  Usamos cookies necessários para o funcionamento do site e, com sua autorização, cookies analíticos e de terceiros para melhorar sua experiência.
                 </p>
               </div>
             </div>
-            <button onClick={rejectOptional} className="rounded-full p-1.5 text-white/75 hover:bg-white/12 hover:text-white" aria-label="Fechar e recusar cookies nao essenciais">
+            <button onClick={rejectOptional} className="rounded-full p-1.5 text-white/75 hover:bg-white/12 hover:text-white" aria-label="Fechar e recusar cookies não essenciais">
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -171,12 +171,12 @@ export function CookieBanner() {
         ) : (
           <div className="space-y-4 p-5">
             <p className="text-xs leading-5 text-stone-500">
-              Voce pode alterar sua escolha depois em <Link href={"/preferencias-de-cookies" as Route} className="font-semibold text-brand-700 hover:text-brand-900">Preferencias de Cookies</Link>.
+              Você pode alterar sua escolha depois em <Link href={"/preferencias-de-cookies" as Route} className="font-semibold text-brand-700 hover:text-brand-900">Preferências de Cookies</Link>.
             </p>
             <div className="grid gap-2 sm:grid-cols-3">
               <Button onClick={acceptAll} size="sm">Aceitar todos</Button>
-              <Button onClick={rejectOptional} variant="secondary" size="sm">Recusar nao essenciais</Button>
-              <Button onClick={() => setShowPreferences(true)} variant="ghost" size="sm">Configurar preferencias</Button>
+              <Button onClick={rejectOptional} variant="secondary" size="sm">Recusar não essenciais</Button>
+              <Button onClick={() => setShowPreferences(true)} variant="ghost" size="sm">Configurar preferências</Button>
             </div>
           </div>
         )}

@@ -36,7 +36,7 @@ async function uploadImagesFromForm(formData: FormData, altFallback: string, sta
       imagePath: stored.imagePath,
       imageThumbUrl: stored.imageThumbUrl,
       imageThumbPath: stored.imageThumbPath,
-      alt: altFallback || "Produto Laikao",
+      alt: altFallback || "Produto Laikão",
       mimeType: stored.mimeType,
       sizeBytes: stored.sizeBytes,
       width: stored.width,
@@ -129,7 +129,7 @@ async function saveProduct(formData: FormData) {
       imageThumbPath: String(formData.get(`imageThumbPath:${id}`) ?? "")
     }));
 
-  const uploadedImages = await uploadImagesFromForm(formData, String(formData.get("name") ?? "Produto Laikao"), existingImages.length);
+  const uploadedImages = await uploadImagesFromForm(formData, String(formData.get("name") ?? "Produto Laikão"), existingImages.length);
   if (existingImages.length === 0 && uploadedImages.length > 0) {
     uploadedImages[0].isPrimary = true;
   }

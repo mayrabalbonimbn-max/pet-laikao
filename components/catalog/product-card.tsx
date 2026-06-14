@@ -44,7 +44,7 @@ export function ProductCard({ product }: { product: ProductPreview; compact?: bo
         <div className="add">
           {isOut ? (
             <span className="btn" aria-disabled="true">
-              Indisponivel
+              Indisponível
             </span>
           ) : (
             <Link className="btn btn--rosa" href={href}>

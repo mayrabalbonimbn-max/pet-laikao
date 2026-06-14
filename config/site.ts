@@ -3,9 +3,9 @@ import { publicRoutes } from "@/lib/routes";
 export type ShortcutStatus = "active" | "placeholder";
 
 export const siteConfig = {
-  name: "Pet Shop Laikao",
+  name: "Pet Shop Laikão",
   description:
-    "Plataforma premium de servicos, agenda e loja para um pet shop com presenca forte, operacao profissional e experiencia mobile excelente.",
+    "Plataforma premium de serviços, agenda e loja para um pet shop com presença forte, operação profissional e experiência mobile excelente.",
   whatsappNumber: "+55 11 98051-2871",
   phoneNumber: "+55 11 98051-2871",
   email: "contato@petlaikao.com.br",
@@ -13,7 +13,7 @@ export const siteConfig = {
     contact: {
       label: "Contato",
       email: "contato@petlaikao.com.br",
-      description: "Atendimento geral, duvidas e informacoes."
+      description: "Atendimento geral, dúvidas e informações."
     },
     support: {
       label: "Suporte",
@@ -21,7 +21,7 @@ export const siteConfig = {
       description: "Ajuda com pedidos, agenda e uso do site."
     },
     billing: {
-      label: "Cobranca",
+      label: "Cobrança",
       email: "cobranca@petlaikao.com.br",
       description: "Pagamentos, comprovantes, reembolsos e financeiro."
     },
@@ -37,14 +37,14 @@ export const siteConfig = {
   mapUrl:
     "https://www.google.com/maps/search/?api=1&query=Rua+Franklin+do+Amaral+271,+Vila+Nova+Cachoeirinha,+Sao+Paulo,+SP",
   addressLine: "Rua Franklin do Amaral, 271",
-  addressNeighborhood: "Vila Nova Cachoeirinha, Sao Paulo - SP",
-  address: "Rua Franklin do Amaral, 271, Vila Nova Cachoeirinha, Sao Paulo - SP",
-  hoursLabel: "Seg a sab, 8h as 19h",
+  addressNeighborhood: "Vila Nova Cachoeirinha, São Paulo - SP",
+  address: "Rua Franklin do Amaral, 271, Vila Nova Cachoeirinha, São Paulo - SP",
+  hoursLabel: "Seg a sáb, 8h às 19h",
   quickLinks: {
     whatsapp: {
       label: "WhatsApp",
       href: "https://wa.me/5511980512871",
-      description: "Atendimento rapido e confirmacoes.",
+      description: "Atendimento rápido e confirmações.",
       status: "active" as ShortcutStatus
     },
     instagram: {
@@ -63,13 +63,13 @@ export const siteConfig = {
     schedule: {
       label: "Agendar",
       href: publicRoutes.schedule,
-      description: "Fluxo online do proprio site, pronto para trocar depois.",
+      description: "Fluxo online do próprio site, pronto para trocar depois.",
       status: "active" as ShortcutStatus
     },
     ifood: {
       label: "iFood",
       href: "https://www.ifood.com.br/delivery/sao-paulo-sp/pet-shop-laikao-vila-nova-cachoeirinha/d7c31af8-0c1f-4649-b99b-0aaf09ce7adf?UTM_Medium=share",
-      description: "Pedir no iFood com entrega rapida.",
+      description: "Pedir no iFood com entrega rápida.",
       status: "active" as ShortcutStatus
     }
   }

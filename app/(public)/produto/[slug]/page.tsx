@@ -83,10 +83,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
       <section className="mt-7 grid gap-4 lg:grid-cols-4">
         {[
-          { icon: ShieldCheck, title: "Compra tranquila", text: "Voce confirma a disponibilidade com a gente antes de fechar." },
-          { icon: Truck, title: "Entrega ou retirada", text: "Receba pelo iFood ate meia-noite ou retire na loja." },
+          { icon: ShieldCheck, title: "Compra tranquila", text: "Você confirma a disponibilidade com a gente antes de fechar." },
+          { icon: Truck, title: "Entrega ou retirada", text: "Receba pelo iFood até meia-noite ou retire na loja." },
           { icon: PackageCheck, title: "Sempre fresquinho", text: "Produtos certos pro dia a dia do seu pet." },
-          { icon: HeartHandshake, title: "Atendida pela Cris", text: "A gente ajuda voce a escolher o item certo." }
+          { icon: HeartHandshake, title: "Atendida pela Cris", text: "A gente ajuda você a escolher o item certo." }
         ].map((item) => (
           <article key={item.title} className="rounded-[22px] bg-white p-5 shadow-[var(--shadow-soft)] ring-1 ring-brand-100">
             <item.icon className="h-5 w-5 text-[var(--magenta-600)]" />

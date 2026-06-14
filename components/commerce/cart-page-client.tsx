@@ -39,7 +39,7 @@ export function CartPageClient() {
         setCouponCode(nextCart.couponCode);
       }
     } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : "Nao foi possivel carregar o carrinho.");
+      setError(nextError instanceof Error ? nextError.message : "Não foi possível carregar o carrinho.");
     } finally {
       setIsLoading(false);
     }
@@ -54,7 +54,7 @@ export function CartPageClient() {
       return;
     }
 
-    setError("Nao foi possivel iniciar o carrinho neste dispositivo.");
+    setError("Não foi possível iniciar o carrinho neste dispositivo.");
     setIsLoading(false);
   }, []);
 
@@ -101,7 +101,7 @@ export function CartPageClient() {
       setCart(nextCart);
     } catch (nextError) {
       setCouponTone("error");
-      setCouponFeedback(nextError instanceof Error ? nextError.message : "Nao foi possivel atualizar a quantidade.");
+      setCouponFeedback(nextError instanceof Error ? nextError.message : "Não foi possível atualizar a quantidade.");
     } finally {
       setPendingItemId(null);
     }
@@ -118,7 +118,7 @@ export function CartPageClient() {
       setCart(nextCart);
     } catch (nextError) {
       setCouponTone("error");
-      setCouponFeedback(nextError instanceof Error ? nextError.message : "Nao foi possivel remover o item.");
+      setCouponFeedback(nextError instanceof Error ? nextError.message : "Não foi possível remover o item.");
     } finally {
       setPendingItemId(null);
     }
@@ -139,7 +139,7 @@ export function CartPageClient() {
         setCouponFeedback("Cupom aplicado com sucesso.");
       } catch (nextError) {
         setCouponTone("error");
-        setCouponFeedback(nextError instanceof Error ? nextError.message : "Nao foi possivel aplicar o cupom.");
+        setCouponFeedback(nextError instanceof Error ? nextError.message : "Não foi possível aplicar o cupom.");
       }
     });
   };
@@ -160,7 +160,7 @@ export function CartPageClient() {
   if (error) {
     return (
       <div className="mt-8">
-        <ErrorState title="Nao foi possivel carregar o carrinho" description={error} />
+        <ErrorState title="Não foi possível carregar o carrinho" description={error} />
       </div>
     );
   }
@@ -256,7 +256,7 @@ export function CartPageClient() {
               pending={pendingItemId === item.id}
               status={
                 item.availableQuantity < item.quantity
-                  ? `A quantidade escolhida passou do estoque disponivel. Restam ${item.availableQuantity} unidade(s).`
+                  ? `A quantidade escolhida passou do estoque disponível. Restam ${item.availableQuantity} unidade(s).`
                   : item.priceChanged
                     ? "O valor deste item foi atualizado e o carrinho ja reflete o preco mais recente."
                     : undefined

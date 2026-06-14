@@ -10,7 +10,7 @@ export async function PATCH(request: NextRequest, context: { params: Promise<Rec
   try {
     const id = (await context.params).id;
     if (!id) {
-      return NextResponse.json({ message: "ID da promocao invalido." }, { status: 400 });
+      return NextResponse.json({ message: "ID da promoção inválido." }, { status: 400 });
     }
     const body = (await request.json()) as { active?: boolean };
     const promotion = await togglePromotionActiveAction(id, Boolean(body.active));

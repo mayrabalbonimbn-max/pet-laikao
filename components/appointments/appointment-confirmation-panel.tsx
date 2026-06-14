@@ -117,14 +117,14 @@ export function AppointmentConfirmationPanel({
           <div className="mt-3 space-y-1 text-xs text-stone-500">
             <p>Pagamento: {paymentIntent.id}</p>
             {paymentIntent.expiresAt ? <p>Expira em {formatExpiry(paymentIntent.expiresAt)}</p> : null}
-            {paymentIntent.providerPaymentId ? <p>Transacao do pagamento: {paymentIntent.providerPaymentId}</p> : null}
-            {paymentIntent.providerCheckoutId ? <p>Referencia da cobranca: {paymentIntent.providerCheckoutId}</p> : null}
+            {paymentIntent.providerPaymentId ? <p>Transação do pagamento: {paymentIntent.providerPaymentId}</p> : null}
+            {paymentIntent.providerCheckoutId ? <p>Referência da cobrança: {paymentIntent.providerCheckoutId}</p> : null}
           </div>
         </div>
       ) : null}
 
       {paymentError ? (
-        <InlineNotice tone="danger" title="Nao foi possivel preparar a cobranca" description={paymentError} />
+        <InlineNotice tone="danger" title="Não foi possível preparar a cobrança" description={paymentError} />
       ) : null}
 
       {isHold ? (
@@ -132,7 +132,7 @@ export function AppointmentConfirmationPanel({
           <InlineNotice
             tone="warning"
             title="Hold ativo aguardando pagamento"
-            description={`O horario esta reservado temporariamente.${countdownLabel ? ` Expira em ${countdownLabel}.` : ""}`}
+            description={`O horário está reservado temporariamente.${countdownLabel ? ` Expira em ${countdownLabel}.` : ""}`}
           />
 
           {hasPendingCheckout ? (
@@ -146,15 +146,15 @@ export function AppointmentConfirmationPanel({
             </div>
           ) : (
             <Button fullWidth onClick={onCreatePayment} disabled={isCreatingPayment}>
-              {isCreatingPayment ? "Gerando cobranca..." : "Gerar cobranca real"}
+              {isCreatingPayment ? "Gerando cobrança..." : "Gerar cobrança real"}
             </Button>
           )}
 
           {canRegenerateCheckout ? (
             <InlineNotice
               tone="warning"
-              title="A cobranca anterior nao esta mais utilizavel"
-              description="Voce pode gerar uma nova cobranca enquanto o hold continuar valido."
+              title="A cobrança anterior não está mais utilizável"
+              description="Você pode gerar uma nova cobrança enquanto o hold continuar válido."
             />
           ) : null}
         </>
@@ -170,7 +170,7 @@ export function AppointmentConfirmationPanel({
           {isBalanceIntent && hasPendingCheckout ? (
             <div className="grid gap-3 sm:grid-cols-2">
               <Button fullWidth onClick={onOpenCheckout}>
-                Abrir cobranca do saldo
+                Abrir cobrança do saldo
               </Button>
               <Button variant="secondary" fullWidth onClick={onCheckStatus} disabled={isCheckingStatus}>
                 {isCheckingStatus ? "Verificando..." : "Atualizar status do saldo"}
@@ -196,7 +196,7 @@ export function AppointmentConfirmationPanel({
           <InlineNotice
             tone="danger"
             title="Pagamento falhou e o slot foi liberado"
-            description="A tentativa ficou registrada. Para tentar novamente, reinicie a reserva e gere uma nova cobranca."
+            description="A tentativa ficou registrada. Para tentar novamente, reinicie a reserva e gere uma nova cobrança."
           />
           <Button fullWidth onClick={onRetry}>
             Recomeçar reserva
@@ -208,8 +208,8 @@ export function AppointmentConfirmationPanel({
         <>
           <InlineNotice
             tone="warning"
-            title="O prazo da cobranca ou do hold expirou"
-            description="O horario foi liberado automaticamente. Escolha outro slot para criar um novo hold."
+            title="O prazo da cobrança ou do hold expirou"
+            description="O horário foi liberado automaticamente. Escolha outro slot para criar um novo hold."
           />
           <Button fullWidth onClick={onRetry}>
             Recomeçar reserva

@@ -21,15 +21,15 @@ export function HeroBanner() {
       <div className="lk-wrap hero-grid">
         <div>
           <span className="selo">
-            <Paw className="paw" /> Estetica animal &middot; Zona Norte SP
+            <Paw className="paw" /> Estética animal &middot; Zona Norte SP
           </span>
           <h1>
             O seu pet bem cuidado, do <span className="rosa">banho</span> ao petisco.
           </h1>
-          <p className="tag">Paixao que une, amor que cuida.</p>
+          <p className="tag">Paixão que une, amor que cuida.</p>
           <p className="sub">
-            A Cris e a equipe da Laikao dao banho, tosa e atencao de verdade pro seu bicho, com loja completa, retirada e iFood
-            ate meia-noite.
+            A Cris e a equipe da Laikão dão banho, tosa e atenção de verdade pro seu bicho, com loja completa, retirada e iFood
+            até meia-noite.
           </p>
           <div className="hero-acoes">
             <Link className="btn btn--rosa" href={publicRoutes.schedule}>
@@ -55,7 +55,7 @@ export function HeroBanner() {
                 <circle cx="12" cy="12" r="9" />
                 <path d="M12 7v5l3 2" />
               </svg>
-              iFood ate meia-noite
+              iFood até meia-noite
             </span>
             <span className="chip">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

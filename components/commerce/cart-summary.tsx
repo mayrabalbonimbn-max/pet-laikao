@@ -122,7 +122,7 @@ export function CartSummary({
       {actionHref && !onAction ? <Link href={actionHref}>{actionButton}</Link> : actionButton}
 
       <p className="mt-3 text-xs leading-5 text-stone-500">
-        Valores, disponibilidade e beneficios precisam continuar claros ate o ultimo passo para o cliente fechar com confianca.
+        Valores, disponibilidade e benefícios precisam continuar claros até o último passo para o cliente fechar com confiança.
       </p>
 
       <div className="mt-5 xl:hidden">

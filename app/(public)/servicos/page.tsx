@@ -56,7 +56,7 @@ export default async function ServicesPage() {
           </div>
           <div>
             <span className="v">{formatServiceDuration(service.durationMinutes)}</span>
-            <span className="k">Duracao</span>
+            <span className="k">Duração</span>
           </div>
         </div>
         <div className="card-acoes">
@@ -76,7 +76,7 @@ export default async function ServicesPage() {
       <PageHead
         eyebrow={
           <>
-            <Paw className="paw" /> Estetica animal
+            <Paw className="paw" /> Estética animal
           </>
         }
         title={
@@ -84,7 +84,7 @@ export default async function ServicesPage() {
             Cuidado, beleza e <span className="rosa">carinho</span> pro seu pet.
           </>
         }
-        description="Escolha o servico, veja o preco e o tempo, e reserve o horario em poucos toques. Sem fila, sem confusao."
+        description="Escolha o serviço, veja o preço e o tempo, e reserve o horário em poucos toques. Sem fila, sem confusão."
         actions={
           <>
             <Link className="btn btn--rosa" href={publicRoutes.schedule}>
@@ -120,13 +120,13 @@ export default async function ServicesPage() {
           )}
 
           <div style={{ marginTop: 54 }}>
-            <span className="selo sec-eyebrow">Tambem fazemos</span>
-            <h2 style={{ fontSize: "clamp(1.6rem,4.5vw,2.3rem)", fontWeight: 800 }}>Outros cuidados no balcao da Laikao</h2>
+            <span className="selo sec-eyebrow">Também fazemos</span>
+            <h2 style={{ fontSize: "clamp(1.6rem,4.5vw,2.3rem)", fontWeight: 800 }}>Outros cuidados no balcão da Laikão</h2>
             <div className="inclui">
-              <span className="pill">{Check} Hidratacao</span>
-              <span className="pill">{Check} Escovacao</span>
+              <span className="pill">{Check} Hidratação</span>
+              <span className="pill">{Check} Escovação</span>
               <span className="pill">{Check} Corte de unhas</span>
-              <span className="pill">{Check} Caes e gatos</span>
+              <span className="pill">{Check} Cães e gatos</span>
             </div>
           </div>
         </div>
@@ -145,7 +145,7 @@ export default async function ServicesPage() {
               <h3>Antes de trazer seu pet</h3>
               <p>
                 Pra proteger todos os bichinhos que passam por aqui, pet que chega com <b>pulga ou carrapato</b> precisa ser
-                medicado na hora, evitando que passe pro ambiente e pros outros clientes. Qualquer duvida, chame a gente no
+                medicado na hora, evitando que passe pro ambiente e pros outros clientes. Qualquer dúvida, chame a gente no
                 WhatsApp.
               </p>
             </div>
@@ -156,8 +156,8 @@ export default async function ServicesPage() {
       <section className="sec" style={{ paddingTop: 0 }}>
         <div className="lk-wrap">
           <div className="cta-band">
-            <h2>Reserve o horario do seu pet</h2>
-            <p>Escolha o servico, veja os horarios livres e confirme. Rapidinho.</p>
+            <h2>Reserve o horário do seu pet</h2>
+            <p>Escolha o serviço, veja os horários livres e confirme. Rapidinho.</p>
             <div className="acoes">
               <Link className="btn btn--linha" href={publicRoutes.schedule}>
                 Ir para a agenda
