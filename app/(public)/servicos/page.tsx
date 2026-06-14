@@ -2,8 +2,9 @@ import Link from "next/link";
 
 import { PageHead } from "@/components/marketing/page-head";
 import { siteConfig } from "@/config/site";
+import { getServiceMeta } from "@/config/services-content";
 import { listPublicServices } from "@/domains/appointments/queries";
-import { formatCurrency } from "@/lib/formatters";
+import { formatCurrency, formatServiceDuration } from "@/lib/formatters";
 import { publicRoutes } from "@/lib/routes";
 
 function Paw({ className }: { className?: string }) {
@@ -38,6 +39,37 @@ const Zap = (
 
 export default async function ServicesPage() {
   const services = await listPublicServices();
+  const banho = services.filter((service) => getServiceMeta(service.slug).category === "Banho");
+  const tosas = services.filter((service) => getServiceMeta(service.slug).category === "Tosa");
+
+  const renderCard = (service: (typeof services)[number]) => {
+    const meta = getServiceMeta(service.slug);
+    return (
+      <article key={service.slug} className="lk-card">
+        <div className="ico">{ScissorsBath}</div>
+        <h3>{service.name}</h3>
+        <p>{service.description}</p>
+        <div className="meta">
+          <div>
+            <span className="v">{formatCurrency(service.priceCents / 100)}</span>
+            <span className="k">{meta.priceFrom ? "A partir de" : "Valor"}</span>
+          </div>
+          <div>
+            <span className="v">{formatServiceDuration(service.durationMinutes)}</span>
+            <span className="k">Duracao</span>
+          </div>
+        </div>
+        <div className="card-acoes">
+          <Link className="btn btn--rosa" href={publicRoutes.schedule}>
+            Agendar
+          </Link>
+          <Link className="btn btn--linha" href={`/servicos/${service.slug}`}>
+            Ver detalhes
+          </Link>
+        </div>
+      </article>
+    );
+  };
 
   return (
     <>
@@ -67,33 +99,25 @@ export default async function ServicesPage() {
 
       <section className="sec" style={{ paddingTop: 24 }}>
         <div className="lk-wrap">
-          <div className="cards" style={{ marginTop: 0 }}>
-            {services.map((service) => (
-              <article key={service.slug} className="lk-card">
-                <div className="ico">{ScissorsBath}</div>
-                <h3>{service.name}</h3>
-                <p>{service.description}</p>
-                <div className="meta">
-                  <div>
-                    <span className="v">{formatCurrency(service.priceCents / 100)}</span>
-                    <span className="k">Valor</span>
-                  </div>
-                  <div>
-                    <span className="v">{service.durationMinutes} min</span>
-                    <span className="k">Duracao</span>
-                  </div>
-                </div>
-                <div className="card-acoes">
-                  <Link className="btn btn--rosa" href={publicRoutes.schedule}>
-                    Agendar
-                  </Link>
-                  <Link className="btn btn--linha" href={`/servicos/${service.slug}`}>
-                    Ver detalhes
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
+          {banho.length > 0 && (
+            <>
+              <span className="selo sec-eyebrow">Banho</span>
+              <h2 style={{ fontSize: "clamp(1.6rem,4.5vw,2.3rem)", fontWeight: 800 }}>Banho do jeitinho que o seu pet merece</h2>
+              <div className="cards" style={{ marginTop: 18 }}>
+                {banho.map(renderCard)}
+              </div>
+            </>
+          )}
+
+          {tosas.length > 0 && (
+            <div style={{ marginTop: 54 }}>
+              <span className="selo sec-eyebrow">Tosas</span>
+              <h2 style={{ fontSize: "clamp(1.6rem,4.5vw,2.3rem)", fontWeight: 800 }}>Tosas pra cada tipo de pelo e estilo</h2>
+              <div className="cards" style={{ marginTop: 18 }}>
+                {tosas.map(renderCard)}
+              </div>
+            </div>
+          )}
 
           <div style={{ marginTop: 54 }}>
             <span className="selo sec-eyebrow">Tambem fazemos</span>

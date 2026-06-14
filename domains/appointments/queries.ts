@@ -175,6 +175,12 @@ export async function getAvailabilityData({
   }
 
   function buildSlotsForDate(dateKey: string) {
+    // Sem duração confirmada não há como montar slots reais (evita horários de
+    // duração zero). O serviço fica indisponível na agenda online até definirmos.
+    if (selectedService.durationMinutes <= 0) {
+      return [] as TimeSlotOption[];
+    }
+
     const dayDate = new Date(`${dateKey}T12:00:00.000Z`);
     const weekday = dayDate.getUTCDay();
     const normalizedWeekday = weekday === 0 ? 7 : weekday;

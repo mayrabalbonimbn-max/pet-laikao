@@ -3,8 +3,16 @@ import { notFound } from "next/navigation";
 
 import { PageHead } from "@/components/marketing/page-head";
 import { siteConfig } from "@/config/site";
+import {
+  BATH_SERVICE_SLUG,
+  COMMERCIAL_TOSA_SLUG,
+  bathIncludesNote,
+  bathPriceTable,
+  commercialTosaTiers,
+  getServiceMeta
+} from "@/config/services-content";
 import { getPublicServiceDetail } from "@/domains/appointments/queries";
-import { formatCurrency } from "@/lib/formatters";
+import { formatCurrency, formatServiceDuration } from "@/lib/formatters";
 import { publicRoutes } from "@/lib/routes";
 
 function Paw({ className }: { className?: string }) {
@@ -39,6 +47,9 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   }
 
   const especies = (service.petSpecies ?? "all") === "all" ? "Caes e gatos" : service.petSpecies;
+  const meta = getServiceMeta(service.slug);
+  const isBanho = service.slug === BATH_SERVICE_SLUG;
+  const isComercial = service.slug === COMMERCIAL_TOSA_SLUG;
 
   return (
     <>
@@ -70,10 +81,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
             <div className="meta">
               <div>
                 <span className="v">{formatCurrency(service.priceCents / 100)}</span>
-                <span className="k">Valor</span>
+                <span className="k">{meta.priceFrom ? "A partir de" : "Valor"}</span>
               </div>
               <div>
-                <span className="v">{service.durationMinutes} min</span>
+                <span className="v">{formatServiceDuration(service.durationMinutes)}</span>
                 <span className="k">Duracao</span>
               </div>
               <div>
@@ -97,6 +108,52 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           </article>
         </div>
       </section>
+
+      {isBanho && (
+        <section className="sec" style={{ paddingTop: 8 }}>
+          <div className="lk-wrap">
+            <article className="lk-card" style={{ maxWidth: 720 }}>
+              <h3>Valor do banho por porte</h3>
+              <p>
+                Estes sao valores de referencia, a partir de. O preco final depende do porte, da raca e da pelagem do seu pet,
+                e a gente confirma certinho no agendamento.
+              </p>
+              <div className="tabela-precos" style={{ marginTop: 16 }}>
+                {bathPriceTable.map((linha) => (
+                  <div className="tabela-linha" key={linha.porte}>
+                    <span className="tabela-porte">{linha.porte}</span>
+                    <span className="tabela-valor">
+                      A partir de <b>{formatCurrency(linha.fromReais)}</b>
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p style={{ marginTop: 16, fontWeight: 700, color: "var(--roxo-profundo)" }}>{bathIncludesNote}</p>
+            </article>
+          </div>
+        </section>
+      )}
+
+      {isComercial && (
+        <section className="sec" style={{ paddingTop: 8 }}>
+          <div className="lk-wrap">
+            <article className="lk-card" style={{ maxWidth: 720 }}>
+              <h3>Niveis da tosa comercial</h3>
+              <p>Escolha a altura da pelagem. Cada nivel tem um valor a partir de:</p>
+              <div className="tabela-precos" style={{ marginTop: 16 }}>
+                {commercialTosaTiers.map((tier) => (
+                  <div className="tabela-linha" key={tier.nome}>
+                    <span className="tabela-porte">{tier.nome}</span>
+                    <span className="tabela-valor">
+                      A partir de <b>{formatCurrency(tier.fromReais)}</b>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </article>
+          </div>
+        </section>
+      )}
 
       <section className="sec sec--lav" style={{ paddingTop: 40 }}>
         <div className="lk-wrap">

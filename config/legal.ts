@@ -347,6 +347,29 @@ export const legalPages = [
         title: "6. Informacoes do pet",
         body:
           "O tutor deve informar dados importantes sobre o pet, como comportamento, idade, porte, condicoes de saude, alergias, gestacao, uso de medicamentos ou qualquer ponto que possa afetar o atendimento. Em caso de risco ao animal ou equipe, o servico pode ser adaptado, recusado ou reagendado."
+      },
+      {
+        title: "7. Regras de atendimento de banho e tosa",
+        items: [
+          "Atendemos apenas pets dóceis. Para a segurança da equipe e dos outros clientes, não atendemos cães agressivos ou reativos.",
+          "Pet que chega com pulga ou carrapato precisa ser medicado na hora, para não contaminar o ambiente nem os outros pets.",
+          "Todo banho inclui limpeza de ouvidos e corte de unhas.",
+          "Se o pet tem algum problema de saúde, alergia ou de pele, o tutor precisa avisar antes do atendimento.",
+          "O valor do banho e da tosa é a partir de, podendo variar conforme porte, raça e pelagem. O valor final é confirmado no agendamento."
+        ]
+      },
+      {
+        title: "8. Pacotes de banho e tosa",
+        body:
+          "Os pacotes são uma condição de recorrência (semanal ou quinzenal) com desconto. Não são um serviço avulso. Valem as regras abaixo.",
+        items: [
+          "A validade conta a partir da primeira sessão. Sessões não usadas dentro do período expiram.",
+          "A frequência combinada (semanal ou quinzenal) deve ser seguida, sem pular nem pausar as sessões.",
+          "Cancelamento ou remarcação com pelo menos 24 horas de antecedência. Faltou sem avisar, a sessão é considerada feita.",
+          "O pagamento é feito no primeiro dia de serviço, sem parcelar.",
+          "Descontos pagando tudo no primeiro dia: 10% no Pix ou dinheiro, 5% no crédito ou débito.",
+          "O pacote não tem estorno e não pode ser transferido para outra pessoa ou outro pet."
+        ]
       }
     ]
   }
