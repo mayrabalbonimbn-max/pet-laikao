@@ -15,6 +15,7 @@ out
 .cache
 .tmp
 temp
+tsconfig.tsbuildinfo
 
 # local database / prisma
 prisma/dev.db
@@ -48,4 +49,5 @@ Thumbs.db
 fotos para home/
 
 # catalogos de origem (PDFs pesados, fonte bruta, nao versionar)
-catálogos para o site/
+# wildcard cobre o acento decomposto (NFD) do nome da pasta no macOS/iCloud
+cat*logos para o site/
