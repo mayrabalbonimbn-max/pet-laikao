@@ -39,43 +39,113 @@ export const paymentOptionLabels: Record<PaymentOption, string> = {
   full_100: "Pagar 100%"
 };
 
+// Catálogo real de serviços (fonte de verdade do conteúdo: servicos-laikao.md).
+// Duração em 0 = "a confirmar"; será definida na fase da agenda (não inventar minutos).
+// Serviços sem preço confirmado entram inativos (não aparecem na vitrine nem na agenda).
+// Categoria, "a partir de", tabela de banho e níveis da tosa comercial ficam em
+// config/services-content.ts (não são colunas do modelo).
 export const appointmentServicesSeed: AppointmentService[] = [
   {
-    id: "svc-bath-premium",
-    slug: "banho-e-tosa-premium",
-    name: "Banho e tosa premium",
-    description: "Serviço principal com ticket mais alto e operação completa.",
-    durationMinutes: 90,
-    priceCents: 11000,
+    id: "svc-banho",
+    slug: "banho",
+    name: "Banho",
+    description:
+      "Banho completo com produtos próprios pra cada tipo de pelo. O valor varia por porte, raça e pelagem. Todo banho inclui limpeza de ouvidos e corte de unhas.",
+    durationMinutes: 0,
+    priceCents: 4500,
     active: true,
     displayOrder: 1,
-    petSpecies: "dog",
+    petSpecies: "all",
     petSize: "all"
   },
   {
-    id: "svc-bath-therapy",
-    slug: "banho-terapeutico",
-    name: "Banho terapêutico",
-    description: "Banho de cuidado especial com execução mais rápida.",
-    durationMinutes: 60,
-    priceCents: 7800,
+    id: "svc-tosa-bebe",
+    slug: "tosa-bebe",
+    name: "Tosa Bebê",
+    description:
+      "Dá forma ao corpo sem reduzir muito o pelo, com patas cilíndricas e aspecto arredondado. Indicada pra Shih Tzu, Lhasa, Yorkshire, Poodle e Maltês.",
+    durationMinutes: 0,
+    priceCents: 11000,
     active: true,
     displayOrder: 2,
-    petSpecies: "dog",
+    petSpecies: "all",
     petSize: "all"
   },
+  {
+    id: "svc-tosa-baixa",
+    slug: "tosa-baixa",
+    name: "Tosa Baixa",
+    description:
+      "Reduz bastante o comprimento, com visual leve e prático. Ideal pra climas quentes e pets que embolam o pelo com facilidade.",
+    durationMinutes: 0,
+    priceCents: 10000,
+    active: true,
+    displayOrder: 3,
+    petSpecies: "all",
+    petSize: "all"
+  },
+  {
+    id: "svc-tosa-comercial",
+    slug: "tosa-comercial",
+    name: "Tosa Comercial",
+    description:
+      "Pelagem uniforme, em alturas diferentes. Níveis: Zero, Média e Alta na tesoura.",
+    durationMinutes: 0,
+    priceCents: 10000,
+    active: true,
+    displayOrder: 4,
+    petSpecies: "all",
+    petSize: "all"
+  },
+  {
+    id: "svc-tosa-trimming",
+    slug: "tosa-trimming",
+    name: "Tosa Trimming",
+    description:
+      "Para pelagem dupla, como Lulu da Pomerânia e Spitz Alemão. Aparo estratégico, com aspecto de ursinho de pelúcia.",
+    durationMinutes: 0,
+    priceCents: 15000,
+    active: true,
+    displayOrder: 5,
+    petSpecies: "all",
+    petSize: "all"
+  },
+  // Pendentes de preço (servicos-laikao.md, seção 6). Ficam INATIVOS até a Cris
+  // confirmar o valor. Sem preço fake: priceCents fica em 0 só como marcador.
   {
     id: "svc-hygiene",
     slug: "tosa-higienica",
-    name: "Tosa higiênica",
-    description: "Serviço de manutenção com ótima conversão de entrada.",
-    durationMinutes: 45,
-    priceCents: 6500,
-    active: true,
-    displayOrder: 3,
-    petSpecies: "dog",
+    name: "Tosa Higiênica",
+    description:
+      "Foco em saúde e limpeza: patas, coxins, regiões íntimas, barriga e orelhas. Previne fungos e dermatites. Recomendada cerca de uma vez por mês.",
+    durationMinutes: 0,
+    priceCents: 0,
+    active: false,
+    displayOrder: 6,
+    petSpecies: "all",
+    petSize: "all"
+  },
+  {
+    id: "svc-tosa-asiatica",
+    slug: "tosa-asiatica",
+    name: "Tosa Asiática",
+    description:
+      "Modelagem estilizada de rosto e corpo, no estilo bonequinho japonês ou coreano. Visual moderno e diferenciado.",
+    durationMinutes: 0,
+    priceCents: 0,
+    active: false,
+    displayOrder: 7,
+    petSpecies: "all",
     petSize: "all"
   }
+];
+
+// IDs de serviços placeholder antigos que saem do catálogo real (preço/duração
+// fictícios). Não são apagados (preserva histórico de agendamentos), apenas
+// desativados pelo script de cadastro.
+export const retiredServiceIds: string[] = [
+  "svc-bath-premium",
+  "svc-bath-therapy"
 ];
 
 export const availabilityRulesSeed: AvailabilityRule[] = [

@@ -42,7 +42,7 @@ export default async function AdminServicesPage() {
           <input name="name" placeholder="Nome" className="rounded-[12px] border border-stone-200 px-3 py-2" required />
           <input name="slug" placeholder="Slug" className="rounded-[12px] border border-stone-200 px-3 py-2" required />
           <input name="priceReais" type="number" step="0.01" min="0" placeholder="Preço (R$)" className="rounded-[12px] border border-stone-200 px-3 py-2" required />
-          <input name="durationMinutes" type="number" min="1" placeholder="Duração (min)" className="rounded-[12px] border border-stone-200 px-3 py-2" required />
+          <input name="durationMinutes" type="number" min="0" defaultValue={0} placeholder="Duração (min, 0 = a confirmar)" className="rounded-[12px] border border-stone-200 px-3 py-2" required />
           <input name="displayOrder" type="number" defaultValue={0} placeholder="Prioridade" className="rounded-[12px] border border-stone-200 px-3 py-2" />
           <label className="inline-flex items-center gap-2 text-sm text-stone-700"><input name="active" type="checkbox" defaultChecked /> Ativo</label>
           <select name="petSpecies" className="rounded-[12px] border border-stone-200 px-3 py-2">
@@ -72,7 +72,7 @@ export default async function AdminServicesPage() {
               <input name="slug" defaultValue={service.slug} className="rounded-[12px] border border-stone-200 px-3 py-2" required />
               <input name="displayOrder" type="number" defaultValue={service.displayOrder} className="rounded-[12px] border border-stone-200 px-3 py-2" />
               <input name="priceReais" type="number" step="0.01" min="0" defaultValue={(service.priceCents / 100).toFixed(2)} className="rounded-[12px] border border-stone-200 px-3 py-2" required />
-              <input name="durationMinutes" type="number" min="1" defaultValue={service.durationMinutes} className="rounded-[12px] border border-stone-200 px-3 py-2" required />
+              <input name="durationMinutes" type="number" min="0" defaultValue={service.durationMinutes} placeholder="Duração (min, 0 = a confirmar)" className="rounded-[12px] border border-stone-200 px-3 py-2" required />
               <label className="inline-flex items-center gap-2 text-sm text-stone-700"><input name="active" type="checkbox" defaultChecked={service.active} /> Ativo</label>
               <select name="petSpecies" defaultValue={service.petSpecies ?? "all"} className="rounded-[12px] border border-stone-200 px-3 py-2">
                 <option value="all">Espécie: todos</option>

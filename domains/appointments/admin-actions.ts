@@ -7,7 +7,7 @@ const serviceSchema = z.object({
   slug: z.string().min(2),
   name: z.string().min(2),
   description: z.string().min(4),
-  durationMinutes: z.number().int().positive(),
+  durationMinutes: z.number().int().nonnegative(), // 0 = duração a confirmar
   priceCents: z.number().int().nonnegative(),
   active: z.boolean(),
   displayOrder: z.number().int().nonnegative(),

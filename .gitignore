@@ -46,3 +46,6 @@ Thumbs.db
 
 # material de origem das fotos da home (fonte bruta, nao versionar)
 fotos para home/
+
+# catalogos de origem (PDFs pesados, fonte bruta, nao versionar)
+catálogos para o site/
