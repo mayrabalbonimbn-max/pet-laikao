@@ -28,23 +28,23 @@ export const cookieConsentStorageKey = "laikao-cookie-consent-v1";
 export const cookieCategories = [
   {
     id: "necessary",
-    title: "Cookies necessarios",
+    title: "Cookies necessários",
     description:
-      "Mantem recursos essenciais do site funcionando, como seguranca, carrinho, sessao, preferencias e estabilidade da navegacao.",
+      "Mantém recursos essenciais do site funcionando, como segurança, carrinho, sessão, preferências e estabilidade da navegação.",
     required: true
   },
   {
     id: "analytics",
-    title: "Cookies analiticos",
+    title: "Cookies analíticos",
     description:
-      "Ajudam a entender paginas visitadas, desempenho e pontos de melhoria. Ficam desativados ate voce autorizar.",
+      "Ajudam a entender páginas visitadas, desempenho e pontos de melhoria. Ficam desativados até você autorizar.",
     required: false
   },
   {
     id: "marketing",
     title: "Cookies de marketing e terceiros",
     description:
-      "Podem apoiar campanhas, pixels, medicao de anuncios e conteudos de terceiros. Ficam desativados ate voce autorizar.",
+      "Podem apoiar campanhas, pixels, medição de anúncios e conteúdos de terceiros. Ficam desativados até você autorizar.",
     required: false
   }
 ] as const;
