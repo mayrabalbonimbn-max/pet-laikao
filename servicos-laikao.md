@@ -74,5 +74,5 @@ Esses entram no cadastro de **produtos** (admin de produtos ou o `catalogo-model
 1. **Preço da Tosa Higiênica** (não consta no catálogo).
 2. **Preço da Tosa Asiática** (está R$00,00 no catálogo).
 3. **Banho terapêutico** ainda existe? Qual o preço? (aparece no letreiro da loja, mas não nesses materiais)
-4. **Duração de cada serviço** (banho, cada tosa), em minutos. A agenda precisa disso pra montar os horários. Sem isso, dá pra cadastrar com preço e descrição agora e ajustar a duração depois.
+4. ~~Duração de cada serviço~~ RESPONDIDO pela Cris: duração média de **1h30 (90 minutos)** por atendimento. Usar **90 min como padrão** de todos os serviços na fase da agenda. Pode refinar por serviço depois (ex.: banho sozinho mais rápido) se a Cris quiser.
 5. A medicação de pulga/carrapato "na hora" tem custo? Quanto?

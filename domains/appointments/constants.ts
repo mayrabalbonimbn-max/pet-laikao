@@ -40,7 +40,8 @@ export const paymentOptionLabels: Record<PaymentOption, string> = {
 };
 
 // Catálogo real de serviços (fonte de verdade do conteúdo: servicos-laikao.md).
-// Duração em 0 = "a confirmar"; será definida na fase da agenda (não inventar minutos).
+// Duração padrão de 90 min confirmada pela Cris (1h30 por atendimento); pode ser
+// refinada por serviço depois. Serviços com duração > 0 ficam agendáveis online.
 // Serviços sem preço confirmado entram inativos (não aparecem na vitrine nem na agenda).
 // Categoria, "a partir de", tabela de banho e níveis da tosa comercial ficam em
 // config/services-content.ts (não são colunas do modelo).
@@ -51,7 +52,7 @@ export const appointmentServicesSeed: AppointmentService[] = [
     name: "Banho",
     description:
       "Banho completo com produtos próprios pra cada tipo de pelo. O valor varia por porte, raça e pelagem. Todo banho inclui limpeza de ouvidos e corte de unhas.",
-    durationMinutes: 0,
+    durationMinutes: 90,
     priceCents: 4500,
     active: true,
     displayOrder: 1,
@@ -64,7 +65,7 @@ export const appointmentServicesSeed: AppointmentService[] = [
     name: "Tosa Bebê",
     description:
       "Dá forma ao corpo sem reduzir muito o pelo, com patas cilíndricas e aspecto arredondado. Indicada pra Shih Tzu, Lhasa, Yorkshire, Poodle e Maltês.",
-    durationMinutes: 0,
+    durationMinutes: 90,
     priceCents: 11000,
     active: true,
     displayOrder: 2,
@@ -77,7 +78,7 @@ export const appointmentServicesSeed: AppointmentService[] = [
     name: "Tosa Baixa",
     description:
       "Reduz bastante o comprimento, com visual leve e prático. Ideal pra climas quentes e pets que embolam o pelo com facilidade.",
-    durationMinutes: 0,
+    durationMinutes: 90,
     priceCents: 10000,
     active: true,
     displayOrder: 3,
@@ -90,7 +91,7 @@ export const appointmentServicesSeed: AppointmentService[] = [
     name: "Tosa Comercial",
     description:
       "Pelagem uniforme, em alturas diferentes. Níveis: Zero, Média e Alta na tesoura.",
-    durationMinutes: 0,
+    durationMinutes: 90,
     priceCents: 10000,
     active: true,
     displayOrder: 4,
@@ -103,7 +104,7 @@ export const appointmentServicesSeed: AppointmentService[] = [
     name: "Tosa Trimming",
     description:
       "Para pelagem dupla, como Lulu da Pomerânia e Spitz Alemão. Aparo estratégico, com aspecto de ursinho de pelúcia.",
-    durationMinutes: 0,
+    durationMinutes: 90,
     priceCents: 15000,
     active: true,
     displayOrder: 5,
@@ -118,7 +119,7 @@ export const appointmentServicesSeed: AppointmentService[] = [
     name: "Tosa Higiênica",
     description:
       "Foco em saúde e limpeza: patas, coxins, regiões íntimas, barriga e orelhas. Previne fungos e dermatites. Recomendada cerca de uma vez por mês.",
-    durationMinutes: 0,
+    durationMinutes: 90,
     priceCents: 0,
     active: false,
     displayOrder: 6,
@@ -131,7 +132,7 @@ export const appointmentServicesSeed: AppointmentService[] = [
     name: "Tosa Asiática",
     description:
       "Modelagem estilizada de rosto e corpo, no estilo bonequinho japonês ou coreano. Visual moderno e diferenciado.",
-    durationMinutes: 0,
+    durationMinutes: 90,
     priceCents: 0,
     active: false,
     displayOrder: 7,
